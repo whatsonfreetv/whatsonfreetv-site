@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WhatsOnFreeTV — Free Streaming TV Channels</title>
+  <meta name="description" content="Discover hundreds of free streaming TV channels available in the US and Canada.">
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    /* Inline only what this page needs */
+  </style>
+</head>
+<body>
+  <div class="redirect-page">
+    <div class="redirect-logo">WhatsOn<span>FreeTV</span></div>
+    <div class="redirect-spinner" id="spinner"></div>
+    <p class="redirect-msg" id="redirectMsg">Detecting your location…</p>
+
+    <!-- Shown only if geo-detection fails or takes too long -->
+    <div class="redirect-manual hidden" id="manualLinks">
+      <a href="us.html" class="redirect-btn">🇺🇸 United States</a>
+      <a href="ca.html" class="redirect-btn">🇨🇦 Canada</a>
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      const TIMEOUT_MS = 4000;
+      let redirected = false;
+
+      function go(country) {
+        if (redirected) return;
+        redirected = true;
+        const dest = country === 'CA' ? 'ca.html' : 'us.html';
+        window.location.replace(dest);
+      }
+
+      // Show manual links as fallback after timeout
+      const fallbackTimer = setTimeout(() => {
+        if (!redirected) {
+          document.getElementById('spinner').style.display = 'none';
+          document.getElementById('redirectMsg').textContent = 'Choose your country:';
+          document.getElementById('manualLinks').classList.remove('hidden');
+        }
+      }, TIMEOUT_MS);
+
+      // Primary: ipapi.co (returns country code as plain text)
+      fetch('https://ipapi.co/country/', { signal: AbortSignal.timeout(3000) })
+        .then(r => r.text())
+        .then(code => {
+          clearTimeout(fallbackTimer);
+          go(code.trim().toUpperCase());
+        })
+        .catch(() => {
+          // Fallback: ip-api.com
+          fetch('https://ip-api.com/json/?fields=countryCode', { signal: AbortSignal.timeout(3000) })
+            .then(r => r.json())
+            .then(d => {
+              clearTimeout(fallbackTimer);
+              go((d.countryCode || '').toUpperCase());
+            })
+            .catch(() => {
+              // Default to US if both fail
+              clearTimeout(fallbackTimer);
+              go('US');
+            });
+        });
+    })();
+  </script>
+</body>
+</html>

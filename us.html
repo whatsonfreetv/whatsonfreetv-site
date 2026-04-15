@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WhatsOnFreeTV — Free Streaming TV Channels</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📺</text></svg>">
+  <meta name="description" content="Browse free streaming TV channels available in the United States. Discover news, sports, movies, entertainment and more — all free.">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <!-- ======================== NAVBAR ======================== -->
+  <nav class="navbar">
+    <a href="index.html" class="navbar-logo">WhatsOn<span>FreeTV</span></a>
+
+    <div class="nav-country-links">
+      <a href="us.html" class="nav-country-link active">🇺🇸 US</a>
+      <a href="ca.html" class="nav-country-link">🇨🇦 CA</a>
+    </div>
+
+    <div class="navbar-spacer"></div>
+
+    <div class="search-wrapper">
+      <span class="search-icon">🔍</span>
+      <input
+        type="search"
+        class="search-input"
+        id="searchInput"
+        placeholder="Search channels…"
+        autocomplete="off"
+        aria-label="Search channels"
+      >
+    </div>
+
+    <a href="suggest.html" class="suggest-nav-btn">+ Suggest Channel</a>
+  </nav>
+
+  <!-- ======================== HERO ======================== -->
+  <header class="hero">
+    <div class="hero-eyebrow">🇺🇸 United States</div>
+    <h1 class="hero-title">Free TV Channels</h1>
+    <p class="hero-subtitle">Every free streaming channel available in the US, organized by genre. No subscription needed.</p>
+    <div class="hero-stats">
+      <div>
+        <div class="hero-stat-value" id="heroChannelCount">—</div>
+        <div class="hero-stat-label">Channels</div>
+      </div>
+      <div>
+        <div class="hero-stat-value" id="heroPlatformCount">—</div>
+        <div class="hero-stat-label">Platforms</div>
+      </div>
+      <div>
+        <div class="hero-stat-value" id="heroGenreCount">—</div>
+        <div class="hero-stat-label">Genres</div>
+      </div>
+    </div>
+  </header>
+
+  <!-- ======================== PLATFORM PILLS ======================== -->
+  <div class="platform-pills-bar">
+    <div id="platformPills" class="platform-pills"></div>
+  </div>
+
+  <!-- ======================== GENRE PILLS ======================== -->
+  <div class="genre-pills-bar">
+    <div id="genrePills" class="platform-pills genre-pills"></div>
+  </div>
+
+  <!-- ======================== VIEW TOGGLE ======================== -->
+  <div class="view-toggle-bar" id="viewToggleBar"></div>
+
+  <!-- ======================== LIVE GUIDE ======================== -->
+  <div id="guideSection" style="display:none"></div>
+
+  <!-- ======================== PLATFORM HERO ======================== -->
+  <section id="platformHero" class="platform-hero" style="display:none">
+    <div class="genre-header">
+      <span class="epg-live-badge">&#9679; Live</span>
+      <h2 class="genre-title platform-hero-title">On Now</h2>
+    </div>
+    <div class="row-container">
+      <button class="scroll-btn left" aria-label="Scroll left">&#8249;</button>
+      <div class="featured-epg-row"></div>
+      <button class="scroll-btn right" aria-label="Scroll right">&#8250;</button>
+    </div>
+  </section>
+
+  <!-- ======================== EPG: WHAT'S ON NOW ======================== -->
+  <section id="epgSection" class="epg-section" style="display:none">
+    <div class="genre-header">
+      <span class="epg-live-badge">&#9679; Live</span>
+      <h2 class="genre-title">What's On Now</h2>
+      <span class="genre-count" id="epgCount"></span>
+    </div>
+    <div class="row-container">
+      <button class="scroll-btn left" aria-label="Scroll left">&#8249;</button>
+      <div class="channels-row" id="epgRow"></div>
+      <button class="scroll-btn right" aria-label="Scroll right">&#8250;</button>
+    </div>
+  </section>
+
+  <!-- ======================== CONTENT ======================== -->
+  <main class="content" id="channelContent" aria-live="polite"></main>
+
+  <div class="state-box hidden" id="noResults">
+    <div class="state-icon">🔎</div>
+    <div class="state-title">No channels found</div>
+    <div class="state-msg">Try a different search term or clear your filters.</div>
+  </div>
+
+  <!-- ======================== FOOTER ======================== -->
+  <footer class="site-footer">
+    <div class="footer-logo">WhatsOn<span>FreeTV</span></div>
+    <div class="footer-links">
+      <a href="us.html" class="footer-link">🇺🇸 US Channels</a>
+      <a href="ca.html" class="footer-link">🇨🇦 CA Channels</a>
+      <a href="suggest.html" class="footer-link">Suggest a Channel</a>
+    </div>
+    <p class="footer-copy">&copy; <script>document.write(new Date().getFullYear())</script> WhatsOnFreeTV. Free TV, always.</p>
+  </footer>
+
+  <script>window.SITE_COUNTRY = 'US';</script>
+  <script src="channels.js"></script>
+</body>
+</html>

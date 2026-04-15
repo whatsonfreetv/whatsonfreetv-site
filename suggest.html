@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Suggest a Channel — WhatsOnFreeTV</title>
+  <meta name="description" content="Know a free TV channel we're missing? Tell us about it and we'll add it to the directory.">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <!-- ======================== NAVBAR ======================== -->
+  <nav class="navbar">
+    <a href="index.html" class="navbar-logo">WhatsOn<span>FreeTV</span></a>
+    <div class="nav-country-links">
+      <a href="us.html" class="nav-country-link">🇺🇸 US</a>
+      <a href="ca.html" class="nav-country-link">🇨🇦 CA</a>
+    </div>
+    <div class="navbar-spacer"></div>
+  </nav>
+
+  <!-- ======================== FORM ======================== -->
+  <div class="suggest-page">
+    <h1>Suggest a Channel</h1>
+    <p class="page-sub">Know a free streaming channel we're missing? Fill in the details below and we'll review it.</p>
+
+    <div class="form-feedback hidden" id="formFeedback"></div>
+
+    <form id="suggestForm" class="form-grid" novalidate>
+
+      <!-- Channel Name -->
+      <div class="form-group">
+        <label for="channelName">Channel Name <span>*</span></label>
+        <input
+          type="text"
+          id="channelName"
+          name="channelName"
+          class="form-control"
+          placeholder="e.g. Tubi, Pluto TV, CBC Gem…"
+          required
+          maxlength="120"
+        >
+      </div>
+
+      <!-- Logo URL -->
+      <div class="form-group">
+        <label for="logoUrl">Logo URL</label>
+        <input
+          type="url"
+          id="logoUrl"
+          name="logoUrl"
+          class="form-control"
+          placeholder="https://example.com/logo.png"
+        >
+        <span class="form-hint">Direct link to the channel's logo image (PNG, JPG, or SVG).</span>
+      </div>
+
+      <!-- Description -->
+      <div class="form-group">
+        <label for="description">Description</label>
+        <textarea
+          id="description"
+          name="description"
+          class="form-control"
+          placeholder="Brief description of the channel and what it offers…"
+          maxlength="500"
+          rows="4"
+        ></textarea>
+      </div>
+
+      <!-- Country -->
+      <div class="form-group">
+        <label>Available In <span>*</span></label>
+        <div class="checkbox-grid" id="countryGroup">
+          <label class="checkbox-label">
+            <input type="checkbox" name="country" value="US"> 🇺🇸 United States
+          </label>
+          <label class="checkbox-label">
+            <input type="checkbox" name="country" value="CA"> 🇨🇦 Canada
+          </label>
+        </div>
+      </div>
+
+      <!-- Platform -->
+      <div class="form-group">
+        <label>Platform(s)</label>
+        <div class="checkbox-grid" id="platformGroup">
+          <label class="checkbox-label"><input type="checkbox" name="platform" value="Tubi"> Tubi</label>
+          <label class="checkbox-label"><input type="checkbox" name="platform" value="Pluto TV"> Pluto TV</label>
+          <label class="checkbox-label"><input type="checkbox" name="platform" value="Peacock"> Peacock</label>
+          <label class="checkbox-label"><input type="checkbox" name="platform" value="Plex"> Plex</label>
+          <label class="checkbox-label"><input type="checkbox" name="platform" value="Roku Channel"> Roku Channel</label>
+          <label class="checkbox-label"><input type="checkbox" name="platform" value="Samsung TV+"> Samsung TV+</label>
+          <label class="checkbox-label"><input type="checkbox" name="platform" value="Amazon Freevee"> Amazon Freevee</label>
+          <label class="checkbox-label"><input type="checkbox" name="platform" value="CBC Gem"> CBC Gem</label>
+          <label class="checkbox-label"><input type="checkbox" name="platform" value="CTV"> CTV</label>
+          <label class="checkbox-label"><input type="checkbox" name="platform" value="Crave"> Crave</label>
+          <label class="checkbox-label"><input type="checkbox" name="platform" value="Crackle"> Crackle</label>
+          <label class="checkbox-label"><input type="checkbox" name="platform" value="Kanopy"> Kanopy</label>
+          <label class="checkbox-label"><input type="checkbox" name="platform" value="Other"> Other</label>
+        </div>
+        <div class="form-group" style="margin-top:10px;">
+          <input
+            type="text"
+            id="platformOther"
+            class="form-control"
+            placeholder="Other platform name…"
+            maxlength="80"
+            style="display:none"
+          >
+        </div>
+      </div>
+
+      <!-- Genre -->
+      <div class="form-group">
+        <label>Genre(s)</label>
+        <div class="checkbox-grid">
+          <label class="checkbox-label"><input type="checkbox" name="genre" value="News"> News</label>
+          <label class="checkbox-label"><input type="checkbox" name="genre" value="Sports"> Sports</label>
+          <label class="checkbox-label"><input type="checkbox" name="genre" value="Movies"> Movies</label>
+          <label class="checkbox-label"><input type="checkbox" name="genre" value="Entertainment"> Entertainment</label>
+          <label class="checkbox-label"><input type="checkbox" name="genre" value="Kids"> Kids</label>
+          <label class="checkbox-label"><input type="checkbox" name="genre" value="Comedy"> Comedy</label>
+          <label class="checkbox-label"><input type="checkbox" name="genre" value="Drama"> Drama</label>
+          <label class="checkbox-label"><input type="checkbox" name="genre" value="Reality"> Reality</label>
+          <label class="checkbox-label"><input type="checkbox" name="genre" value="Lifestyle"> Lifestyle</label>
+          <label class="checkbox-label"><input type="checkbox" name="genre" value="Documentary"> Documentary</label>
+          <label class="checkbox-label"><input type="checkbox" name="genre" value="Music"> Music</label>
+          <label class="checkbox-label"><input type="checkbox" name="genre" value="Science & Nature"> Science &amp; Nature</label>
+          <label class="checkbox-label"><input type="checkbox" name="genre" value="Food"> Food</label>
+          <label class="checkbox-label"><input type="checkbox" name="genre" value="Travel"> Travel</label>
+          <label class="checkbox-label"><input type="checkbox" name="genre" value="Technology"> Technology</label>
+          <label class="checkbox-label"><input type="checkbox" name="genre" value="Classic TV"> Classic TV</label>
+          <label class="checkbox-label"><input type="checkbox" name="genre" value="International"> International</label>
+        </div>
+      </div>
+
+      <!-- Submit -->
+      <div>
+        <button type="submit" class="submit-btn" id="submitBtn">Submit Channel</button>
+      </div>
+
+    </form>
+
+    <p style="margin-top:32px;font-size:0.78rem;color:var(--text-dim);max-width:480px;line-height:1.6;">
+      Submissions are reviewed before publishing. We reserve the right to edit or reject suggestions.
+      All listed channels must be freely accessible without a paid subscription.
+    </p>
+  </div>
+
+  <!-- ======================== FOOTER ======================== -->
+  <footer class="site-footer">
+    <div class="footer-logo">WhatsOn<span>FreeTV</span></div>
+    <div class="footer-links">
+      <a href="us.html" class="footer-link">🇺🇸 US Channels</a>
+      <a href="ca.html" class="footer-link">🇨🇦 CA Channels</a>
+    </div>
+    <p class="footer-copy">&copy; <script>document.write(new Date().getFullYear())</script> WhatsOnFreeTV.</p>
+  </footer>
+
+  <script src="config.js"></script>
+  <script>
+    (function () {
+      // Navbar scroll
+      const nav = document.querySelector('.navbar');
+      window.addEventListener('scroll', () => {
+        nav.classList.toggle('scrolled', window.scrollY > 10);
+      }, { passive: true });
+
+      // Pre-fill channel name if passed via ?name= param
+      const prefilledName = new URLSearchParams(window.location.search).get('name');
+      if (prefilledName) {
+        const nameInput = document.getElementById('channelName');
+        if (nameInput) nameInput.value = prefilledName;
+      }
+
+      // Show "Other" platform text input when "Other" is checked
+      const otherCheck = document.querySelector('input[name="platform"][value="Other"]');
+      const otherInput = document.getElementById('platformOther');
+      otherCheck.addEventListener('change', () => {
+        otherInput.style.display = otherCheck.checked ? 'block' : 'none';
+        if (!otherCheck.checked) otherInput.value = '';
+      });
+
+      // ---- Form submission ----
+      const form = document.getElementById('suggestForm');
+      const feedback = document.getElementById('formFeedback');
+      const submitBtn = document.getElementById('submitBtn');
+
+      function showFeedback(type, msg) {
+        feedback.className = `form-feedback ${type}`;
+        feedback.textContent = msg;
+        feedback.classList.remove('hidden');
+        feedback.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      }
+
+      function getCheckedValues(name) {
+        return Array.from(document.querySelectorAll(`input[name="${name}"]:checked`))
+          .map(el => el.value);
+      }
+
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        const name = document.getElementById('channelName').value.trim();
+        if (!name) {
+          showFeedback('error', 'Channel name is required.');
+          document.getElementById('channelName').focus();
+          return;
+        }
+
+        const countries = getCheckedValues('country');
+        if (!countries.length) {
+          showFeedback('error', 'Please select at least one country.');
+          return;
+        }
+
+        // Collect platforms — merge "Other" text input
+        let platforms = getCheckedValues('platform').filter(p => p !== 'Other');
+        const otherVal = otherInput.value.trim();
+        if (otherCheck.checked && otherVal) platforms.push(otherVal);
+
+        const fields = {
+          'Channel Name': name,
+          'Country': countries,
+        };
+
+        const logo = document.getElementById('logoUrl').value.trim();
+        if (logo) fields['Logo URL'] = logo;
+
+        const desc = document.getElementById('description').value.trim();
+        if (desc) fields['Description'] = desc;
+
+        if (platforms.length)  fields['Platform'] = platforms;
+
+        const genres = getCheckedValues('genre');
+        if (genres.length) fields['Genre'] = genres;
+
+        // Disable form while submitting
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'Submitting…';
+        feedback.classList.add('hidden');
+
+        try {
+          const res = await fetch(CONFIG.API_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ fields })
+          });
+
+          const data = await res.json().catch(() => ({}));
+
+          if (!res.ok) {
+            throw new Error(data.error?.message || `Server error (${res.status})`);
+          }
+
+          // Success
+          form.reset();
+          otherInput.style.display = 'none';
+          showFeedback('success', `Thanks! "${name}" has been submitted for review. We'll add it soon.`);
+        } catch (err) {
+          showFeedback('error', `Submission failed: ${err.message}`);
+        } finally {
+          submitBtn.disabled = false;
+          submitBtn.textContent = 'Submit Channel';
+        }
+      });
+    })();
+  </script>
+</body>
+</html>
