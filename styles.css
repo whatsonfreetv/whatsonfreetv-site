@@ -1002,16 +1002,22 @@ textarea.form-control {
    ============================================= */
 .site-footer {
   border-top: 1px solid var(--border);
-  padding: 32px 48px;
+  padding: 40px 48px 32px;
+  background: var(--bg-dark);
+  text-align: center;
+}
+
+.footer-inner {
+  max-width: 860px;
+  margin: 0 auto;
   display: flex;
+  flex-direction: column;
   align-items: center;
-  justify-content: space-between;
-  flex-wrap: wrap;
-  gap: 16px;
+  gap: 18px;
 }
 
 .footer-logo {
-  font-size: 1rem;
+  font-size: 1.1rem;
   font-weight: 800;
   color: var(--red);
 }
@@ -1020,7 +1026,9 @@ textarea.form-control {
 
 .footer-links {
   display: flex;
-  gap: 20px;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 6px 20px;
 }
 
 .footer-link {
@@ -1031,10 +1039,121 @@ textarea.form-control {
 
 .footer-link:hover { color: var(--text-muted); }
 
+.footer-legal {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+
 .footer-copy {
   font-size: 0.75rem;
   color: var(--text-dim);
-  width: 100%;
+}
+
+.footer-attribution {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 4px 10px;
+  font-size: 0.72rem;
+  color: var(--text-dim);
+}
+
+.footer-attr-link {
+  color: var(--text-dim);
+  transition: color var(--transition);
+}
+
+.footer-attr-link:hover { color: var(--text-muted); }
+
+.footer-sep { color: var(--border); }
+
+/* =============================================
+   LEGAL PAGES (privacy.html, terms.html)
+   ============================================= */
+.legal-page {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: calc(var(--nav-height) + 56px) 48px 80px;
+  color: var(--text-muted);
+  line-height: 1.75;
+}
+
+.legal-page h1 {
+  font-size: 2rem;
+  font-weight: 900;
+  color: var(--text);
+  margin-bottom: 6px;
+  letter-spacing: -0.5px;
+}
+
+.legal-page .legal-updated {
+  font-size: 0.82rem;
+  color: var(--text-dim);
+  margin-bottom: 48px;
+}
+
+.legal-page h2 {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--text);
+  margin: 36px 0 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+}
+
+.legal-page h3 {
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  margin: 24px 0 8px;
+}
+
+.legal-page p {
+  font-size: 0.88rem;
+  margin-bottom: 14px;
+}
+
+.legal-page ul,
+.legal-page ol {
+  margin: 8px 0 14px 24px;
+}
+
+.legal-page li {
+  font-size: 0.88rem;
+  margin-bottom: 6px;
+}
+
+.legal-page a {
+  color: var(--red);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.legal-page a:hover { color: var(--red-hover); }
+
+.legal-page strong { color: var(--text); font-weight: 600; }
+
+.legal-toc {
+  margin: 12px 0 32px 0;
+  padding-left: 24px;
+}
+
+.legal-toc li {
+  margin-bottom: 8px;
+  font-size: 0.85rem;
+}
+
+.legal-toc a {
+  text-decoration: none;
+  color: var(--text-muted);
+}
+
+.legal-toc a:hover {
+  color: var(--text);
+  text-decoration: underline;
+  text-underline-offset: 2px;
 }
 
 /* =============================================
@@ -1081,7 +1200,8 @@ textarea.form-control {
 
   .suggest-page { padding: 100px 20px 60px; }
 
-  .site-footer { padding: 24px 20px; flex-direction: column; align-items: flex-start; }
+  .site-footer { padding: 28px 20px; }
+  .legal-page { padding: calc(var(--nav-height) + 32px) 20px 60px; }
 }
 
 @media (max-width: 600px) {
