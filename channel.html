@@ -177,6 +177,8 @@
         }));
       }
 
+      const EPG_PLACEHOLDER = 'program information currently unavailable';
+
       async function fetchEPGForChannel(country, channelName) {
         try {
           const res = await fetch(`${DATA_BASE}/epg-${country.toLowerCase()}.json?t=${new Date().toISOString().slice(0, 13)}`);
@@ -188,7 +190,11 @@
             .filter(p => {
               if ((p.channel || '').toLowerCase() !== lower) return false;
               const end = p.end ? new Date(p.end).getTime() : NaN;
-              return !isNaN(end) && end > now;
+              if (isNaN(end) || end <= now) return false;
+              // Drop placeholder and empty-title entries
+              const title = (p.title || '').trim();
+              if (!title || title.toLowerCase().startsWith(EPG_PLACEHOLDER)) return false;
+              return true;
             })
             .map(p => ({
               fields: {
@@ -335,6 +341,7 @@
 
       // ---- Render On Now ----
       function renderOnNow(programs, body, isClickable, channelName) {
+        if (!Array.isArray(programs) || !programs.length) return;
         const now = Date.now();
         const current = programs.find(p => {
           const start = new Date(p.fields['Start Time']).getTime();
@@ -342,8 +349,8 @@
           return !isNaN(start) && !isNaN(end) && start <= now && now <= end;
         });
         if (!current) return;
-
-        const showTitle = current.fields['Show Title'] || 'Unknown Show';
+        const showTitle = current.fields['Show Title'];
+        if (!showTitle) return;
         const remaining = current.fields['End Time'] ? timeRemaining(current.fields['End Time']) : null;
 
         const section = document.createElement('div');
@@ -408,14 +415,18 @@
 
       // ---- Render Coming Up Next ----
       function renderUpNext(programs, body, isClickable, channelName) {
+        if (!Array.isArray(programs) || !programs.length) return;
         const now = Date.now();
 
+        const FIVE_MIN = 5 * 60 * 1000;
         const seen = new Set();
         const upcoming = programs
           .filter(p => {
             const start = new Date(p.fields['Start Time']).getTime();
             if (isNaN(start) || start <= now) return false;
-            const key = `${p.fields['Start Time']}|${p.fields['Show Title']}`;
+            const roundedStart = Math.round(start / FIVE_MIN) * FIVE_MIN;
+            const title = (p.fields['Show Title'] || '').trim().toLowerCase();
+            const key = `${roundedStart}|${title}`;
             if (seen.has(key)) return false;
             seen.add(key);
             return true;

@@ -77,11 +77,16 @@
       const now     = Date.now();
       const horizon = now + 12 * 60 * 60 * 1000;
 
+      const PLACEHOLDER = 'program information currently unavailable';
       const records = (json.programs || [])
         .filter(p => {
           const end   = p.end   ? new Date(p.end).getTime()   : NaN;
           const start = p.start ? new Date(p.start).getTime() : NaN;
-          return !isNaN(end) && !isNaN(start) && end > now && start < horizon;
+          if (isNaN(end) || isNaN(start) || end <= now || start >= horizon) return false;
+          // Drop Tubi placeholder entries and any program with no title
+          const title = (p.title || '').trim();
+          if (!title || title.toLowerCase().startsWith(PLACEHOLDER)) return false;
+          return true;
         })
         .map(p => ({
           fields: {
@@ -127,15 +132,18 @@
   // EPG UTILITIES
   // ============================================================
   function getAiring(programs) {
-    const now  = Date.now();
-    const seen = new Set();
+    const now    = Date.now();
+    const FIVE_MIN = 5 * 60 * 1000;
+    const seen   = new Set();
     return programs.filter(p => {
       const start = new Date(p.fields['Start Time']).getTime();
       const end   = new Date(p.fields['End Time']).getTime();
       if (isNaN(start) || isNaN(end) || !(start <= now && now <= end)) return false;
-      const ch = (p.fields['Channel'] || '').toLowerCase().trim();
-      if (seen.has(ch)) return false;
-      seen.add(ch);
+      const roundedStart = Math.round(start / FIVE_MIN) * FIVE_MIN;
+      const title = (p.fields['Show Title'] || '').trim().toLowerCase();
+      const key = `${roundedStart}|${title}`;
+      if (seen.has(key)) return false;
+      seen.add(key);
       return true;
     });
   }
