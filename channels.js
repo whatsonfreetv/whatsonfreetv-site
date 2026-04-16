@@ -87,41 +87,25 @@
 
   async function fetchPrograms() {
     const isMobile = window.innerWidth < 768;
-    // Separate cache keys — mobile gets a narrower time window than desktop
+    // Separate cache keys so mobile and desktop don't share a narrowed/full dataset
     const key = `woftv_prog_${COUNTRY}${isMobile ? '_m' : ''}`;
     const cached = getCached(key);
     if (cached) return cached;
 
     try {
-      const res = await fetch(`${DATA_BASE}/epg-${COUNTRY.toLowerCase()}.json?t=${new Date().toISOString().slice(0, 13)}`);
-      if (!res.ok) throw new Error(`HTTP ${res.status}`);
-      const json = await res.json();
+      let records;
 
-      const now  = Date.now();
-      const PLACEHOLDER = 'program information currently unavailable';
+      if (isMobile) {
+        // ── Mobile: delegate filtering to the Netlify function ──────────────
+        // The server fetches the full 48 k-program JSON, filters it to a
+        // [-30 min, +6 h] window, and returns only the matching slice.
+        // This prevents mobile Safari from freezing on a large parse + filter.
+        const res = await fetch(`/.netlify/functions/epg?country=${COUNTRY}&hours=6`);
+        if (!res.ok) throw new Error(`EPG function returned HTTP ${res.status}`);
+        const json = await res.json();
 
-      // Mobile: keep only programs overlapping the guide window [-30 min, +4 h].
-      // This cuts ~48 k programs down to ~3–5 k, preventing mobile Safari from freezing.
-      // Desktop: keep 12 h so the guide can scroll well forward.
-      const horizon  = isMobile ? now + 6  * 60 * 60 * 1000 : now + 12 * 60 * 60 * 1000;
-      const lookback = isMobile ? now - 30 * 60 * 1000       : now;
-
-      const programs = json.programs || [];
-
-      const records = await filterMapAsync(
-        programs,
-        500, // batch size — yields to browser between every 500 items
-        p => {
-          const end   = p.end   ? new Date(p.end).getTime()   : NaN;
-          const start = p.start ? new Date(p.start).getTime() : NaN;
-          if (isNaN(end) || isNaN(start)) return false;
-          // Program must overlap the display window
-          if (end <= lookback || start >= horizon) return false;
-          const title = (p.title || '').trim();
-          if (!title || title.toLowerCase().startsWith(PLACEHOLDER)) return false;
-          return true;
-        },
-        p => ({
+        // Server already filtered by time and stripped placeholders; just map fields.
+        records = (json.programs || []).map(p => ({
           fields: {
             'Show Title': p.title    || '',
             'Channel':    p.channel  || '',
@@ -129,8 +113,43 @@
             'End Time':   p.end      || '',
             'Platform':   p.platform || ''
           }
-        })
-      );
+        }));
+
+      } else {
+        // ── Desktop: fetch full EPG from GitHub, filter with time-sliced batches ──
+        // 12-hour horizon lets the Live Guide scroll well forward.
+        const res = await fetch(`${DATA_BASE}/epg-${COUNTRY.toLowerCase()}.json?t=${new Date().toISOString().slice(0, 13)}`);
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const json = await res.json();
+
+        const now         = Date.now();
+        const PLACEHOLDER = 'program information currently unavailable';
+        const lookback    = now;
+        const horizon     = now + 12 * 60 * 60 * 1000;
+
+        records = await filterMapAsync(
+          json.programs || [],
+          500, // batch size — yields to browser between every 500 items
+          p => {
+            const end   = p.end   ? new Date(p.end).getTime()   : NaN;
+            const start = p.start ? new Date(p.start).getTime() : NaN;
+            if (isNaN(end) || isNaN(start)) return false;
+            if (end <= lookback || start >= horizon) return false;
+            const title = (p.title || '').trim();
+            if (!title || title.toLowerCase().startsWith(PLACEHOLDER)) return false;
+            return true;
+          },
+          p => ({
+            fields: {
+              'Show Title': p.title    || '',
+              'Channel':    p.channel  || '',
+              'Start Time': p.start    || '',
+              'End Time':   p.end      || '',
+              'Platform':   p.platform || ''
+            }
+          })
+        );
+      }
 
       setCache(key, records);
       return records;
@@ -918,15 +937,8 @@
       applyFilters();
     });
 
-    // Mobile-only Suggest button (sits next to Live Guide; hidden on desktop via CSS)
-    const suggestBtn = document.createElement('a');
-    suggestBtn.href = 'suggest.html';
-    suggestBtn.className = 'suggest-nav-btn suggest-toggle-btn';
-    suggestBtn.textContent = '+ Suggest';
-
     bar.appendChild(btnBrowse);
     bar.appendChild(btnGuide);
-    bar.appendChild(suggestBtn);
   }
 
   function renderGuide(channels, programs, channelMap) {

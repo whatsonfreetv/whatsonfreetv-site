@@ -102,35 +102,20 @@ input, select, textarea { font-family: inherit; }
 }
 
 .search-icon {
-  position: absolute;
-  left: 10px;
-  top: 50%;
-  transform: translateY(-50%);
+  position: static;
+  transform: none;
   color: var(--text-muted);
-  font-size: 0.9rem;
+  font-size: 1.1rem;
   pointer-events: auto;
   cursor: pointer;
-  z-index: 1;
+  padding: 4px 8px;
+  flex-shrink: 0;
 }
 
-.search-input {
-  background: rgba(0,0,0,0.5);
-  border: 1px solid var(--border-focus);
-  color: var(--text);
-  padding: 8px 12px 8px 34px;
-  border-radius: var(--radius);
-  font-size: 0.875rem;
-  width: 220px;
-  outline: none;
-  transition: border-color var(--transition), width var(--transition), background var(--transition);
-}
+.search-icon:hover { color: var(--text); }
 
-.search-input::placeholder { color: var(--text-dim); }
-.search-input:focus {
-  border-color: var(--text-muted);
-  background: rgba(0,0,0,0.8);
-  width: 280px;
-}
+/* Input is always hidden — clicking the icon opens the search modal */
+.search-input { display: none !important; }
 
 .platform-filter {
   background: rgba(0,0,0,0.5);
@@ -1252,10 +1237,8 @@ textarea.form-control {
   }
 
   .navbar-logo { font-size: 1.2rem; }
-  .search-input { width: 160px; }
-  .search-input:focus { width: 180px; }
 
-  /* Suggest button lives in the toggle bar, not the navbar */
+  /* Suggest button is desktop-only — hidden on mobile via the ≤768px rule below */
 
   .hero {
     padding: 100px 20px 32px;
@@ -1304,20 +1287,6 @@ textarea.form-control {
     gap: 8px;
   }
 
-  /* ---- Search: on mobile, icon taps open full-screen modal ---- */
-  .search-input,
-  .search-close-btn { display: none !important; }
-
-  .search-icon {
-    position: static;
-    transform: none;
-    cursor: pointer;
-    pointer-events: auto;
-    font-size: 1.1rem;
-    color: var(--text-muted);
-    padding: 4px 8px;
-    flex-shrink: 0;
-  }
 }
 
 /* =============================================

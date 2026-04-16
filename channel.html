@@ -19,6 +19,9 @@
       <a href="ca.html" class="nav-country-link">🇨🇦 CA</a>
     </div>
     <div class="navbar-spacer"></div>
+    <div class="search-wrapper">
+      <span class="search-icon" id="navSearchIcon">🔍</span>
+    </div>
     <a href="suggest.html" class="suggest-nav-btn">+ Suggest Channel</a>
   </nav>
 
@@ -158,6 +161,108 @@
         });
       }
       highlightNav();
+
+      // ---- Search modal ----
+      function setupSearch() {
+        const icon = document.querySelector('.search-icon');
+        if (!icon) return;
+
+        let searchChannels = null; // lazy-loaded on first open
+
+        const modal = document.createElement('div');
+        modal.id = 'searchModal';
+        modal.className = 'search-modal';
+        modal.innerHTML = `
+          <div class="search-modal-inner">
+            <div class="search-modal-bar">
+              <span class="search-modal-icon">🔍</span>
+              <input type="search" class="search-modal-input" id="searchModalInput"
+                placeholder="Search channels…" autocomplete="off" aria-label="Search channels">
+              <button class="search-modal-close" aria-label="Close">&#x2715;</button>
+            </div>
+            <div class="search-modal-results" id="searchModalResults"></div>
+          </div>
+        `;
+        document.body.appendChild(modal);
+
+        const modalInput = modal.querySelector('#searchModalInput');
+        const resultsEl  = modal.querySelector('#searchModalResults');
+        const closeBtn   = modal.querySelector('.search-modal-close');
+
+        async function openModal() {
+          modal.classList.add('open');
+          setTimeout(() => modalInput.focus(), 50);
+          if (!searchChannels) {
+            resultsEl.innerHTML = '<div class="search-modal-hint">Loading channels…</div>';
+            try {
+              const country = sessionStorage.getItem('woftv_country') || 'US';
+              searchChannels = await fetchChannelsJSON(country);
+            } catch (_) {
+              resultsEl.innerHTML = '<div class="search-modal-hint">Could not load channels.</div>';
+              return;
+            }
+          }
+          renderModalResults(modalInput.value);
+        }
+
+        function closeModal() {
+          modal.classList.remove('open');
+          modalInput.value = '';
+          resultsEl.innerHTML = '';
+        }
+
+        function renderModalResults(q) {
+          if (!searchChannels) return;
+          const query = q.toLowerCase().trim();
+          if (!query) {
+            resultsEl.innerHTML = '<div class="search-modal-hint">Start typing to search channels…</div>';
+            return;
+          }
+          const matches = searchChannels.filter(ch => {
+            const f = ch.fields;
+            return (f['Channel Name'] || '').toLowerCase().includes(query) ||
+                   (f['Description']  || '').toLowerCase().includes(query) ||
+                   (f['Genre']        || []).join(' ').toLowerCase().includes(query);
+          }).slice(0, 24);
+
+          if (!matches.length) {
+            resultsEl.innerHTML = '<div class="search-modal-hint">No channels found.</div>';
+            return;
+          }
+
+          resultsEl.innerHTML = '';
+          matches.forEach(ch => {
+            const name    = ch.fields['Channel Name'] || '';
+            const logo    = (ch.fields['Logo URL'] || '').trim();
+            const initial = name.trim().charAt(0).toUpperCase();
+            const item    = document.createElement('div');
+            item.className = 'search-modal-item';
+            item.innerHTML = `
+              ${logo ? `<img class="search-modal-logo" src="${esc(logo)}" alt="${esc(name)}" loading="lazy">` : ''}
+              <div class="search-modal-logo-fallback"${logo ? ' style="display:none"' : ''}>${esc(initial)}</div>
+              <span class="search-modal-name">${esc(name)}</span>
+            `;
+            if (logo) {
+              const img = item.querySelector('img');
+              const fb  = item.querySelector('.search-modal-logo-fallback');
+              img.addEventListener('error', () => { img.style.display = 'none'; fb.style.display = 'flex'; });
+            }
+            item.addEventListener('click', () => {
+              window.location.href = `channel.html?id=${encodeURIComponent(name)}`;
+            });
+            resultsEl.appendChild(item);
+          });
+        }
+
+        icon.addEventListener('click', openModal);
+        closeBtn.addEventListener('click', closeModal);
+        modal.addEventListener('click', e => { if (e.target === modal) closeModal(); });
+        document.addEventListener('keydown', e => {
+          if (e.key === 'Escape' && modal.classList.contains('open')) closeModal();
+        });
+        modalInput.addEventListener('input', () => renderModalResults(modalInput.value));
+      }
+      setupSearch();
 
       // ---- Data fetching from GitHub JSON ----
       async function fetchChannelsJSON(country) {
