@@ -13,6 +13,7 @@
   let activePlatform    = '';
   let activeGenre       = '';
   let activeView        = 'browse';
+  let epgLoadPromise    = null; // tracks in-flight or completed EPG fetch
 
   // ============================================================
   // SESSION CACHE
@@ -104,6 +105,20 @@
       console.warn('[Programs] fetch failed:', err.message);
       return [];
     }
+  }
+
+  // Lazy EPG loader — deduplicates concurrent requests, respects sessionStorage cache
+  function ensureEPG() {
+    if (allPrograms.length) return Promise.resolve(allPrograms);
+    if (epgLoadPromise) return epgLoadPromise;
+    epgLoadPromise = fetchPrograms()
+      .then(programs => { allPrograms = programs; return programs; })
+      .catch(err => {
+        console.warn('[EPG] load failed:', err.message);
+        epgLoadPromise = null; // allow a retry next time
+        return [];
+      });
+    return epgLoadPromise;
   }
 
   // Platform-filtered programs — in-memory, no extra fetch needed
@@ -827,15 +842,45 @@
     btnGuide.className = 'view-toggle-btn';
     btnGuide.textContent = '📺 Live Guide';
 
-    const setView = v => {
-      activeView = v;
-      btnBrowse.classList.toggle('active', v === 'browse');
-      btnGuide.classList.toggle('active', v === 'guide');
+    btnBrowse.addEventListener('click', () => {
+      activeView = 'browse';
+      btnBrowse.classList.add('active');
+      btnGuide.classList.remove('active');
       applyFilters();
-    };
+    });
 
-    btnBrowse.addEventListener('click', () => setView('browse'));
-    btnGuide.addEventListener('click', () => setView('guide'));
+    btnGuide.addEventListener('click', async () => {
+      if (activeView === 'guide') return;
+      activeView = 'guide';
+      btnBrowse.classList.remove('active');
+      btnGuide.classList.add('active');
+
+      // If EPG is already cached, render immediately
+      if (allPrograms.length) { applyFilters(); return; }
+
+      // Show loading state on button and in the guide section
+      btnGuide.disabled = true;
+      btnGuide.textContent = '⏳ Loading…';
+
+      const guideSection = document.getElementById('guideSection');
+      const content      = document.getElementById('channelContent');
+      const heroSection  = document.getElementById('platformHero');
+      const epgSection   = document.getElementById('epgSection');
+      if (content)      content.style.display      = 'none';
+      if (heroSection)  heroSection.style.display  = 'none';
+      if (epgSection)   epgSection.style.display   = 'none';
+      if (guideSection) {
+        guideSection.style.display = 'block';
+        guideSection.innerHTML =
+          '<div class="guide-loading"><div class="redirect-spinner"></div><p>Loading live guide…</p></div>';
+      }
+
+      await ensureEPG();
+
+      btnGuide.disabled = false;
+      btnGuide.textContent = '📺 Live Guide';
+      applyFilters();
+    });
 
     // Mobile-only Suggest button (sits next to Live Guide; hidden on desktop via CSS)
     const suggestBtn = document.createElement('a');
@@ -1158,7 +1203,10 @@
       if (content)      content.style.display = '';
 
       render(filtered, epgMap);
-      await renderPlatformHero(activePlatform, allPrograms, channelMap);
+      // Only render the hero once EPG is available; until then the skeleton stays visible
+      if (allPrograms.length) {
+        await renderPlatformHero(activePlatform, allPrograms, channelMap);
+      }
       if (epgSection) epgSection.style.display = 'none';
     }
   }
@@ -1406,17 +1454,22 @@
 
     document.getElementById('searchInput')?.addEventListener('input', debounce(applyFilters, 280));
 
-    // Phase 2 — EPG in background: update hero and card badges when ready
-    fetchPrograms()
-      .then(programs => {
-        allPrograms = programs;
-        applyFilters();
-      })
-      .catch(err => {
-        console.warn('[EPG] background load failed:', err.message);
-        const section = document.getElementById('platformHero');
-        if (section) section.style.display = 'none';
-      });
+    // Phase 2 — lazy EPG: fetch only when "What's On Now" enters the viewport
+    // (or immediately if IntersectionObserver isn't supported)
+    const heroEl = document.getElementById('platformHero');
+    if (heroEl) {
+      if ('IntersectionObserver' in window) {
+        const io = new IntersectionObserver(entries => {
+          if (entries[0].isIntersecting) {
+            io.disconnect();
+            ensureEPG().then(() => applyFilters());
+          }
+        }, { rootMargin: '200px' });
+        io.observe(heroEl);
+      } else {
+        ensureEPG().then(() => applyFilters());
+      }
+    }
   }
 
   if (document.readyState === 'loading') {
