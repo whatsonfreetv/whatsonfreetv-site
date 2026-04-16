@@ -1,13 +1,13 @@
 // Netlify Function — Server-side EPG filter proxy
-// Fetches the full EPG JSON from GitHub, filters to a time window, and returns
-// a slimmed-down payload so mobile devices don't have to parse 48 k+ records.
+// Fetches the full EPG JSON from GitHub, filters to a tight time window,
+// strips unused fields, and caps the result so the response stays well under 1 MB.
 //
 // Query params:
 //   country  — "US" or "CA" (default "US")
-//   hours    — how many hours ahead to include (default 6)
 
 const DATA_BASE   = 'https://raw.githubusercontent.com/whatsonfreetv/whatsonfreetv-data/main';
 const PLACEHOLDER = 'program information currently unavailable';
+const MAX_PROGRAMS = 3000;
 
 const CORS_HEADERS = {
   'Access-Control-Allow-Origin':  '*',
@@ -33,7 +33,6 @@ exports.handler = async (event) => {
   const country = (['US', 'CA'].includes((params.country || '').toUpperCase()))
     ? params.country.toUpperCase()
     : 'US';
-  const hours   = Math.min(Math.max(parseInt(params.hours, 10) || 6, 1), 24);
 
   try {
     const url = `${DATA_BASE}/epg-${country.toLowerCase()}.json`;
@@ -44,18 +43,32 @@ exports.handler = async (event) => {
     const programs = json.programs || [];
 
     const now      = Date.now();
-    const lookback = now - 30 * 60 * 1000;              // 30 min ago
-    const horizon  = now + hours * 60 * 60 * 1000;      // hours from now
+    const lookback = now -  15 * 60 * 1000;   // 15 min ago  — drop recently-ended shows
+    const horizon  = now +   4 * 60 * 60 * 1000; // +4 hours — enough for the mobile guide
 
-    const filtered = programs.filter(p => {
-      const end   = p.end   ? new Date(p.end).getTime()   : NaN;
-      const start = p.start ? new Date(p.start).getTime() : NaN;
-      if (isNaN(end) || isNaN(start)) return false;
-      if (end <= lookback || start >= horizon) return false;
-      const title = (p.title || '').trim();
-      if (!title || title.toLowerCase().startsWith(PLACEHOLDER)) return false;
-      return true;
-    });
+    // 1. Filter to the time window and strip placeholder titles
+    // 2. Sort by start time ascending
+    // 3. Hard-cap at MAX_PROGRAMS to guarantee the response fits within Netlify's 6 MB limit
+    // 4. Project to the five fields the client actually uses — drop channelLogo, description, etc.
+    const slimmed = programs
+      .filter(p => {
+        const end   = p.end   ? new Date(p.end).getTime()   : NaN;
+        const start = p.start ? new Date(p.start).getTime() : NaN;
+        if (isNaN(end) || isNaN(start)) return false;
+        if (end <= lookback || start >= horizon) return false;
+        const title = (p.title || '').trim();
+        if (!title || title.toLowerCase().startsWith(PLACEHOLDER)) return false;
+        return true;
+      })
+      .sort((a, b) => (a.start < b.start ? -1 : a.start > b.start ? 1 : 0))
+      .slice(0, MAX_PROGRAMS)
+      .map(p => ({
+        channel:  p.channel  || '',
+        title:    p.title    || '',
+        start:    p.start    || '',
+        end:      p.end      || '',
+        platform: p.platform || '',
+      }));
 
     return {
       statusCode: 200,
@@ -64,11 +77,7 @@ exports.handler = async (event) => {
         'Content-Type':  'application/json',
         'Cache-Control': 'public, max-age=300',
       },
-      body: JSON.stringify({
-        programs: filtered,
-        count:    filtered.length,
-        filtered: true,
-      }),
+      body: JSON.stringify({ programs: slimmed, count: slimmed.length, filtered: true }),
     };
   } catch (err) {
     console.error('[epg function] error:', err.message);
