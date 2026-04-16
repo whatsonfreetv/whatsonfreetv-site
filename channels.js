@@ -63,8 +63,32 @@
     return records;
   }
 
+  // Process a large array in time-sliced batches to keep the main thread free.
+  // filterFn(item) → bool, mapFn(item) → transformed item.
+  function filterMapAsync(items, batchSize, filterFn, mapFn) {
+    return new Promise(resolve => {
+      const results = [];
+      let i = 0;
+      function step() {
+        const end = Math.min(i + batchSize, items.length);
+        for (; i < end; i++) {
+          const item = items[i];
+          if (filterFn(item)) results.push(mapFn(item));
+        }
+        if (i < items.length) {
+          setTimeout(step, 0); // yield to browser between batches
+        } else {
+          resolve(results);
+        }
+      }
+      step();
+    });
+  }
+
   async function fetchPrograms() {
-    const key = `woftv_prog_${COUNTRY}`;
+    const isMobile = window.innerWidth < 768;
+    // Separate cache keys — mobile gets a narrower time window than desktop
+    const key = `woftv_prog_${COUNTRY}${isMobile ? '_m' : ''}`;
     const cached = getCached(key);
     if (cached) return cached;
 
@@ -73,23 +97,31 @@
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       const json = await res.json();
 
-      // Keep programs airing now or starting within the next 12 hours so the
-      // Live Guide can navigate forward well beyond the initial 6-hour view.
-      const now     = Date.now();
-      const horizon = now + 12 * 60 * 60 * 1000;
-
+      const now  = Date.now();
       const PLACEHOLDER = 'program information currently unavailable';
-      const records = (json.programs || [])
-        .filter(p => {
+
+      // Mobile: keep only programs overlapping the guide window [-30 min, +4 h].
+      // This cuts ~48 k programs down to ~3–5 k, preventing mobile Safari from freezing.
+      // Desktop: keep 12 h so the guide can scroll well forward.
+      const horizon  = isMobile ? now + 6  * 60 * 60 * 1000 : now + 12 * 60 * 60 * 1000;
+      const lookback = isMobile ? now - 30 * 60 * 1000       : now;
+
+      const programs = json.programs || [];
+
+      const records = await filterMapAsync(
+        programs,
+        500, // batch size — yields to browser between every 500 items
+        p => {
           const end   = p.end   ? new Date(p.end).getTime()   : NaN;
           const start = p.start ? new Date(p.start).getTime() : NaN;
-          if (isNaN(end) || isNaN(start) || end <= now || start >= horizon) return false;
-          // Drop Tubi placeholder entries and any program with no title
+          if (isNaN(end) || isNaN(start)) return false;
+          // Program must overlap the display window
+          if (end <= lookback || start >= horizon) return false;
           const title = (p.title || '').trim();
           if (!title || title.toLowerCase().startsWith(PLACEHOLDER)) return false;
           return true;
-        })
-        .map(p => ({
+        },
+        p => ({
           fields: {
             'Show Title': p.title    || '',
             'Channel':    p.channel  || '',
@@ -97,7 +129,8 @@
             'End Time':   p.end      || '',
             'Platform':   p.platform || ''
           }
-        }));
+        })
+      );
 
       setCache(key, records);
       return records;
@@ -871,8 +904,11 @@
       if (epgSection)   epgSection.style.display   = 'none';
       if (guideSection) {
         guideSection.style.display = 'block';
+        const loadingMsg = window.innerWidth < 768
+          ? 'Loading live guide…<br><span class="guide-loading-sub">This may take a moment on mobile</span>'
+          : 'Loading live guide…';
         guideSection.innerHTML =
-          '<div class="guide-loading"><div class="redirect-spinner"></div><p>Loading live guide…</p></div>';
+          `<div class="guide-loading"><div class="redirect-spinner"></div><p>${loadingMsg}</p></div>`;
       }
 
       await ensureEPG();

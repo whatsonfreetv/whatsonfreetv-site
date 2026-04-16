@@ -79,6 +79,7 @@
 
       // Current channel info — set in load(), read by openShowModal
       let _channel = { name: '', logo: '', initial: '' };
+      let _backdropApplied = false; // prevent double-application
 
       // ---- Helpers ----
       function esc(str) {
@@ -245,6 +246,42 @@
         } catch (_) { return null; }
       }
 
+      async function fetchTVmazeBackdrop(showId, fallbackUrl) {
+        const key = `tvmaze_bg_${showId}`;
+        const cached = sessionStorage.getItem(key);
+        if (cached) return cached === 'null' ? null : cached;
+        let result = fallbackUrl || null;
+        try {
+          const res = await fetch(`https://api.tvmaze.com/shows/${showId}/images`);
+          if (res.ok) {
+            const images = await res.json();
+            const bg = images.find(img => img.type === 'background');
+            if (bg) result = bg.resolutions?.original?.url || bg.resolutions?.medium?.url || result;
+          }
+        } catch (_) {}
+        try { sessionStorage.setItem(key, result ?? 'null'); } catch (_) {}
+        return result;
+      }
+
+      function applyHeroBackdrop(imageUrl) {
+        if (_backdropApplied || !imageUrl) return;
+        _backdropApplied = true;
+        const hero = document.getElementById('detailHero');
+        if (!hero) return;
+        const img = new Image();
+        img.onload = () => {
+          const backdrop = document.createElement('div');
+          backdrop.className = 'detail-hero-backdrop';
+          backdrop.style.backgroundImage = `url(${JSON.stringify(imageUrl)})`;
+          hero.insertBefore(backdrop, hero.firstChild);
+          hero.classList.add('has-backdrop');
+          // Fade in after paint so the transition plays
+          requestAnimationFrame(() => requestAnimationFrame(() => backdrop.classList.add('loaded')));
+        };
+        img.onerror = () => { _backdropApplied = false; }; // let it retry on next call
+        img.src = imageUrl;
+      }
+
       async function fetchTVmazeCast(showId) {
         try {
           const res = await fetch(`https://api.tvmaze.com/shows/${showId}/cast`);
@@ -408,6 +445,11 @@
             if (rating && ratingEl) {
               ratingEl.textContent = `⭐ ${rating}/10`;
               ratingEl.style.display = 'inline';
+            }
+            // Apply cinematic backdrop for multi-show channels too
+            if (result.source === 'tvmaze' && result.data?.id) {
+              fetchTVmazeBackdrop(result.data.id, result.data.image?.original || null)
+                .then(applyHeroBackdrop);
             }
           });
         }
@@ -677,6 +719,9 @@
           renderUpNext(programs, container);
           return;
         }
+
+        // Kick off backdrop fetch in background — non-blocking
+        fetchTVmazeBackdrop(show.id, show.image?.original || null).then(applyHeroBackdrop);
 
         const [cast, episodes] = await Promise.all([
           fetchTVmazeCast(show.id),

@@ -385,6 +385,10 @@ input, select, textarea { font-family: inherit; }
   background: #1a1a1a;
   padding: 8px 10px;
   border-radius: 0 0 var(--radius-lg) var(--radius-lg);
+  min-height: 50px;              /* uniform height whether or not EPG is present */
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between; /* name always top-aligned; EPG (if any) anchors to bottom */
 }
 
 .card-label {
@@ -509,12 +513,90 @@ input, select, textarea { font-family: inherit; }
 }
 
 .detail-hero {
-  padding: calc(var(--nav-height) + 32px) 48px 40px;
+  padding: calc(var(--nav-height) + 32px) 48px 24px;
   background: linear-gradient(135deg, #0a0a0a 0%, #1a0a0a 100%);
   border-bottom: 1px solid var(--border);
   display: flex;
   gap: 48px;
   align-items: flex-start;
+  position: relative;
+  overflow: hidden;
+  min-height: 300px;
+}
+
+/* ---- Cinematic backdrop (injected by JS when TVmaze background image is available) ---- */
+.detail-hero-backdrop {
+  position: absolute;
+  top: var(--nav-height); /* start below nav so image doesn't bleed through transparent nav bottom */
+  right: -30px;           /* bleed past side/bottom edges so blur fringe is clipped by overflow:hidden */
+  bottom: -30px;
+  left: -30px;
+  background-size: cover;
+  background-position: center top;
+  filter: blur(22px);
+  z-index: 0;
+  transition: opacity 0.5s ease;
+  opacity: 0;
+}
+
+.detail-hero-backdrop.loaded {
+  opacity: 1;
+}
+
+/* Two-axis overlay: left-side dark panel for text legibility + bottom fade into page bg */
+.detail-hero-backdrop::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(to right,  rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.50) 50%, rgba(0,0,0,0) 100%),
+    linear-gradient(to bottom, rgba(0,0,0,0.30) 0%, rgba(20,20,20,1.00) 100%);
+}
+
+/* Lift content above the backdrop only when a backdrop is active */
+.detail-hero.has-backdrop .detail-logo-wrap,
+.detail-hero.has-backdrop .detail-info {
+  position: relative;
+  z-index: 1;
+}
+
+/* When backdrop is active, boost text contrast across all hero text */
+.detail-hero.has-backdrop .detail-channel-name {
+  text-shadow: 0 2px 16px rgba(0, 0, 0, 0.95), 0 1px 4px rgba(0, 0, 0, 0.8);
+}
+
+.detail-hero.has-backdrop .detail-description {
+  color: rgba(255, 255, 255, 0.88);
+  text-shadow: 0 1px 8px rgba(0, 0, 0, 0.85);
+}
+
+/* "Back to US/CA" link — always white against any backdrop image */
+.detail-hero.has-backdrop .detail-back {
+  color: rgba(255, 255, 255, 0.9);
+  text-shadow: 0 1px 8px rgba(0, 0, 0, 0.95);
+}
+.detail-hero.has-backdrop .detail-back:hover {
+  color: #fff;
+}
+
+/* GENRE / AVAILABLE ON labels — brighter against backdrop */
+.detail-hero.has-backdrop .detail-section-label {
+  color: rgba(255, 255, 255, 0.72);
+  text-shadow: 0 1px 6px rgba(0, 0, 0, 0.9);
+}
+
+/* Genre badges — darken background so text pops off any image color */
+.detail-hero.has-backdrop .badge-genre {
+  background: rgba(0, 0, 0, 0.45) !important;
+  border-color: rgba(255, 255, 255, 0.22) !important;
+  color: rgba(255, 255, 255, 0.88) !important;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.8);
+}
+
+/* Platform badges already have solid brand colors; just add text-shadow for safety */
+.detail-hero.has-backdrop .badge-platform,
+.detail-hero.has-backdrop .badge-country {
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.6);
 }
 
 .detail-logo-wrap {
@@ -1189,7 +1271,7 @@ textarea.form-control {
 
   .detail-hero {
     flex-direction: column;
-    padding: 100px 20px 32px;
+    padding: 100px 20px 20px;
     gap: 24px;
   }
 
@@ -1904,6 +1986,14 @@ textarea.form-control {
   padding: 80px 20px;
   color: var(--text-muted);
   font-size: 0.95rem;
+  text-align: center;
+}
+
+.guide-loading-sub {
+  display: block;
+  font-size: 0.78rem;
+  color: var(--text-dim);
+  margin-top: 4px;
 }
 
 .guide-wrap {
