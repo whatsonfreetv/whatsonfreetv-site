@@ -248,12 +248,27 @@
   // ============================================================
   // TIME UTILITIES
   // ============================================================
-  function timeRemaining(endTimeStr) {
-    const mins = Math.round((new Date(endTimeStr).getTime() - Date.now()) / 60000);
-    if (mins <= 0 || mins > 360) return null; // skip bad/stale data > 6 hours
-    if (mins < 60) return `ends in ${mins}m`;
-    const h = Math.floor(mins / 60), m = mins % 60;
-    return `ends in ${h}h${m > 0 ? ' ' + m + 'm' : ''}`;
+  function timeRemaining(startTimeStr, endTimeStr) {
+    const now     = Date.now();
+    const startMs = new Date(startTimeStr).getTime();
+    const endMs   = new Date(endTimeStr).getTime();
+    if (isNaN(startMs) || isNaN(endMs)) return null;
+
+    if (now < startMs) {
+      // Show hasn't started yet — display "starts in X"
+      const mins = Math.round((startMs - now) / 60000);
+      if (mins <= 0 || mins > 720) return null;
+      if (mins < 60) return `starts in ${mins}m`;
+      const h = Math.floor(mins / 60), m = mins % 60;
+      return `starts in ${h}h${m > 0 ? ' ' + m + 'm' : ''}`;
+    } else {
+      // Show is currently airing — display "ends in X"
+      const mins = Math.round((endMs - now) / 60000);
+      if (mins <= 0 || mins > 360) return null;
+      if (mins < 60) return `ends in ${mins}m`;
+      const h = Math.floor(mins / 60), m = mins % 60;
+      return `ends in ${h}h${m > 0 ? ' ' + m + 'm' : ''}`;
+    }
   }
 
   function formatTime12hr(dateStr) {
@@ -405,7 +420,7 @@
     const f          = program.fields;
     const channelName = (f['Channel'] || '').trim();
     const showTitle   = f['Show Title'] || 'Unknown Show';
-    const remaining   = f['End Time'] ? timeRemaining(f['End Time']) : null;
+    const remaining   = (f['Start Time'] && f['End Time']) ? timeRemaining(f['Start Time'], f['End Time']) : null;
     const platform    = (f['Platform'] || '').trim();
     const logo        = (channel?.fields['Logo URL'] || '').trim();
     const initial     = (channelName || showTitle).trim().charAt(0).toUpperCase();
@@ -461,7 +476,7 @@
     const f           = program.fields;
     const channelName = (f['Channel'] || '').trim();
     const showTitle   = f['Show Title'] || 'Unknown Show';
-    const remaining   = f['End Time'] ? timeRemaining(f['End Time']) : null;
+    const remaining   = (f['Start Time'] && f['End Time']) ? timeRemaining(f['Start Time'], f['End Time']) : null;
     const platform    = (f['Platform'] || '').trim();
 
     const channel = channelMap.get(normalizeName(channelName));
@@ -525,7 +540,7 @@
     const f           = program.fields;
     const channelName = (f['Channel'] || '').trim();
     const showTitle   = f['Show Title'] || 'Unknown Show';
-    const remaining   = f['End Time'] ? timeRemaining(f['End Time']) : null;
+    const remaining   = (f['Start Time'] && f['End Time']) ? timeRemaining(f['Start Time'], f['End Time']) : null;
 
     const channel = channelMap.get(normalizeName(channelName));
     const logo    = (channel?.fields['Logo URL'] || '').trim();
@@ -832,6 +847,11 @@
     const noResults = document.getElementById('noResults');
     if (!content) return;
 
+    // Skip full DOM rebuild if the channel set and EPG data haven't changed
+    const rKey = channels.map(c => c.id).join(',') + ':' + allPrograms.length;
+    if (content.dataset.renderKey === rKey) return;
+    content.dataset.renderKey = rKey;
+
     content.innerHTML = '';
 
     if (!channels.length) {
@@ -895,47 +915,28 @@
       applyFilters();
     });
 
-    btnGuide.addEventListener('click', async () => {
+    btnGuide.addEventListener('click', () => {
       if (activeView === 'guide') return;
       activeView = 'guide';
       btnBrowse.classList.remove('active');
       btnGuide.classList.add('active');
 
-      // If EPG is already cached, render immediately
-      if (allPrograms.length) { applyFilters(); return; }
-
-      // Show loading state on button and in the guide section
-      btnGuide.disabled = true;
-      btnGuide.textContent = '⏳ Loading…';
-
-      const guideSection = document.getElementById('guideSection');
-      const content      = document.getElementById('channelContent');
-      const heroSection  = document.getElementById('platformHero');
-      const epgSection   = document.getElementById('epgSection');
-      if (content)      content.style.display      = 'none';
-      if (heroSection)  heroSection.style.display  = 'none';
-      if (epgSection)   epgSection.style.display   = 'none';
-      if (guideSection) {
-        guideSection.style.display = 'block';
-        const loadingMsg = window.innerWidth < 768
-          ? 'Loading live guide…<br><span class="guide-loading-sub">This may take a moment on mobile</span>'
-          : 'Loading live guide…';
-        guideSection.innerHTML =
-          `<div class="guide-loading"><div class="redirect-spinner"></div><p>${loadingMsg}</p></div>`;
-      }
-
-      await ensureEPG();
-
-      btnGuide.disabled = false;
-      btnGuide.textContent = '📺 Live Guide';
+      // Switch immediately — renderGuide shows a spinner if EPG isn't ready yet
       applyFilters();
+
+      // If EPG not loaded yet, kick it off in the background and re-render when done
+      if (!allPrograms.length) {
+        ensureEPG().then(() => {
+          if (activeView === 'guide') applyFilters();
+        });
+      }
     });
 
     bar.appendChild(btnBrowse);
     bar.appendChild(btnGuide);
   }
 
-  function renderGuide(channels, programs, channelMap) {
+  async function renderGuide(channels, programs, channelMap) {
     const section = document.getElementById('guideSection');
     if (!section) return;
 
@@ -947,23 +948,18 @@
     const minStart    = now - 30 * 60 * 1000;
     const viewStartMs = minStart;
 
-    // Determine view width from available data, capped at 12 hours
+    // Determine view width from available data, capped at 12 hours FROM NOW
+    // (not from viewStartMs — that would only give 11.5 h since viewStartMs is 30 min ago)
     let viewEndMs = viewStartMs + 6 * 60 * 60 * 1000; // minimum 6 hours
     programs.forEach(p => {
       const end = new Date(p.fields['End Time']).getTime();
       if (!isNaN(end) && end > viewEndMs) viewEndMs = end;
     });
-    viewEndMs = Math.min(viewEndMs, viewStartMs + 12 * 60 * 60 * 1000);
+    viewEndMs = Math.min(viewEndMs, now + 12 * 60 * 60 * 1000);
     const VIEW_MINS = Math.ceil((viewEndMs - viewStartMs) / 60000);
 
     // Now-line position (now is always within the window since we start 30 min ago)
     const nowOffsetPx = Math.round((now - viewStartMs) / 60000 * PX_MIN);
-
-    // Does any loaded program start after this window ends?
-    const hasMoreData = programs.some(p => {
-      const start = new Date(p.fields['Start Time']).getTime();
-      return !isNaN(start) && start >= viewEndMs;
-    });
 
     // Group programs by channelName|platform key within the view window
     const progMap = new Map();
@@ -1002,15 +998,30 @@
       ? guideRows.filter(r => r.platform.toLowerCase() === activePlatform.toLowerCase())
       : guideRows;
 
+    // Skip full DOM rebuild if channels, program count, platform filter, and time bucket
+    // (5-minute granularity) are all unchanged — makes Browse ↔ Live Guide switching instant
+    const rKey = channels.map(c => c.id).join(',') + ':' + programs.length
+      + ':' + (activePlatform || '') + ':' + Math.floor(Date.now() / 300000);
+    if (section.dataset.renderKey === rKey) return;
+    section.dataset.renderKey = rKey;
+
     section.innerHTML = '';
 
     if (!renderedRows.length) {
-      section.innerHTML = `
-        <div class="state-box" style="margin:40px auto;max-width:400px">
-          <div class="state-icon">📺</div>
-          <div class="state-title">${programs.length ? 'No guide data for current filters' : 'Live guide loading\u2026'}</div>
-          <div class="state-msg">${programs.length ? 'Try a different filter or check back later.' : 'EPG data is loading in the background.'}</div>
-        </div>`;
+      if (!programs.length) {
+        section.innerHTML = `
+          <div class="guide-loading">
+            <div class="redirect-spinner"></div>
+            <p>Loading live guide…</p>
+          </div>`;
+      } else {
+        section.innerHTML = `
+          <div class="state-box" style="margin:40px auto;max-width:400px">
+            <div class="state-icon">📺</div>
+            <div class="state-title">No guide data for current filters</div>
+            <div class="state-msg">Try a different filter or check back later.</div>
+          </div>`;
+      }
 
       return;
     }
@@ -1063,7 +1074,29 @@
     const body = document.createElement('div');
     body.className = 'guide-body';
 
-    renderedRows.forEach(({ ch, platform, key }) => {
+    // Attach the skeleton structure to the DOM now so the time header is visible
+    // immediately while rows stream in progressively via the async loop below.
+    inner.appendChild(body);
+    bodyScroll.appendChild(inner);
+    wrap.appendChild(bodyScroll);
+    section.innerHTML = '';          // clear spinner
+    section.appendChild(wrap);
+
+    // Sync horizontal scroll → time header (attached early so it works during streaming)
+    bodyScroll.addEventListener('scroll', () => {
+      timeViewport.scrollLeft = bodyScroll.scrollLeft;
+    }, { passive: true });
+
+    // Build rows in async chunks (15 at a time) so the main thread yields between
+    // batches and the browser can stay responsive instead of going blank for 8+ seconds.
+    const CHUNK = 15;
+    for (let ci = 0; ci < renderedRows.length; ci += CHUNK) {
+      if (ci > 0) {
+        await new Promise(r => setTimeout(r, 0));
+        // Abort if user navigated away or filters changed while we were building
+        if (activeView !== 'guide' || section.dataset.renderKey !== rKey) return;
+      }
+      renderedRows.slice(ci, ci + CHUNK).forEach(({ ch, platform, key }) => {
       const f       = ch.fields;
       const name    = (f['Channel Name'] || '').trim();
       const logo    = (f['Logo URL'] || '').trim();
@@ -1177,32 +1210,23 @@
       row.appendChild(chanCell);
       row.appendChild(progsCell);
       body.appendChild(row);
-    });
+      }); // end chunk forEach
+    } // end chunk for-loop
 
-    // End-of-schedule message — only when there's genuinely no more data ahead
-    if (!hasMoreData) {
-      const endMsg = document.createElement('div');
-      endMsg.className = 'guide-end-message';
-      endMsg.textContent = 'No more programs. Schedule updates daily — check back tomorrow for full programming.';
-      inner.appendChild(endMsg);
-    }
-
-    // Red now-line — marks current time
+    // Red now-line — marks current time (appended last so it sits on top of rows)
     const nowLine = document.createElement('div');
     nowLine.className = 'guide-now-line';
     nowLine.style.left = (CHAN_W + nowOffsetPx) + 'px';
     body.appendChild(nowLine);
 
-    inner.appendChild(body);
-    bodyScroll.appendChild(inner);
-    wrap.appendChild(bodyScroll);
-
-    // Sync horizontal scroll → time header
-    bodyScroll.addEventListener('scroll', () => {
-      timeViewport.scrollLeft = bodyScroll.scrollLeft;
-    }, { passive: true });
-
-    section.appendChild(wrap);
+    // End-of-schedule message — sits OUTSIDE the horizontal scroll container so it
+    // spans the full section width and is always visible below the guide grid.
+    // Always shown: the data window is always finite (12 h), so there is always
+    // more programming beyond what's displayed.
+    const endMsg = document.createElement('div');
+    endMsg.className = 'guide-end-message';
+    endMsg.textContent = 'Schedule updates 4x daily. Check back soon for more programming.';
+    wrap.appendChild(endMsg);
   }
 
   // ============================================================
@@ -1237,7 +1261,19 @@
       if (heroSection) heroSection.style.display = 'none';
       if (guideSection) {
         guideSection.style.display = 'block';
-        renderGuide(filtered, allPrograms, channelMap);
+
+        // Check if guide needs a rebuild (same key renderGuide uses internally).
+        // If yes, paint the spinner first and yield a frame so the browser can
+        // display it before the heavy synchronous DOM construction blocks the thread.
+        const guideKey = filtered.map(c => c.id).join(',') + ':' + allPrograms.length
+          + ':' + (activePlatform || '') + ':' + Math.floor(Date.now() / 300000);
+        if (guideSection.dataset.renderKey !== guideKey) {
+          guideSection.innerHTML =
+            `<div class="guide-loading"><div class="redirect-spinner"></div><p>Loading live guide\u2026</p></div>`;
+          await new Promise(r => setTimeout(r, 0));
+        }
+
+        await renderGuide(filtered, allPrograms, channelMap);
       }
     } else {
       if (guideSection) guideSection.style.display = 'none';
@@ -1495,10 +1531,10 @@
 
     document.getElementById('searchInput')?.addEventListener('input', debounce(applyFilters, 280));
 
-    // Phase 2a — background EPG pre-warm: kick off the fetch ~1.5 s after the channel grid
+    // Phase 2a — background EPG pre-warm: kick off the fetch ~500 ms after the channel grid
     // renders so the Live Guide switch is near-instant instead of waiting 5+ seconds.
     // ensureEPG() deduplicates concurrent calls, so this is safe alongside Phase 2b below.
-    setTimeout(() => ensureEPG(), 1500);
+    setTimeout(() => ensureEPG(), 500);
 
     // Phase 2b — lazy EPG: also trigger when "What's On Now" enters the viewport
     // (or immediately if IntersectionObserver isn't supported)
