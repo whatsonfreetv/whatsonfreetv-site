@@ -1230,10 +1230,8 @@ textarea.form-control {
   .navbar {
     padding: 0 20px;
     gap: 12px;
-    flex-wrap: wrap;
-    height: auto;
-    padding-top: 12px;
-    padding-bottom: 12px;
+    flex-wrap: nowrap; /* keep all items on one line — prevents spacer from pushing search+suggest off-screen on landscape phones */
+    height: var(--nav-height);
   }
 
   .navbar-logo { font-size: 1.2rem; }

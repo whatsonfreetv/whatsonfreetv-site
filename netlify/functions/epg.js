@@ -42,9 +42,11 @@ exports.handler = async (event) => {
     const json     = await res.json();
     const programs = json.programs || [];
 
-    const now      = Date.now();
-    const lookback = now -  15 * 60 * 1000;   // 15 min ago  — drop recently-ended shows
-    const horizon  = now +   4 * 60 * 60 * 1000; // +4 hours — enough for the mobile guide
+    const now      = Date.now();                    // UTC ms — Date.now() is always UTC
+    const lookback = now -  30 * 60 * 1000;         // -30 min — keep recently-started shows
+    const horizon  = now +   6 * 60 * 60 * 1000;    // +6 hours — enough forward coverage
+
+    console.log(`[epg] country=${country} now=${new Date(now).toISOString()} lookback=${new Date(lookback).toISOString()} horizon=${new Date(horizon).toISOString()}`);
 
     // 1. Filter to the time window and strip placeholder titles
     // 2. Sort by start time ascending

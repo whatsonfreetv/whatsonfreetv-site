@@ -1502,7 +1502,12 @@
 
     document.getElementById('searchInput')?.addEventListener('input', debounce(applyFilters, 280));
 
-    // Phase 2 — lazy EPG: fetch only when "What's On Now" enters the viewport
+    // Phase 2a — background EPG pre-warm: kick off the fetch ~1.5 s after the channel grid
+    // renders so the Live Guide switch is near-instant instead of waiting 5+ seconds.
+    // ensureEPG() deduplicates concurrent calls, so this is safe alongside Phase 2b below.
+    setTimeout(() => ensureEPG(), 1500);
+
+    // Phase 2b — lazy EPG: also trigger when "What's On Now" enters the viewport
     // (or immediately if IntersectionObserver isn't supported)
     const heroEl = document.getElementById('platformHero');
     if (heroEl) {
