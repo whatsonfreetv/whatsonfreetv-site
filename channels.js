@@ -184,10 +184,10 @@
   // Next program for a channel — in-memory lookup
   function fetchNextProgram(channelName) {
     const now   = Date.now();
-    const lower = channelName.toLowerCase();
+    const lower = normalizeName(channelName);
     const next  = allPrograms
       .filter(p => {
-        if ((p.fields['Channel'] || '').toLowerCase() !== lower) return false;
+        if (normalizeName(p.fields['Channel']) !== lower) return false;
         const start = new Date(p.fields['Start Time']).getTime();
         return !isNaN(start) && start > now;
       })
@@ -215,12 +215,23 @@
     });
   }
 
+  // Normalize a channel name for map keys / lookups.
+  // Lowercase + trim + collapse internal whitespace + strip non-alphanumeric-space chars.
+  // Applied consistently when BUILDING maps and when LOOKING UP — must be identical both ways.
+  function normalizeName(str) {
+    return (str || '')
+      .toLowerCase()
+      .trim()
+      .replace(/[^a-z0-9 ]/g, '')   // strip special chars (accents, punctuation, &, +, etc.)
+      .replace(/\s+/g, ' ');         // collapse runs of whitespace to a single space
+  }
+
   // Map: channelNameLower → { current: program|null, next: program|null }
   function buildEPGMap(programs) {
     const now = Date.now();
     const map = new Map();
     programs.forEach(p => {
-      const name  = (p.fields['Channel'] || '').toLowerCase().trim();
+      const name  = normalizeName(p.fields['Channel']);
       if (!name) return;
       const start = new Date(p.fields['Start Time']).getTime();
       const end   = new Date(p.fields['End Time']).getTime();
@@ -241,11 +252,11 @@
     return map;
   }
 
-  // Map: channelNameLower → channel record
+  // Map: normalizedName → channel record
   function buildChannelMap(channels) {
     const map = new Map();
     channels.forEach(ch => {
-      map.set((ch.fields['Channel Name'] || '').toLowerCase().trim(), ch);
+      map.set(normalizeName(ch.fields['Channel Name']), ch);
     });
     return map;
   }
@@ -469,7 +480,7 @@
     const remaining   = f['End Time'] ? timeRemaining(f['End Time']) : null;
     const platform    = (f['Platform'] || '').trim();
 
-    const channel = channelMap.get(channelName.toLowerCase());
+    const channel = channelMap.get(normalizeName(channelName));
     const logo    = (channel?.fields['Logo URL'] || '').trim();
     const initial = (channelName || showTitle).trim().charAt(0).toUpperCase();
 
@@ -532,7 +543,7 @@
     const showTitle   = f['Show Title'] || 'Unknown Show';
     const remaining   = f['End Time'] ? timeRemaining(f['End Time']) : null;
 
-    const channel = channelMap.get(channelName.toLowerCase());
+    const channel = channelMap.get(normalizeName(channelName));
     const logo    = (channel?.fields['Logo URL'] || '').trim();
     const initial = (channelName || showTitle).trim().charAt(0).toUpperCase();
 
@@ -584,17 +595,17 @@
     const platformNames = platform ? new Set(
       allChannels
         .filter(ch => (ch.fields['Platform'] || []).includes(platform))
-        .map(ch => (ch.fields['Channel Name'] || '').toLowerCase().trim())
+        .map(ch => normalizeName(ch.fields['Channel Name']))
     ) : null;
 
     const genreNames = activeGenre ? new Set(
       allChannels
         .filter(ch => (ch.fields['Genre'] || []).includes(activeGenre))
-        .map(ch => (ch.fields['Channel Name'] || '').toLowerCase().trim())
+        .map(ch => normalizeName(ch.fields['Channel Name']))
     ) : null;
 
     const airing = getAiring(pool).filter(p => {
-      const name = (p.fields['Channel'] || '').toLowerCase().trim();
+      const name = normalizeName(p.fields['Channel']);
       if (platformNames && !platformNames.has(name)) return false;
       if (genreNames   && !genreNames.has(name))    return false;
       return true;
@@ -820,8 +831,7 @@
 
     const row = section.querySelector('.channels-row');
     channels.forEach(ch => {
-      const name = (ch.fields['Channel Name'] || '').toLowerCase();
-      row.appendChild(buildCard(ch, epgMap.get(name)));
+      row.appendChild(buildCard(ch, epgMap.get(normalizeName(ch.fields['Channel Name']))));
     });
 
     const scrollAmt = 620;
@@ -974,8 +984,8 @@
     // Group programs by channelName|platform key within the view window
     const progMap = new Map();
     programs.forEach(p => {
-      const name  = (p.fields['Channel']  || '').toLowerCase().trim();
-      const plat  = (p.fields['Platform'] || '').toLowerCase().trim();
+      const name  = normalizeName(p.fields['Channel']);
+      const plat  = normalizeName(p.fields['Platform']);
       const key   = plat ? `${name}|${plat}` : name;
       const start = new Date(p.fields['Start Time']).getTime();
       const end   = new Date(p.fields['End Time']).getTime();
@@ -991,14 +1001,13 @@
     // Build multi-platform rows: one row per channel × platform combination
     const guideRows = [];
     channels.forEach(ch => {
-      const name      = (ch.fields['Channel Name'] || '').trim();
-      const nameLower = name.toLowerCase();
+      const nameLower = normalizeName(ch.fields['Channel Name']);
       const platforms = ch.fields['Platform'] || [];
       if (!platforms.length) {
         if (progMap.has(nameLower)) guideRows.push({ ch, platform: '', key: nameLower });
       } else {
         platforms.forEach(plat => {
-          const key = `${nameLower}|${plat.toLowerCase()}`;
+          const key = `${nameLower}|${normalizeName(plat)}`;
           if (progMap.has(key)) guideRows.push({ ch, platform: plat, key });
         });
       }

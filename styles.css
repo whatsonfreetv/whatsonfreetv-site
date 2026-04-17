@@ -1276,7 +1276,11 @@ textarea.form-control {
   .skeleton-thumb { width: 100%; height: auto; aspect-ratio: 16/9; }
   .skeleton-card { flex: 0 0 calc(50vw - 30px); }
 
-  /* ---- Navbar: single-line, no wrap ---- */
+  /* On mobile, .card-mobile-platforms is a third line in the footer.
+     Increase min-height so cards with and without EPG stay the same height. */
+  .card-footer { min-height: 66px; }
+
+  /* ---- Navbar: single-line, no wrap; suggest button hidden (portrait phones) ---- */
   .navbar {
     flex-wrap: nowrap;
     height: var(--nav-height);
@@ -1285,6 +1289,7 @@ textarea.form-control {
     gap: 8px;
   }
 
+  .navbar .suggest-nav-btn { display: none !important; }
 }
 
 /* =============================================
@@ -1926,11 +1931,7 @@ textarea.form-control {
   flex-shrink: 0;
 }
 
-@media (max-width: 768px) {
-  /* Show the toggle-bar button, hide the navbar button */
-  .suggest-toggle-btn       { display: inline-flex; }
-  .navbar .suggest-nav-btn  { display: none !important; }
-}
+/* Suggest button is hidden on portrait phones via the ≤600px rule in the RESPONSIVE section above. */
 
 @media (max-width: 600px) {
   .view-toggle-bar { padding: 10px 16px; }
