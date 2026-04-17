@@ -87,25 +87,44 @@
 
   async function fetchPrograms() {
     const isMobile = window.innerWidth < 768;
-    // Separate cache keys so mobile and desktop don't share a narrowed/full dataset
+    // Separate cache keys — mobile uses a narrower 6-hour window to reduce parse time
     const key = `woftv_prog_${COUNTRY}${isMobile ? '_m' : ''}`;
     const cached = getCached(key);
     if (cached) return cached;
 
+    // Always fetch directly from GitHub. The Netlify function approach was removed because
+    // the free-tier 10-second timeout caused it to silently return [] on slow connections,
+    // leaving the Live Guide permanently empty. The pre-warm (setTimeout in init) means
+    // the fetch completes in the background before the user ever clicks Live Guide.
     try {
-      let records;
+      const res = await fetch(
+        `${DATA_BASE}/epg-${COUNTRY.toLowerCase()}.json?t=${new Date().toISOString().slice(0, 13)}`
+      );
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const json = await res.json();
 
-      if (isMobile) {
-        // ── Mobile: delegate filtering to the Netlify function ──────────────
-        // The server fetches the full 48 k-program JSON, filters it to a
-        // [-30 min, +6 h] window, and returns only the matching slice.
-        // This prevents mobile Safari from freezing on a large parse + filter.
-        const res = await fetch(`/.netlify/functions/epg?country=${COUNTRY}&hours=6`);
-        if (!res.ok) throw new Error(`EPG function returned HTTP ${res.status}`);
-        const json = await res.json();
+      const now         = Date.now();
+      const PLACEHOLDER = 'program information currently unavailable';
+      // Mobile: 6-hour horizon cuts ~48 k records to ~3–5 k, preventing UI thread jank.
+      // Desktop: 12-hour horizon so the Live Guide can scroll well forward.
+      const lookback = now - 30 * 60 * 1000;
+      const horizon  = isMobile
+        ? now +  6 * 60 * 60 * 1000
+        : now + 12 * 60 * 60 * 1000;
 
-        // Server already filtered by time and stripped placeholders; just map fields.
-        records = (json.programs || []).map(p => ({
+      const records = await filterMapAsync(
+        json.programs || [],
+        500, // yield to browser between every 500 items — prevents mobile Safari freeze
+        p => {
+          const end   = p.end   ? new Date(p.end).getTime()   : NaN;
+          const start = p.start ? new Date(p.start).getTime() : NaN;
+          if (isNaN(end) || isNaN(start)) return false;
+          if (end <= lookback || start >= horizon) return false;
+          const title = (p.title || '').trim();
+          if (!title || title.toLowerCase().startsWith(PLACEHOLDER)) return false;
+          return true;
+        },
+        p => ({
           fields: {
             'Show Title': p.title    || '',
             'Channel':    p.channel  || '',
@@ -113,43 +132,8 @@
             'End Time':   p.end      || '',
             'Platform':   p.platform || ''
           }
-        }));
-
-      } else {
-        // ── Desktop: fetch full EPG from GitHub, filter with time-sliced batches ──
-        // 12-hour horizon lets the Live Guide scroll well forward.
-        const res = await fetch(`${DATA_BASE}/epg-${COUNTRY.toLowerCase()}.json?t=${new Date().toISOString().slice(0, 13)}`);
-        if (!res.ok) throw new Error(`HTTP ${res.status}`);
-        const json = await res.json();
-
-        const now         = Date.now();
-        const PLACEHOLDER = 'program information currently unavailable';
-        const lookback    = now;
-        const horizon     = now + 12 * 60 * 60 * 1000;
-
-        records = await filterMapAsync(
-          json.programs || [],
-          500, // batch size — yields to browser between every 500 items
-          p => {
-            const end   = p.end   ? new Date(p.end).getTime()   : NaN;
-            const start = p.start ? new Date(p.start).getTime() : NaN;
-            if (isNaN(end) || isNaN(start)) return false;
-            if (end <= lookback || start >= horizon) return false;
-            const title = (p.title || '').trim();
-            if (!title || title.toLowerCase().startsWith(PLACEHOLDER)) return false;
-            return true;
-          },
-          p => ({
-            fields: {
-              'Show Title': p.title    || '',
-              'Channel':    p.channel  || '',
-              'Start Time': p.start    || '',
-              'End Time':   p.end      || '',
-              'Platform':   p.platform || ''
-            }
-          })
-        );
-      }
+        })
+      );
 
       setCache(key, records);
       return records;
@@ -218,12 +202,12 @@
   // Normalize a channel name for map keys / lookups.
   // Lowercase + trim + collapse internal whitespace + strip non-alphanumeric-space chars.
   // Applied consistently when BUILDING maps and when LOOKING UP — must be identical both ways.
+  // Normalize a channel/platform name for map keys and lookups.
+  // Must be applied identically on both the map-build side and the lookup side.
+  // Keeping this to lowercase + trim only — special-char stripping caused false mismatches
+  // between channel names that differ by punctuation between the EPG and channels JSON.
   function normalizeName(str) {
-    return (str || '')
-      .toLowerCase()
-      .trim()
-      .replace(/[^a-z0-9 ]/g, '')   // strip special chars (accents, punctuation, &, +, etc.)
-      .replace(/\s+/g, ' ');         // collapse runs of whitespace to a single space
+    return (str || '').toLowerCase().trim();
   }
 
   // Map: channelNameLower → { current: program|null, next: program|null }
