@@ -81,7 +81,7 @@
       const DATA_BASE = 'https://raw.githubusercontent.com/whatsonfreetv/whatsonfreetv-data/main';
 
       // Current channel info — set in load(), read by openShowModal
-      let _channel = { name: '', logo: '', initial: '' };
+      let _channel = { name: '', logo: '', initial: '', genres: [] };
       let _backdropApplied = false; // prevent double-application
 
       // ---- Helpers ----
@@ -94,6 +94,35 @@
       function stripHtml(html) {
         if (!html) return '';
         return html.replace(/<[^>]+>/g, '').replace(/&nbsp;/g, ' ').replace(/&#\d+;/g, ' ').trim();
+      }
+
+      // Returns true if the channel is primarily a movie channel
+      // (genre "Movies" or name contains movie-related keywords)
+      function isMovieChannel(channelName, genres) {
+        if ((genres || []).includes('Movies')) return true;
+        const movieWords = ['cinema', 'movie', 'movies', 'film', 'films', 'classics'];
+        const nameLower  = (channelName || '').toLowerCase();
+        return movieWords.some(w => new RegExp('\\b' + w + '\\b').test(nameLower));
+      }
+
+      // Returns true if the API result title closely matches the search query.
+      // Strips articles (the/a/an), normalises punctuation, and requires either
+      // an exact match or a partial match where the shorter string is ≥60% of
+      // the longer string's length (handles "Taxi Driver" vs "Taxi Driver (1976)").
+      function titleMatchesQuery(returnedTitle, query) {
+        function normalize(s) {
+          return (s || '').toLowerCase()
+            .replace(/\b(the|a|an)\b\s*/g, '')
+            .replace(/[^a-z0-9]/g, ' ')
+            .replace(/\s+/g, ' ')
+            .trim();
+        }
+        const norm = normalize(returnedTitle);
+        const q    = normalize(query);
+        if (!norm || !q) return false;
+        if (norm === q) return true;
+        const [shorter, longer] = norm.length <= q.length ? [norm, q] : [q, norm];
+        return longer.includes(shorter) && shorter.length / longer.length >= 0.6;
       }
 
       function attachLogoFallback(img, fallbackEl) {
@@ -141,18 +170,29 @@
       }, { passive: true });
 
       // ---- Back link ----
+      // Reads ?country= and ?from= params set by the View Channel button so the
+      // label and destination are always correct regardless of sessionStorage state.
+      function _backParams() {
+        const p       = new URLSearchParams(window.location.search);
+        const country = p.get('country') || sessionStorage.getItem('woftv_country') || 'US';
+        const from    = p.get('from') || '';
+        return { country, from };
+      }
+
       function backHref() {
-        const country = sessionStorage.getItem('woftv_country') || 'US';
-        return country === 'CA' ? 'ca.html' : 'us.html';
+        const { country, from } = _backParams();
+        const base = country === 'CA' ? 'ca.html' : 'us.html';
+        return from === 'guide' ? `${base}?view=guide` : base;
       }
 
       function backLabel() {
-        const country = sessionStorage.getItem('woftv_country') || 'US';
+        const { country, from } = _backParams();
+        if (from === 'guide') return 'Back to Live Guide';
         return country === 'CA' ? '&#127464;&#127462; Back to Canada' : '&#127482;&#127480; Back to US';
       }
 
       function highlightNav() {
-        const country = sessionStorage.getItem('woftv_country') || 'US';
+        const { country } = _backParams();
         document.querySelectorAll('.nav-country-link').forEach(l => {
           if ((country === 'US' && l.href.includes('us.html')) ||
               (country === 'CA' && l.href.includes('ca.html'))) {
@@ -404,14 +444,16 @@
       }
 
       // ---- OMDb API ----
-      async function fetchOMDbShow(title) {
+      // type: 'movie' | 'series' | '' — passed as &type= to improve result accuracy
+      async function fetchOMDbShow(title, type) {
         const apiKey = (typeof CONFIG !== 'undefined' && CONFIG.OMDB_API_KEY) ? CONFIG.OMDB_API_KEY : '';
         if (!apiKey || apiKey === 'YOUR_KEY') return null;
-        const key = 'omdb_show_' + title.toLowerCase().slice(0, 80);
+        const typeParam = type ? `&type=${encodeURIComponent(type)}` : '';
+        const key = `omdb_show_${type || 'any'}_` + title.toLowerCase().slice(0, 80);
         const cached = sessionStorage.getItem(key);
         if (cached) { try { return JSON.parse(cached); } catch (_) {} }
         try {
-          const res = await fetch(`https://www.omdbapi.com/?t=${encodeURIComponent(title)}&apikey=${encodeURIComponent(apiKey)}`);
+          const res = await fetch(`https://www.omdbapi.com/?t=${encodeURIComponent(title)}&apikey=${encodeURIComponent(apiKey)}${typeParam}`);
           if (!res.ok) return null;
           const data = await res.json();
           if (data.Response !== 'True') return null;
@@ -420,12 +462,34 @@
         } catch (_) { return null; }
       }
 
-      // TVmaze first, OMDb fallback — returns { source: 'tvmaze'|'omdb', data } or null
-      async function fetchShowMetadata(title) {
-        const tvmaze = await fetchTVmazeShow(title);
-        if (tvmaze) return { source: 'tvmaze', data: tvmaze };
-        const omdb = await fetchOMDbShow(title);
-        if (omdb) return { source: 'omdb', data: omdb };
+      // Smart metadata fetch — returns { source: 'tvmaze'|'omdb', data } or null.
+      // Rules:
+      //   1. Movie channels skip TVmaze entirely — go straight to OMDb (better movie data).
+      //   2. Non-movie channels try TVmaze first; if the result language isn't English, discard it.
+      //   3. OMDb is searched with type=movie for movie channels, type=series for others.
+      //   4. Confidence check: if the returned title doesn't closely match the query, skip it.
+      async function fetchShowMetadata(title, channelName, channelGenres) {
+        const isMovie  = isMovieChannel(channelName, channelGenres);
+        const omdbType = isMovie ? 'movie' : 'series';
+
+        if (!isMovie) {
+          const tvmaze = await fetchTVmazeShow(title);
+          if (tvmaze) {
+            const lang = tvmaze.language || 'English';
+            if (lang !== 'English') {
+              // Non-English result — discard and fall through to OMDb
+            } else if (titleMatchesQuery(tvmaze.name, title)) {
+              return { source: 'tvmaze', data: tvmaze };
+            }
+          }
+        }
+
+        // OMDb (primary for movie channels, fallback for others)
+        const omdb = await fetchOMDbShow(title, omdbType);
+        if (omdb && titleMatchesQuery(omdb.Title, title)) {
+          return { source: 'omdb', data: omdb };
+        }
+
         return null;
       }
 
@@ -444,9 +508,8 @@
         document.querySelector('meta[name="description"]')
           ?.setAttribute('content', desc.slice(0, 160) || `${name} on WhatsOnFreeTV`);
 
-        const countryDisplay = countries
-          .map(c => c === 'US' ? '&#127482;&#127480; US' : c === 'CA' ? '&#127464;&#127462; CA' : esc(c))
-          .join(' &middot; ');
+        const { country: ctxCountry } = _backParams();
+        const countryDisplay = ctxCountry === 'CA' ? '&#127464;&#127462; CA' : '&#127482;&#127480; US';
 
         const hero = document.getElementById('detailHero');
         hero.innerHTML = `
@@ -524,7 +587,7 @@
 
         // Enrich with poster + rating in background (TVmaze → OMDb fallback)
         if (isClickable) {
-          fetchShowMetadata(showTitle).then(result => {
+          fetchShowMetadata(showTitle, _channel.name, _channel.genres).then(result => {
             if (!result) return;
             const card     = section.querySelector('#onNowCard');
             const ratingEl = section.querySelector('#onNowRating');
@@ -900,7 +963,7 @@
             ${timeStr ? `<div class="show-modal-airing-info">${timeStr}${platformBadge}</div>` : ''}
           </div>` : '';
 
-        fetchShowMetadata(showTitle).then(result => {
+        fetchShowMetadata(showTitle, _channel.name, _channel.genres).then(result => {
           if (!result) {
             inner.innerHTML = `
               <div class="show-modal-title">${esc(showTitle)}</div>
@@ -998,7 +1061,8 @@
         _channel = {
           name,
           logo:    (record.fields['Logo URL'] || '').trim(),
-          initial: name.trim().charAt(0).toUpperCase()
+          initial: name.trim().charAt(0).toUpperCase(),
+          genres
         };
 
         const body = document.getElementById('detailBody');

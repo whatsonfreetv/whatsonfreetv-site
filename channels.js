@@ -105,12 +105,10 @@
 
       const now         = Date.now();
       const PLACEHOLDER = 'program information currently unavailable';
-      // Mobile: 6-hour horizon cuts ~48 k records to ~3–5 k, preventing UI thread jank.
-      // Desktop: 12-hour horizon so the Live Guide can scroll well forward.
+      // Both mobile and desktop use a 12-hour horizon — async chunked rendering
+      // keeps the UI responsive so the larger dataset is safe on mobile too.
       const lookback = now - 30 * 60 * 1000;
-      const horizon  = isMobile
-        ? now +  6 * 60 * 60 * 1000
-        : now + 12 * 60 * 60 * 1000;
+      const horizon  = now + 12 * 60 * 60 * 1000;
 
       const records = await filterMapAsync(
         json.programs || [],
@@ -412,6 +410,22 @@
     backdrop.addEventListener('click', e => { if (e.target === backdrop) close(); });
     document.addEventListener('keydown', e => { if (e.key === 'Escape') close(); });
 
+    // Belt-and-suspenders for iOS: catch the tap at touchend so it can't be
+    // swallowed by the Live Guide's scroll container underneath the modal.
+    const viewBtn = backdrop.querySelector('.epg-modal-btn-primary');
+    let touchStartY = 0;
+    viewBtn.addEventListener('touchstart', e => {
+      touchStartY = e.touches[0].clientY;
+    }, { passive: true });
+    viewBtn.addEventListener('touchend', e => {
+      // Only treat as a tap if the finger didn't move vertically (not a scroll)
+      if (Math.abs(e.changedTouches[0].clientY - touchStartY) < 10) {
+        e.preventDefault(); // suppress the 300ms synthetic click
+        const href = viewBtn.getAttribute('href');
+        if (href && href !== '#') window.location.href = href;
+      }
+    }, { passive: false });
+
     return backdrop;
   }
 
@@ -424,7 +438,9 @@
     const platform    = (f['Platform'] || '').trim();
     const logo        = (channel?.fields['Logo URL'] || '').trim();
     const initial     = (channelName || showTitle).trim().charAt(0).toUpperCase();
-    const channelId   = channel?.id;
+    // Use the Airtable-canonical Channel Name for the link so findChannelByName()
+    // in channel.html always gets an exact match. Fall back to the EPG name.
+    const linkName    = (channel?.fields['Channel Name'] || channelName || '').trim();
 
     const logoWrap = backdrop.querySelector('.epg-modal-logo-wrap');
     logoWrap.innerHTML = logo
@@ -462,10 +478,16 @@
     });
 
     const viewBtn = backdrop.querySelector('.epg-modal-btn-primary');
-    if (channelName) {
-      viewBtn.href = `channel.html?id=${encodeURIComponent(channelName)}`;
+    if (linkName) {
+      // Include country + from=guide so channel.html can show the correct back link
+      const fromGuide = (activeView === 'guide');
+      const destUrl   = `channel.html?id=${encodeURIComponent(linkName)}&country=${COUNTRY}${fromGuide ? '&from=guide' : ''}`;
+      viewBtn.href    = destUrl;
+      viewBtn.onclick = null; // let the native <a href> handle navigation — most reliable on iOS
       viewBtn.style.display = '';
     } else {
+      viewBtn.href    = '#';
+      viewBtn.onclick = null;
       viewBtn.style.display = 'none';
     }
 
@@ -901,11 +923,11 @@
     bar.dataset.rendered = '1';
 
     const btnBrowse = document.createElement('button');
-    btnBrowse.className = 'view-toggle-btn active';
+    btnBrowse.className = 'view-toggle-btn' + (activeView !== 'guide' ? ' active' : '');
     btnBrowse.textContent = '🔲 Browse';
 
     const btnGuide = document.createElement('button');
-    btnGuide.className = 'view-toggle-btn';
+    btnGuide.className = 'view-toggle-btn' + (activeView === 'guide' ? ' active' : '');
     btnGuide.textContent = '📺 Live Guide';
 
     btnBrowse.addEventListener('click', () => {
@@ -1087,6 +1109,13 @@
       timeViewport.scrollLeft = bodyScroll.scrollLeft;
     }, { passive: true });
 
+    // Now-line — appended before the async row loop so it appears immediately
+    // rather than waiting for all rows to finish building.
+    const nowLine = document.createElement('div');
+    nowLine.className = 'guide-now-line';
+    nowLine.style.left = (CHAN_W + nowOffsetPx) + 'px';
+    body.appendChild(nowLine);
+
     // Build rows in async chunks (15 at a time) so the main thread yields between
     // batches and the browser can stay responsive instead of going blank for 8+ seconds.
     const CHUNK = 15;
@@ -1212,12 +1241,6 @@
       body.appendChild(row);
       }); // end chunk forEach
     } // end chunk for-loop
-
-    // Red now-line — marks current time (appended last so it sits on top of rows)
-    const nowLine = document.createElement('div');
-    nowLine.className = 'guide-now-line';
-    nowLine.style.left = (CHAN_W + nowOffsetPx) + 'px';
-    body.appendChild(nowLine);
 
     // End-of-schedule message — sits OUTSIDE the horizontal scroll container so it
     // spans the full section width and is always visible below the guide grid.
@@ -1502,6 +1525,7 @@
     const urlParams   = new URLSearchParams(window.location.search);
     const urlPlatform = urlParams.get('platform');
     const urlGenre    = urlParams.get('genre');
+    const urlView     = urlParams.get('view');
     if (urlPlatform) {
       activePlatform = urlPlatform;
       const pills = document.getElementById('platformPills');
@@ -1525,16 +1549,26 @@
       }
     }
 
+    // If returning from a channel page that was reached via the Live Guide,
+    // pre-set the active view so the guide opens automatically.
+    if (urlView === 'guide') activeView = 'guide';
+
     renderViewToggle();
     showEPGSkeleton();
-    await applyFilters(); // renders channel grid; hero stays as skeleton
+    await applyFilters(); // renders channel grid (or guide loading state); hero stays as skeleton
 
     document.getElementById('searchInput')?.addEventListener('input', debounce(applyFilters, 280));
 
     // Phase 2a — background EPG pre-warm: kick off the fetch ~500 ms after the channel grid
     // renders so the Live Guide switch is near-instant instead of waiting 5+ seconds.
     // ensureEPG() deduplicates concurrent calls, so this is safe alongside Phase 2b below.
-    setTimeout(() => ensureEPG(), 500);
+    // When returning to the guide via ?view=guide, also re-render when the EPG resolves
+    // (the button click handler that normally does this was never clicked in this flow).
+    setTimeout(() => {
+      ensureEPG().then(() => {
+        if (activeView === 'guide') applyFilters();
+      });
+    }, 500);
 
     // Phase 2b — lazy EPG: also trigger when "What's On Now" enters the viewport
     // (or immediately if IntersectionObserver isn't supported)
