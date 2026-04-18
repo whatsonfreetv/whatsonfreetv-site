@@ -83,56 +83,55 @@
 
       <!-- Platform -->
       <div class="form-group">
-        <label>Platform(s)</label>
-        <div class="checkbox-grid" id="platformGroup">
-          <label class="checkbox-label"><input type="checkbox" name="platform" value="Tubi"> Tubi</label>
-          <label class="checkbox-label"><input type="checkbox" name="platform" value="Pluto TV"> Pluto TV</label>
-          <label class="checkbox-label"><input type="checkbox" name="platform" value="Peacock"> Peacock</label>
-          <label class="checkbox-label"><input type="checkbox" name="platform" value="Plex"> Plex</label>
-          <label class="checkbox-label"><input type="checkbox" name="platform" value="Roku Channel"> Roku Channel</label>
-          <label class="checkbox-label"><input type="checkbox" name="platform" value="Samsung TV+"> Samsung TV+</label>
-          <label class="checkbox-label"><input type="checkbox" name="platform" value="Amazon Freevee"> Amazon Freevee</label>
-          <label class="checkbox-label"><input type="checkbox" name="platform" value="CBC Gem"> CBC Gem</label>
-          <label class="checkbox-label"><input type="checkbox" name="platform" value="CTV"> CTV</label>
-          <label class="checkbox-label"><input type="checkbox" name="platform" value="Crave"> Crave</label>
-          <label class="checkbox-label"><input type="checkbox" name="platform" value="Crackle"> Crackle</label>
-          <label class="checkbox-label"><input type="checkbox" name="platform" value="Kanopy"> Kanopy</label>
-          <label class="checkbox-label"><input type="checkbox" name="platform" value="Other"> Other</label>
-        </div>
-        <div class="form-group" style="margin-top:10px;">
-          <input
-            type="text"
-            id="platformOther"
-            class="form-control"
-            placeholder="Other platform name…"
-            maxlength="80"
-            style="display:none"
-          >
-        </div>
+        <label for="platformSelect">Platform</label>
+        <select id="platformSelect" name="platform" class="form-control">
+          <option value="">— Select a platform —</option>
+          <option value="Pluto TV">Pluto TV</option>
+          <option value="Samsung TV Plus">Samsung TV Plus</option>
+          <option value="Plex">Plex</option>
+          <option value="Roku">Roku</option>
+          <option value="Tubi">Tubi</option>
+          <option value="Xumo Play">Xumo Play</option>
+          <option value="LG Channels">LG Channels</option>
+          <option value="TCLtv+">TCLtv+</option>
+          <option value="Vizio WatchFree+">Vizio WatchFree+</option>
+          <option value="Prime Video">Prime Video</option>
+          <option value="Peacock">Peacock</option>
+          <option value="Other">Other</option>
+        </select>
+        <input
+          type="text"
+          id="platformOther"
+          class="form-control"
+          placeholder="Platform name…"
+          maxlength="80"
+          style="display:none;margin-top:8px;"
+        >
       </div>
 
       <!-- Genre -->
       <div class="form-group">
-        <label>Genre(s)</label>
-        <div class="checkbox-grid">
-          <label class="checkbox-label"><input type="checkbox" name="genre" value="News"> News</label>
-          <label class="checkbox-label"><input type="checkbox" name="genre" value="Sports"> Sports</label>
-          <label class="checkbox-label"><input type="checkbox" name="genre" value="Movies"> Movies</label>
-          <label class="checkbox-label"><input type="checkbox" name="genre" value="Entertainment"> Entertainment</label>
-          <label class="checkbox-label"><input type="checkbox" name="genre" value="Kids"> Kids</label>
-          <label class="checkbox-label"><input type="checkbox" name="genre" value="Comedy"> Comedy</label>
-          <label class="checkbox-label"><input type="checkbox" name="genre" value="Drama"> Drama</label>
-          <label class="checkbox-label"><input type="checkbox" name="genre" value="Reality"> Reality</label>
-          <label class="checkbox-label"><input type="checkbox" name="genre" value="Lifestyle"> Lifestyle</label>
-          <label class="checkbox-label"><input type="checkbox" name="genre" value="Documentary"> Documentary</label>
-          <label class="checkbox-label"><input type="checkbox" name="genre" value="Music"> Music</label>
-          <label class="checkbox-label"><input type="checkbox" name="genre" value="Science & Nature"> Science &amp; Nature</label>
-          <label class="checkbox-label"><input type="checkbox" name="genre" value="Food"> Food</label>
-          <label class="checkbox-label"><input type="checkbox" name="genre" value="Travel"> Travel</label>
-          <label class="checkbox-label"><input type="checkbox" name="genre" value="Technology"> Technology</label>
-          <label class="checkbox-label"><input type="checkbox" name="genre" value="Classic TV"> Classic TV</label>
-          <label class="checkbox-label"><input type="checkbox" name="genre" value="International"> International</label>
-        </div>
+        <label for="genreSelect">Genre</label>
+        <select id="genreSelect" name="genre" class="form-control">
+          <option value="">— Select a genre —</option>
+          <option value="News">News</option>
+          <option value="Sports">Sports</option>
+          <option value="Movies">Movies</option>
+          <option value="Entertainment">Entertainment</option>
+          <option value="Kids">Kids</option>
+          <option value="Comedy">Comedy</option>
+          <option value="Drama">Drama</option>
+          <option value="Reality">Reality</option>
+          <option value="Lifestyle">Lifestyle</option>
+          <option value="Documentary">Documentary</option>
+          <option value="Music">Music</option>
+          <option value="Science & Nature">Science &amp; Nature</option>
+          <option value="Food">Food</option>
+          <option value="Travel">Travel</option>
+          <option value="Technology">Technology</option>
+          <option value="Classic TV">Classic TV</option>
+          <option value="International">International</option>
+        </select>
       </div>
 
       <!-- Submit -->
@@ -187,12 +186,13 @@
         if (nameInput) nameInput.value = prefilledName;
       }
 
-      // Show "Other" platform text input when "Other" is checked
-      const otherCheck = document.querySelector('input[name="platform"][value="Other"]');
+      // Show "Other" text input when "Other" is selected in the dropdown
+      const platformSelect = document.getElementById('platformSelect');
       const otherInput = document.getElementById('platformOther');
-      otherCheck.addEventListener('change', () => {
-        otherInput.style.display = otherCheck.checked ? 'block' : 'none';
-        if (!otherCheck.checked) otherInput.value = '';
+      platformSelect.addEventListener('change', () => {
+        const isOther = platformSelect.value === 'Other';
+        otherInput.style.display = isOther ? 'block' : 'none';
+        if (!isOther) otherInput.value = '';
       });
 
       // ---- Form submission ----
@@ -228,10 +228,11 @@
           return;
         }
 
-        // Collect platforms — merge "Other" text input
-        let platforms = getCheckedValues('platform').filter(p => p !== 'Other');
+        // Collect platform from select — use text input if "Other"
+        const platformVal = platformSelect.value;
         const otherVal = otherInput.value.trim();
-        if (otherCheck.checked && otherVal) platforms.push(otherVal);
+        const platforms = platformVal === 'Other' && otherVal ? [otherVal]
+          : platformVal ? [platformVal] : [];
 
         const fields = {
           'Channel Name': name,
@@ -246,8 +247,8 @@
 
         if (platforms.length)  fields['Platform'] = platforms;
 
-        const genres = getCheckedValues('genre');
-        if (genres.length) fields['Genre'] = genres;
+        const genreVal = document.getElementById('genreSelect').value;
+        if (genreVal) fields['Genre'] = [genreVal];
 
         // Disable form while submitting
         submitBtn.disabled = true;
