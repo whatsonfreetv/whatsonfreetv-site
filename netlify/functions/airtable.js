@@ -2,7 +2,7 @@
 // Keeps AIRTABLE_API_KEY server-side. Set it in Netlify → Site Settings → Environment Variables.
 
 const BASE_ID    = process.env.AIRTABLE_BASE_ID    || 'app9FL5f1eCfoL5Lx';
-const TABLE_NAME = process.env.AIRTABLE_TABLE_NAME || 'Channels';
+const TABLE_NAME = 'Suggestions';
 
 exports.handler = async (event) => {
   const key = process.env.AIRTABLE_API_KEY;
