@@ -948,8 +948,10 @@
   async function load() {
     const params = new URLSearchParams(window.location.search);
 
-    // ?slug= — lookup by url_slug (used by channel cards and /channel/:slug redirect)
-    const slugParam = params.get('slug');
+    // ?slug= — from card clicks (channel.html?slug=cnn-headlines)
+    // pathname — from Netlify rewrite (/channel/cnn-headlines → browser sees clean URL, no query string)
+    const pathMatch = window.location.pathname.match(/\/channel\/([^/?#]+)/);
+    const slugParam = params.get('slug') || (pathMatch ? decodeURIComponent(pathMatch[1]) : null);
 
     // ?id= — legacy lookup by channel name
     const rawId = params.get('id');
