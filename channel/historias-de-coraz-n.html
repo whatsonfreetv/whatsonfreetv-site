@@ -7,11 +7,39 @@
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📺</text></svg>">
   <meta name="description" content="Spanish-language heartwarming stories and emotional drama content.">
   <link rel="canonical" href="https://whatsonfreetv.com/channel/historias-de-coraz-n">
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="Historias de Corazón - Free Streaming | WhatsOnFreeTV">
+  <meta property="og:description" content="Spanish-language heartwarming stories and emotional drama content.">
+  <meta property="og:image" content="https://provider-static.plex.tv/epg/cms/production/7720edee-5e05-4391-b46b-94579db1bf73/HDC_logo_light_-_Jordan_Warkol.png">
+  <meta property="og:url" content="https://whatsonfreetv.com/channel/historias-de-coraz-n">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="WhatsOnFreeTV">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Historias de Corazón - Free Streaming | WhatsOnFreeTV">
+  <meta name="twitter:description" content="Spanish-language heartwarming stories and emotional drama content.">
+  <meta name="twitter:image" content="https://provider-static.plex.tv/epg/cms/production/7720edee-5e05-4391-b46b-94579db1bf73/HDC_logo_light_-_Jordan_Warkol.png">
+
+  <!-- Schema.org -->
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BroadcastChannel",
+  "name": "Historias de Corazón",
+  "broadcastDisplayName": "Historias de Corazón",
+  "url": "https://whatsonfreetv.com/channel/historias-de-coraz-n",
+  "inLanguage": "en",
+  "description": "Spanish-language heartwarming stories and emotional drama content.",
+  "genre": "Spanish",
+  "image": "https://provider-static.plex.tv/epg/cms/production/7720edee-5e05-4391-b46b-94579db1bf73/HDC_logo_light_-_Jordan_Warkol.png"
+}
+  </script>
+
   <link rel="stylesheet" href="../styles.css">
   <script src="../config.js"></script>
   <script>
     window._CHANNEL_SLUG    = 'historias-de-coraz-n';
-    window._CHANNEL_COUNTRY = 'CA';
+    window._CHANNEL_COUNTRY = 'US';
   </script>
 </head>
 <body class="detail-page">
@@ -30,23 +58,35 @@
     <a href="../suggest.html" class="suggest-nav-btn">+ Suggest Channel</a>
   </nav>
 
-  <!-- ======================== DETAIL HERO ======================== -->
+  <!-- ======================== DETAIL HERO (pre-rendered for SEO) ======================== -->
   <section class="detail-hero" id="detailHero">
     <div class="detail-logo-wrap">
-      <div class="skeleton" style="width:100%;height:100%;border-radius:8px;"></div>
+      <img src="https://provider-static.plex.tv/epg/cms/production/7720edee-5e05-4391-b46b-94579db1bf73/HDC_logo_light_-_Jordan_Warkol.png" alt="Historias de Corazón" id="detailImg">
+      <div class="detail-logo-fallback" style="display:none">
+        <span class="card-fallback-name">Historias de Corazón</span>
+        <span class="card-fallback-brand">📺</span>
+      </div>
     </div>
     <div class="detail-info">
-      <div class="skeleton skeleton-title" style="width:80px;margin-bottom:24px;"></div>
-      <div class="skeleton" style="height:36px;width:300px;border-radius:4px;margin-bottom:20px;"></div>
-      <div class="skeleton" style="height:14px;width:100%;max-width:480px;border-radius:4px;margin-bottom:8px;"></div>
-      <div class="skeleton" style="height:14px;width:70%;max-width:340px;border-radius:4px;margin-bottom:24px;"></div>
-      <div class="skeleton" style="height:32px;width:200px;border-radius:20px;"></div>
+      <div class="detail-country">🇺🇸 US</div>
+      <h1 class="detail-channel-name">Historias de Corazón</h1>
+      <p class="detail-description">Spanish-language heartwarming stories and emotional drama content.</p>
+      
+      <div class="detail-section">
+        <div class="detail-section-label">Genre</div>
+        <div class="badge-row"><span class="badge badge-genre">Spanish</span></div>
+      </div>
+      
+      <div class="detail-section">
+        <div class="detail-section-label">Available On</div>
+        <div class="badge-row"><span class="badge badge-platform">Plex</span></div>
+      </div>
     </div>
   </section>
 
   <!-- ======================== DETAIL BODY ======================== -->
   <div class="detail-body" id="detailBody" style="display:none">
-    <!-- Populated by JS -->
+    <!-- Populated by channel-detail.js -->
   </div>
 
   <!-- ======================== ERROR ======================== -->

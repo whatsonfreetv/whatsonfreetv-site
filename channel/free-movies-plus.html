@@ -7,6 +7,34 @@
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📺</text></svg>">
   <meta name="description" content="Free movies across multiple genres available on demand.">
   <link rel="canonical" href="https://whatsonfreetv.com/channel/free-movies-plus">
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="Free Movies Plus - Free Streaming | WhatsOnFreeTV">
+  <meta property="og:description" content="Free movies across multiple genres available on demand.">
+  <meta property="og:image" content="https://provider-static.plex.tv/epg/cms/production/b927ddc8-1ec7-4e82-896c-77028536e891/Free_Movies_plus_1500x1000rdx.png">
+  <meta property="og:url" content="https://whatsonfreetv.com/channel/free-movies-plus">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="WhatsOnFreeTV">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Free Movies Plus - Free Streaming | WhatsOnFreeTV">
+  <meta name="twitter:description" content="Free movies across multiple genres available on demand.">
+  <meta name="twitter:image" content="https://provider-static.plex.tv/epg/cms/production/b927ddc8-1ec7-4e82-896c-77028536e891/Free_Movies_plus_1500x1000rdx.png">
+
+  <!-- Schema.org -->
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BroadcastChannel",
+  "name": "Free Movies Plus",
+  "broadcastDisplayName": "Free Movies Plus",
+  "url": "https://whatsonfreetv.com/channel/free-movies-plus",
+  "inLanguage": "en",
+  "description": "Free movies across multiple genres available on demand.",
+  "genre": "Movies",
+  "image": "https://provider-static.plex.tv/epg/cms/production/b927ddc8-1ec7-4e82-896c-77028536e891/Free_Movies_plus_1500x1000rdx.png"
+}
+  </script>
+
   <link rel="stylesheet" href="../styles.css">
   <script src="../config.js"></script>
   <script>
@@ -30,23 +58,35 @@
     <a href="../suggest.html" class="suggest-nav-btn">+ Suggest Channel</a>
   </nav>
 
-  <!-- ======================== DETAIL HERO ======================== -->
+  <!-- ======================== DETAIL HERO (pre-rendered for SEO) ======================== -->
   <section class="detail-hero" id="detailHero">
     <div class="detail-logo-wrap">
-      <div class="skeleton" style="width:100%;height:100%;border-radius:8px;"></div>
+      <img src="https://provider-static.plex.tv/epg/cms/production/b927ddc8-1ec7-4e82-896c-77028536e891/Free_Movies_plus_1500x1000rdx.png" alt="Free Movies Plus" id="detailImg">
+      <div class="detail-logo-fallback" style="display:none">
+        <span class="card-fallback-name">Free Movies Plus</span>
+        <span class="card-fallback-brand">📺</span>
+      </div>
     </div>
     <div class="detail-info">
-      <div class="skeleton skeleton-title" style="width:80px;margin-bottom:24px;"></div>
-      <div class="skeleton" style="height:36px;width:300px;border-radius:4px;margin-bottom:20px;"></div>
-      <div class="skeleton" style="height:14px;width:100%;max-width:480px;border-radius:4px;margin-bottom:8px;"></div>
-      <div class="skeleton" style="height:14px;width:70%;max-width:340px;border-radius:4px;margin-bottom:24px;"></div>
-      <div class="skeleton" style="height:32px;width:200px;border-radius:20px;"></div>
+      <div class="detail-country">🇺🇸 US</div>
+      <h1 class="detail-channel-name">Free Movies Plus</h1>
+      <p class="detail-description">Free movies across multiple genres available on demand.</p>
+      
+      <div class="detail-section">
+        <div class="detail-section-label">Genre</div>
+        <div class="badge-row"><span class="badge badge-genre">Movies</span></div>
+      </div>
+      
+      <div class="detail-section">
+        <div class="detail-section-label">Available On</div>
+        <div class="badge-row"><span class="badge badge-platform">LG Channels</span><span class="badge badge-platform">Plex</span></div>
+      </div>
     </div>
   </section>
 
   <!-- ======================== DETAIL BODY ======================== -->
   <div class="detail-body" id="detailBody" style="display:none">
-    <!-- Populated by JS -->
+    <!-- Populated by channel-detail.js -->
   </div>
 
   <!-- ======================== ERROR ======================== -->

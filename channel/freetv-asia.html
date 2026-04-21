@@ -7,6 +7,34 @@
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📺</text></svg>">
   <meta name="description" content="El canal con las series y películas más emocionantes Asia, incluyendo k-drama, fantasía, acción y artes marciales.">
   <link rel="canonical" href="https://whatsonfreetv.com/channel/freetv-asia">
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="FreeTV Asia - Free Streaming | WhatsOnFreeTV">
+  <meta property="og:description" content="El canal con las series y películas más emocionantes Asia, incluyendo k-drama, fantasía, acción y artes marciales.">
+  <meta property="og:image" content="https://images.sr.roku.com/idType/roku-trc/context/trc/id/9b3f0b588b03c9126a053d3eebfc58db/https%3A%2F%2Fimage.roku.com%2Fbh-uploads%2Fproduction%2FinfoHUDLogo%2F1736789758464_FreeTV_Asia_HUD_Logo_.png">
+  <meta property="og:url" content="https://whatsonfreetv.com/channel/freetv-asia">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="WhatsOnFreeTV">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="FreeTV Asia - Free Streaming | WhatsOnFreeTV">
+  <meta name="twitter:description" content="El canal con las series y películas más emocionantes Asia, incluyendo k-drama, fantasía, acción y artes marciales.">
+  <meta name="twitter:image" content="https://images.sr.roku.com/idType/roku-trc/context/trc/id/9b3f0b588b03c9126a053d3eebfc58db/https%3A%2F%2Fimage.roku.com%2Fbh-uploads%2Fproduction%2FinfoHUDLogo%2F1736789758464_FreeTV_Asia_HUD_Logo_.png">
+
+  <!-- Schema.org -->
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BroadcastChannel",
+  "name": "FreeTV Asia",
+  "broadcastDisplayName": "FreeTV Asia",
+  "url": "https://whatsonfreetv.com/channel/freetv-asia",
+  "inLanguage": "en",
+  "description": "El canal con las series y películas más emocionantes Asia, incluyendo k-drama, fantasía, acción y artes marciales.",
+  "genre": "Spanish",
+  "image": "https://images.sr.roku.com/idType/roku-trc/context/trc/id/9b3f0b588b03c9126a053d3eebfc58db/https%3A%2F%2Fimage.roku.com%2Fbh-uploads%2Fproduction%2FinfoHUDLogo%2F1736789758464_FreeTV_Asia_HUD_Logo_.png"
+}
+  </script>
+
   <link rel="stylesheet" href="../styles.css">
   <script src="../config.js"></script>
   <script>
@@ -30,23 +58,35 @@
     <a href="../suggest.html" class="suggest-nav-btn">+ Suggest Channel</a>
   </nav>
 
-  <!-- ======================== DETAIL HERO ======================== -->
+  <!-- ======================== DETAIL HERO (pre-rendered for SEO) ======================== -->
   <section class="detail-hero" id="detailHero">
     <div class="detail-logo-wrap">
-      <div class="skeleton" style="width:100%;height:100%;border-radius:8px;"></div>
+      <img src="https://images.sr.roku.com/idType/roku-trc/context/trc/id/9b3f0b588b03c9126a053d3eebfc58db/https%3A%2F%2Fimage.roku.com%2Fbh-uploads%2Fproduction%2FinfoHUDLogo%2F1736789758464_FreeTV_Asia_HUD_Logo_.png" alt="FreeTV Asia" id="detailImg">
+      <div class="detail-logo-fallback" style="display:none">
+        <span class="card-fallback-name">FreeTV Asia</span>
+        <span class="card-fallback-brand">📺</span>
+      </div>
     </div>
     <div class="detail-info">
-      <div class="skeleton skeleton-title" style="width:80px;margin-bottom:24px;"></div>
-      <div class="skeleton" style="height:36px;width:300px;border-radius:4px;margin-bottom:20px;"></div>
-      <div class="skeleton" style="height:14px;width:100%;max-width:480px;border-radius:4px;margin-bottom:8px;"></div>
-      <div class="skeleton" style="height:14px;width:70%;max-width:340px;border-radius:4px;margin-bottom:24px;"></div>
-      <div class="skeleton" style="height:32px;width:200px;border-radius:20px;"></div>
+      <div class="detail-country">🇺🇸 US</div>
+      <h1 class="detail-channel-name">FreeTV Asia</h1>
+      <p class="detail-description">El canal con las series y películas más emocionantes Asia, incluyendo k-drama, fantasía, acción y artes marciales.</p>
+      
+      <div class="detail-section">
+        <div class="detail-section-label">Genre</div>
+        <div class="badge-row"><span class="badge badge-genre">Spanish</span></div>
+      </div>
+      
+      <div class="detail-section">
+        <div class="detail-section-label">Available On</div>
+        <div class="badge-row"><span class="badge badge-platform-roku">Roku</span></div>
+      </div>
     </div>
   </section>
 
   <!-- ======================== DETAIL BODY ======================== -->
   <div class="detail-body" id="detailBody" style="display:none">
-    <!-- Populated by JS -->
+    <!-- Populated by channel-detail.js -->
   </div>
 
   <!-- ======================== ERROR ======================== -->
