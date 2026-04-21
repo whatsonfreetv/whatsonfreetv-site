@@ -7,11 +7,39 @@
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📺</text></svg>">
   <meta name="description" content="Current and compelling true crime stories and investigations.">
   <link rel="canonical" href="https://whatsonfreetv.com/channel/true-crime-now">
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="True Crime Now - Free Streaming | WhatsOnFreeTV">
+  <meta property="og:description" content="Current and compelling true crime stories and investigations.">
+  <meta property="og:image" content="https://provider-static.plex.tv/epg/cms/production/5dadb527-c892-41f0-a43e-dbdc3071f66d/true_crime_now_logordx_white.png">
+  <meta property="og:url" content="https://whatsonfreetv.com/channel/true-crime-now">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="WhatsOnFreeTV">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="True Crime Now - Free Streaming | WhatsOnFreeTV">
+  <meta name="twitter:description" content="Current and compelling true crime stories and investigations.">
+  <meta name="twitter:image" content="https://provider-static.plex.tv/epg/cms/production/5dadb527-c892-41f0-a43e-dbdc3071f66d/true_crime_now_logordx_white.png">
+
+  <!-- Schema.org -->
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BroadcastChannel",
+  "name": "True Crime Now",
+  "broadcastDisplayName": "True Crime Now",
+  "url": "https://whatsonfreetv.com/channel/true-crime-now",
+  "inLanguage": "en",
+  "description": "Current and compelling true crime stories and investigations.",
+  "genre": "True Crime",
+  "image": "https://provider-static.plex.tv/epg/cms/production/5dadb527-c892-41f0-a43e-dbdc3071f66d/true_crime_now_logordx_white.png"
+}
+  </script>
+
   <link rel="stylesheet" href="../styles.css">
   <script src="../config.js"></script>
   <script>
     window._CHANNEL_SLUG    = 'true-crime-now';
-    window._CHANNEL_COUNTRY = 'CA';
+    window._CHANNEL_COUNTRY = 'US';
   </script>
 </head>
 <body class="detail-page">
@@ -30,23 +58,35 @@
     <a href="../suggest.html" class="suggest-nav-btn">+ Suggest Channel</a>
   </nav>
 
-  <!-- ======================== DETAIL HERO ======================== -->
+  <!-- ======================== DETAIL HERO (pre-rendered for SEO) ======================== -->
   <section class="detail-hero" id="detailHero">
     <div class="detail-logo-wrap">
-      <div class="skeleton" style="width:100%;height:100%;border-radius:8px;"></div>
+      <img src="https://provider-static.plex.tv/epg/cms/production/5dadb527-c892-41f0-a43e-dbdc3071f66d/true_crime_now_logordx_white.png" alt="True Crime Now" id="detailImg">
+      <div class="detail-logo-fallback" style="display:none">
+        <span class="card-fallback-name">True Crime Now</span>
+        <span class="card-fallback-brand">📺</span>
+      </div>
     </div>
     <div class="detail-info">
-      <div class="skeleton skeleton-title" style="width:80px;margin-bottom:24px;"></div>
-      <div class="skeleton" style="height:36px;width:300px;border-radius:4px;margin-bottom:20px;"></div>
-      <div class="skeleton" style="height:14px;width:100%;max-width:480px;border-radius:4px;margin-bottom:8px;"></div>
-      <div class="skeleton" style="height:14px;width:70%;max-width:340px;border-radius:4px;margin-bottom:24px;"></div>
-      <div class="skeleton" style="height:32px;width:200px;border-radius:20px;"></div>
+      <div class="detail-country">🇺🇸 US</div>
+      <h1 class="detail-channel-name">True Crime Now</h1>
+      <p class="detail-description">Current and compelling true crime stories and investigations.</p>
+      
+      <div class="detail-section">
+        <div class="detail-section-label">Genre</div>
+        <div class="badge-row"><span class="badge badge-genre">True Crime</span></div>
+      </div>
+      
+      <div class="detail-section">
+        <div class="detail-section-label">Available On</div>
+        <div class="badge-row"><span class="badge badge-platform">Plex</span></div>
+      </div>
     </div>
   </section>
 
   <!-- ======================== DETAIL BODY ======================== -->
   <div class="detail-body" id="detailBody" style="display:none">
-    <!-- Populated by JS -->
+    <!-- Populated by channel-detail.js -->
   </div>
 
   <!-- ======================== ERROR ======================== -->

@@ -7,6 +7,34 @@
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📺</text></svg>">
   <meta name="description" content="Xena is a reformed warrior princess who travels around fighting evil. Gabrielle -- bard and friend -- keeps her company and helps her stay on the path of good">
   <link rel="canonical" href="https://whatsonfreetv.com/channel/xena">
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="Xena - Free Streaming | WhatsOnFreeTV">
+  <meta property="og:description" content="Xena is a reformed warrior princess who travels around fighting evil. Gabrielle -- bard and friend -- keeps her company and helps her stay on the path of good">
+  <meta property="og:image" content="https://images.sr.roku.com/idType/roku-trc/context/trc/id/302d8d86738c0ab83d0ca3a5e2df3492/https%3A%2F%2Fimage.roku.com%2Fbh-uploads%2Fproduction%2FinfoHUDLogo%2F1757537081513_Xena_260x147_2x1_channel_logo_center_align_EFEFEF_transparent_bkgd_roku_PNG.png">
+  <meta property="og:url" content="https://whatsonfreetv.com/channel/xena">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="WhatsOnFreeTV">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Xena - Free Streaming | WhatsOnFreeTV">
+  <meta name="twitter:description" content="Xena is a reformed warrior princess who travels around fighting evil. Gabrielle -- bard and friend -- keeps her company and helps her stay on the path of good">
+  <meta name="twitter:image" content="https://images.sr.roku.com/idType/roku-trc/context/trc/id/302d8d86738c0ab83d0ca3a5e2df3492/https%3A%2F%2Fimage.roku.com%2Fbh-uploads%2Fproduction%2FinfoHUDLogo%2F1757537081513_Xena_260x147_2x1_channel_logo_center_align_EFEFEF_transparent_bkgd_roku_PNG.png">
+
+  <!-- Schema.org -->
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BroadcastChannel",
+  "name": "Xena",
+  "broadcastDisplayName": "Xena",
+  "url": "https://whatsonfreetv.com/channel/xena",
+  "inLanguage": "en",
+  "description": "Xena is a reformed warrior princess who travels around fighting evil. Gabrielle -- bard and friend -- keeps her company and helps her stay on the path of good.",
+  "genre": "Action",
+  "image": "https://images.sr.roku.com/idType/roku-trc/context/trc/id/302d8d86738c0ab83d0ca3a5e2df3492/https%3A%2F%2Fimage.roku.com%2Fbh-uploads%2Fproduction%2FinfoHUDLogo%2F1757537081513_Xena_260x147_2x1_channel_logo_center_align_EFEFEF_transparent_bkgd_roku_PNG.png"
+}
+  </script>
+
   <link rel="stylesheet" href="../styles.css">
   <script src="../config.js"></script>
   <script>
@@ -30,23 +58,35 @@
     <a href="../suggest.html" class="suggest-nav-btn">+ Suggest Channel</a>
   </nav>
 
-  <!-- ======================== DETAIL HERO ======================== -->
+  <!-- ======================== DETAIL HERO (pre-rendered for SEO) ======================== -->
   <section class="detail-hero" id="detailHero">
     <div class="detail-logo-wrap">
-      <div class="skeleton" style="width:100%;height:100%;border-radius:8px;"></div>
+      <img src="https://images.sr.roku.com/idType/roku-trc/context/trc/id/302d8d86738c0ab83d0ca3a5e2df3492/https%3A%2F%2Fimage.roku.com%2Fbh-uploads%2Fproduction%2FinfoHUDLogo%2F1757537081513_Xena_260x147_2x1_channel_logo_center_align_EFEFEF_transparent_bkgd_roku_PNG.png" alt="Xena" id="detailImg">
+      <div class="detail-logo-fallback" style="display:none">
+        <span class="card-fallback-name">Xena</span>
+        <span class="card-fallback-brand">📺</span>
+      </div>
     </div>
     <div class="detail-info">
-      <div class="skeleton skeleton-title" style="width:80px;margin-bottom:24px;"></div>
-      <div class="skeleton" style="height:36px;width:300px;border-radius:4px;margin-bottom:20px;"></div>
-      <div class="skeleton" style="height:14px;width:100%;max-width:480px;border-radius:4px;margin-bottom:8px;"></div>
-      <div class="skeleton" style="height:14px;width:70%;max-width:340px;border-radius:4px;margin-bottom:24px;"></div>
-      <div class="skeleton" style="height:32px;width:200px;border-radius:20px;"></div>
+      <div class="detail-country">🇺🇸 US</div>
+      <h1 class="detail-channel-name">Xena</h1>
+      <p class="detail-description">Xena is a reformed warrior princess who travels around fighting evil. Gabrielle -- bard and friend -- keeps her company and helps her stay on the path of good.</p>
+      
+      <div class="detail-section">
+        <div class="detail-section-label">Genre</div>
+        <div class="badge-row"><span class="badge badge-genre">Action</span></div>
+      </div>
+      
+      <div class="detail-section">
+        <div class="detail-section-label">Available On</div>
+        <div class="badge-row"><span class="badge badge-platform-roku">Roku</span></div>
+      </div>
     </div>
   </section>
 
   <!-- ======================== DETAIL BODY ======================== -->
   <div class="detail-body" id="detailBody" style="display:none">
-    <!-- Populated by JS -->
+    <!-- Populated by channel-detail.js -->
   </div>
 
   <!-- ======================== ERROR ======================== -->
