@@ -349,7 +349,7 @@
       sessionStorage.setItem('woftv_country', COUNTRY);
       const urlSlug = record.url_slug;
       window.location.href = urlSlug
-        ? `channel.html?slug=${encodeURIComponent(urlSlug)}`
+        ? `/channel/${encodeURIComponent(urlSlug)}`
         : `channel.html?id=${encodeURIComponent(name)}`;
     };
     card.addEventListener('click', navigate);
@@ -485,10 +485,9 @@
     if (linkName) {
       const fromGuide  = (activeView === 'guide');
       const urlSlug    = channel?.url_slug;
-      const slugPart   = urlSlug
-        ? `slug=${encodeURIComponent(urlSlug)}`
-        : `id=${encodeURIComponent(linkName)}`;
-      const destUrl    = `channel.html?${slugPart}&country=${COUNTRY}${fromGuide ? '&from=guide' : ''}`;
+      const destUrl    = urlSlug
+        ? `/channel/${encodeURIComponent(urlSlug)}?country=${COUNTRY}${fromGuide ? '&from=guide' : ''}`
+        : `channel.html?id=${encodeURIComponent(linkName)}&country=${COUNTRY}${fromGuide ? '&from=guide' : ''}`;
       viewBtn.href     = destUrl;
       viewBtn.onclick = null; // let the native <a href> handle navigation — most reliable on iOS
       viewBtn.style.display = '';
@@ -1470,7 +1469,7 @@
           sessionStorage.setItem('woftv_country', COUNTRY);
           const urlSlug = ch.url_slug;
           window.location.href = urlSlug
-            ? `channel.html?slug=${encodeURIComponent(urlSlug)}`
+            ? `/channel/${encodeURIComponent(urlSlug)}`
             : `channel.html?id=${encodeURIComponent(name)}`;
         });
         resultsEl.appendChild(item);

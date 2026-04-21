@@ -122,8 +122,8 @@
   function channelHref(ch) {
     const urlSlug = ch.url_slug;
     const name    = ch.fields['Channel Name'] || '';
-    if (urlSlug) return `${SITE_ROOT}channel.html?slug=${encodeURIComponent(urlSlug)}`;
-    return `${SITE_ROOT}channel.html?id=${encodeURIComponent(name)}`;
+    if (urlSlug) return `/channel/${encodeURIComponent(urlSlug)}`;
+    return `channel.html?id=${encodeURIComponent(name)}`;
   }
 
   // ---- Search modal ----
@@ -212,6 +212,8 @@
           img.addEventListener('error', () => { img.style.display = 'none'; fb.style.display = 'flex'; });
         }
         item.addEventListener('click', () => {
+          const country = sessionStorage.getItem('woftv_country') || 'US';
+          sessionStorage.setItem('woftv_country', country);
           window.location.href = channelHref(ch);
         });
         resultsEl.appendChild(item);
@@ -287,6 +289,23 @@
     if (exact) return exact;
     const lower = name.toLowerCase();
     return channels.find(ch => (ch.fields['Channel Name'] || '').toLowerCase() === lower) || null;
+  }
+
+  // JS mirror of Python name_to_slug() — fallback for channels not yet backfilled in Airtable
+  function nameToSlug(name) {
+    return (name || '')
+      .toLowerCase()
+      .replace(/&/g, 'and')
+      .replace(/[^a-z0-9]+/g, '-')
+      .replace(/-+/g, '-')
+      .replace(/^-|-$/g, '');
+  }
+
+  function findChannelBySlug(channels, slug) {
+    return channels.find(ch => ch.url_slug === slug)
+      || channels.find(ch => ch.id === slug)
+      || channels.find(ch => nameToSlug(ch.fields['Channel Name']) === slug)
+      || null;
   }
 
   function getSimilarChannels(channels, genres, excludeName) {
@@ -948,34 +967,45 @@
   async function load() {
     const params = new URLSearchParams(window.location.search);
 
-    // ?slug= — from card clicks (channel.html?slug=cnn-headlines)
-    // pathname — from Netlify rewrite (/channel/cnn-headlines → browser sees clean URL, no query string)
+    // Slug: prefer pathname (/channel/cnn-headlines from Netlify rewrite, no query string)
+    // then ?slug= param (legacy query-param fallback)
     const pathMatch = window.location.pathname.match(/\/channel\/([^/?#]+)/);
-    const slugParam = params.get('slug') || (pathMatch ? decodeURIComponent(pathMatch[1]) : null);
+    const slugParam = (pathMatch ? decodeURIComponent(pathMatch[1]) : null) || params.get('slug');
 
     // ?id= — legacy lookup by channel name
     const rawId = params.get('id');
     const channelName = rawId ? decodeURIComponent(rawId) : null;
 
-    const country = sessionStorage.getItem('woftv_country') || 'US';
-
     if (!slugParam && !channelName) { showError(); return; }
 
-    let channels;
-    try {
-      channels = await fetchChannelsJSON(country);
-    } catch (err) {
-      showError();
-      return;
-    }
+    // Country resolution order: explicit ?country= param → sessionStorage → default US
+    // ?country= is set by EPG modal and back-button links so it's the most reliable signal
+    const primaryCountry = params.get('country') || sessionStorage.getItem('woftv_country') || 'US';
+    const altCountry     = primaryCountry === 'US' ? 'CA' : 'US';
 
-    let record;
-    if (slugParam) {
-      record = channels.find(ch => ch.url_slug === slugParam) || null;
-      // Fallback: if url_slug not yet backfilled, try matching by old slug field
-      if (!record) record = channels.find(ch => ch.id === slugParam) || null;
-    } else {
-      record = findChannelByName(channels, channelName);
+    let record = null;
+    let resolvedCountry = primaryCountry;
+    let resolvedChannels = [];
+
+    try {
+      resolvedChannels = await fetchChannelsJSON(primaryCountry);
+      record = slugParam
+        ? findChannelBySlug(resolvedChannels, slugParam)
+        : findChannelByName(resolvedChannels, channelName);
+    } catch (_) {}
+
+    // Not found in primary country — try the other (handles shared links, wrong sessionStorage, etc.)
+    if (!record) {
+      try {
+        const altChannels = await fetchChannelsJSON(altCountry);
+        record = slugParam
+          ? findChannelBySlug(altChannels, slugParam)
+          : findChannelByName(altChannels, channelName);
+        if (record) {
+          resolvedCountry  = altCountry;
+          resolvedChannels = altChannels;
+        }
+      } catch (_) {}
     }
 
     if (!record) { showError(); return; }
@@ -991,7 +1021,7 @@
       genres
     };
 
-    sessionStorage.setItem('woftv_country', country);
+    sessionStorage.setItem('woftv_country', resolvedCountry);
 
     const body = document.getElementById('detailBody');
     body.style.display = 'block';
@@ -1005,7 +1035,7 @@
     `;
     body.appendChild(epgContainer);
 
-    renderSimilar(getSimilarChannels(channels, genres, name), body);
+    renderSimilar(getSimilarChannels(resolvedChannels, genres, name), body);
 
     const link = document.createElement('a');
     link.href = `${SITE_ROOT}suggest.html?name=${encodeURIComponent(name)}`;
@@ -1013,7 +1043,7 @@
     link.textContent = 'Suggest an edit to this channel';
     body.appendChild(link);
 
-    fetchEPGForChannel(country, name)
+    fetchEPGForChannel(resolvedCountry, name)
       .then(async programs => {
         epgContainer.innerHTML = '';
 
