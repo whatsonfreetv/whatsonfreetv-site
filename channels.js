@@ -486,8 +486,8 @@
       const fromGuide  = (activeView === 'guide');
       const urlSlug    = channel?.url_slug;
       const destUrl    = urlSlug
-        ? `/channel/${encodeURIComponent(urlSlug)}?country=${COUNTRY}${fromGuide ? '&from=guide' : ''}`
-        : `channel.html?id=${encodeURIComponent(linkName)}&country=${COUNTRY}${fromGuide ? '&from=guide' : ''}`;
+        ? `/channel/${encodeURIComponent(urlSlug)}${fromGuide ? '?from=guide' : ''}`
+        : `channel.html?id=${encodeURIComponent(linkName)}${fromGuide ? '?from=guide' : ''}`;
       viewBtn.href     = destUrl;
       viewBtn.onclick = null; // let the native <a href> handle navigation — most reliable on iOS
       viewBtn.style.display = '';
