@@ -625,10 +625,9 @@
 
     const row = section.querySelector('.channels-row');
     channels.forEach(ch => {
-      const f       = ch.fields;
-      const name    = f['Channel Name'] || 'Unknown';
-      const logo    = (f['Logo URL'] || '').trim();
-      const initial = name.trim().charAt(0).toUpperCase();
+      const f    = ch.fields;
+      const name = f['Channel Name'] || 'Unknown';
+      const logo = (f['Logo URL'] || '').trim();
 
       const card = document.createElement('div');
       card.className = 'channel-card';
@@ -637,7 +636,9 @@
       card.innerHTML = `
         <div class="card-thumb">
           ${logo ? `<img src="${esc(logo)}" alt="${esc(name)}" loading="lazy">` : ''}
-          <div class="card-fallback" style="${logo ? '' : 'display:flex'}">${esc(initial)}</div>
+          <div class="card-fallback" style="${logo ? '' : 'display:flex'}">
+            <span class="card-fallback-name">${esc(name)}</span>
+          </div>
         </div>
         <div class="card-footer">
           <div class="card-label">${esc(name)}</div>
