@@ -7,6 +7,34 @@
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📺</text></svg>">
   <meta name="description" content="Professional billiards and pool tournaments featuring the world&#x27;s top players competing for championships.">
   <link rel="canonical" href="https://whatsonfreetv.com/channel/billiards-tv">
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="Billiards TV - Free Streaming | WhatsOnFreeTV">
+  <meta property="og:description" content="Professional billiards and pool tournaments featuring the world&#x27;s top players competing for championships.">
+  <meta property="og:image" content="https://tmsimg.fancybits.co/assets/s87822_h3_aa.png">
+  <meta property="og:url" content="https://whatsonfreetv.com/channel/billiards-tv">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="WhatsOnFreeTV">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Billiards TV - Free Streaming | WhatsOnFreeTV">
+  <meta name="twitter:description" content="Professional billiards and pool tournaments featuring the world&#x27;s top players competing for championships.">
+  <meta name="twitter:image" content="https://tmsimg.fancybits.co/assets/s87822_h3_aa.png">
+
+  <!-- Schema.org -->
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BroadcastChannel",
+  "name": "Billiards TV",
+  "broadcastDisplayName": "Billiards TV",
+  "url": "https://whatsonfreetv.com/channel/billiards-tv",
+  "inLanguage": "en",
+  "description": "Professional billiards and pool tournaments featuring the world's top players competing for championships.",
+  "genre": "Sports",
+  "image": "https://tmsimg.fancybits.co/assets/s87822_h3_aa.png"
+}
+  </script>
+
   <link rel="stylesheet" href="../styles.css">
   <script src="../config.js"></script>
   <script>
@@ -30,23 +58,35 @@
     <a href="../suggest.html" class="suggest-nav-btn">+ Suggest Channel</a>
   </nav>
 
-  <!-- ======================== DETAIL HERO ======================== -->
+  <!-- ======================== DETAIL HERO (pre-rendered for SEO) ======================== -->
   <section class="detail-hero" id="detailHero">
     <div class="detail-logo-wrap">
-      <div class="skeleton" style="width:100%;height:100%;border-radius:8px;"></div>
+      <img src="https://tmsimg.fancybits.co/assets/s87822_h3_aa.png" alt="Billiards TV" id="detailImg">
+      <div class="detail-logo-fallback" style="display:none">
+        <span class="card-fallback-name">Billiards TV</span>
+        <span class="card-fallback-brand">📺</span>
+      </div>
     </div>
     <div class="detail-info">
-      <div class="skeleton skeleton-title" style="width:80px;margin-bottom:24px;"></div>
-      <div class="skeleton" style="height:36px;width:300px;border-radius:4px;margin-bottom:20px;"></div>
-      <div class="skeleton" style="height:14px;width:100%;max-width:480px;border-radius:4px;margin-bottom:8px;"></div>
-      <div class="skeleton" style="height:14px;width:70%;max-width:340px;border-radius:4px;margin-bottom:24px;"></div>
-      <div class="skeleton" style="height:32px;width:200px;border-radius:20px;"></div>
+      <div class="detail-country">🇺🇸 US</div>
+      <h1 class="detail-channel-name">Billiards TV</h1>
+      <p class="detail-description">Professional billiards and pool tournaments featuring the world&#x27;s top players competing for championships.</p>
+      
+      <div class="detail-section">
+        <div class="detail-section-label">Genre</div>
+        <div class="badge-row"><span class="badge badge-genre">Sports</span></div>
+      </div>
+      
+      <div class="detail-section">
+        <div class="detail-section-label">Available On</div>
+        <div class="badge-row"><span class="badge badge-platform">TCLtv+</span></div>
+      </div>
     </div>
   </section>
 
   <!-- ======================== DETAIL BODY ======================== -->
   <div class="detail-body" id="detailBody" style="display:none">
-    <!-- Populated by JS -->
+    <!-- Populated by channel-detail.js -->
   </div>
 
   <!-- ======================== ERROR ======================== -->
