@@ -48,6 +48,7 @@
 
     const records = (json.channels || []).map(ch => ({
       id: ch.slug,
+      url_slug: ch.url_slug || '',
       createdTime: ch.createdTime,
       fields: {
         'Channel Name': ch.name        || '',
@@ -346,7 +347,10 @@
 
     const navigate = () => {
       sessionStorage.setItem('woftv_country', COUNTRY);
-      window.location.href = `channel.html?id=${encodeURIComponent(name)}`;
+      const urlSlug = record.url_slug;
+      window.location.href = urlSlug
+        ? `channel.html?slug=${encodeURIComponent(urlSlug)}`
+        : `channel.html?id=${encodeURIComponent(name)}`;
     };
     card.addEventListener('click', navigate);
     card.addEventListener('keydown', e => {
@@ -479,10 +483,13 @@
 
     const viewBtn = backdrop.querySelector('.epg-modal-btn-primary');
     if (linkName) {
-      // Include country + from=guide so channel.html can show the correct back link
-      const fromGuide = (activeView === 'guide');
-      const destUrl   = `channel.html?id=${encodeURIComponent(linkName)}&country=${COUNTRY}${fromGuide ? '&from=guide' : ''}`;
-      viewBtn.href    = destUrl;
+      const fromGuide  = (activeView === 'guide');
+      const urlSlug    = channel?.url_slug;
+      const slugPart   = urlSlug
+        ? `slug=${encodeURIComponent(urlSlug)}`
+        : `id=${encodeURIComponent(linkName)}`;
+      const destUrl    = `channel.html?${slugPart}&country=${COUNTRY}${fromGuide ? '&from=guide' : ''}`;
+      viewBtn.href     = destUrl;
       viewBtn.onclick = null; // let the native <a href> handle navigation — most reliable on iOS
       viewBtn.style.display = '';
     } else {
@@ -1461,7 +1468,10 @@
 
         item.addEventListener('click', () => {
           sessionStorage.setItem('woftv_country', COUNTRY);
-          window.location.href = `channel.html?id=${encodeURIComponent(name)}`;
+          const urlSlug = ch.url_slug;
+          window.location.href = urlSlug
+            ? `channel.html?slug=${encodeURIComponent(urlSlug)}`
+            : `channel.html?id=${encodeURIComponent(name)}`;
         });
         resultsEl.appendChild(item);
       });
