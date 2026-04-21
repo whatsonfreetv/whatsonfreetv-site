@@ -325,11 +325,24 @@ input, select, textarea { font-family: inherit; }
   height: 100%;
   align-items: center;
   justify-content: center;
-  font-size: 2rem;
-  font-weight: 900;
-  color: var(--red);
-  background: var(--bg-card);
-  letter-spacing: -1px;
+  background: #1a1a1a;
+  border-radius: var(--radius);
+  padding: 14px 10px;
+  overflow: hidden;
+  text-align: center;
+}
+
+.card-fallback-name {
+  font-size: clamp(13px, 3vw, 20px);
+  font-weight: 800;
+  color: #fff;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  word-break: break-word;
+  display: -webkit-box;
+  -webkit-line-clamp: 4;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
 .card-thumb img.errored { display: none; }
@@ -605,9 +618,19 @@ input, select, textarea { font-family: inherit; }
 }
 
 .detail-logo-fallback {
-  font-size: 3.5rem;
-  font-weight: 900;
-  color: var(--red);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  background: #1a1a1a;
+  padding: 16px;
+  text-align: center;
+  overflow: hidden;
+  border-radius: var(--radius-lg);
+}
+.detail-logo-fallback .card-fallback-name {
+  font-size: clamp(12px, 2.5vw, 18px);
 }
 
 .detail-info { flex: 1; }
@@ -999,13 +1022,11 @@ textarea.form-control {
   width: 32px;
   height: 32px;
   border-radius: var(--radius);
-  background: #2a2a2a;
+  background: #1a1a1a;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 0.9rem;
-  font-weight: 800;
-  color: var(--red);
+  font-size: 1rem;
   flex-shrink: 0;
 }
 
@@ -1057,11 +1078,11 @@ textarea.form-control {
   height: 100%;
   align-items: center;
   justify-content: center;
-  font-size: 2rem;
-  font-weight: 900;
-  color: var(--red);
-  background: #1e1e1e;
-  letter-spacing: -1px;
+  background: #1a1a1a;
+  border-radius: var(--radius);
+  padding: 14px 10px;
+  overflow: hidden;
+  text-align: center;
 }
 
 /* =============================================
@@ -1393,9 +1414,18 @@ textarea.form-control {
 }
 
 .featured-epg-thumb-fallback {
-  font-size: 2.8rem;
-  font-weight: 900;
-  color: var(--red);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #1a1a1a;
+  border-radius: var(--radius);
+  padding: 10px 16px;
+  text-align: center;
+  max-width: 85%;
+  overflow: hidden;
+}
+.featured-epg-thumb-fallback .card-fallback-name {
+  font-size: clamp(12px, 2vw, 17px);
 }
 
 .featured-epg-live {
@@ -1712,10 +1742,8 @@ textarea.form-control {
   width: 40px;
   height: 40px;
   border-radius: 6px;
-  background: var(--red-dim);
-  color: var(--red);
-  font-weight: 700;
-  font-size: 1.1rem;
+  background: #1a1a1a;
+  font-size: 1.2rem;
   display: flex;
   align-items: center;
   justify-content: center;

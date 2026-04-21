@@ -1,7 +1,2 @@
 [build]
   functions = "netlify/functions"
-
-[[redirects]]
-  from = "/channel/:slug"
-  to = "/channel.html?slug=:slug"
-  status = 200

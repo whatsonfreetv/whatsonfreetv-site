@@ -331,7 +331,9 @@
       <div class="card-thumb">
         ${cardIsNew ? '<span class="card-new-badge">NEW</span>' : ''}
         ${logo ? `<img src="${esc(logo)}" alt="${esc(name)}" loading="lazy">` : ''}
-        <div class="card-fallback" style="${logo ? '' : 'display:flex'}">${esc(initial)}</div>
+        <div class="card-fallback" style="${logo ? '' : 'display:flex'}">
+          <span class="card-fallback-name">${esc(name)}</span>
+        </div>
         ${platforms.length
           ? `<div class="card-hover-info"><div class="card-hover-platforms">${badgesHTML}</div></div>`
           : ''}
@@ -449,11 +451,11 @@
     const logoWrap = backdrop.querySelector('.epg-modal-logo-wrap');
     logoWrap.innerHTML = logo
       ? `<img class="epg-modal-logo" src="${esc(logo)}" alt="${esc(channelName)}">`
-      : `<div class="epg-modal-logo-fallback">${esc(initial)}</div>`;
+      : `<div class="epg-modal-logo-fallback">📺</div>`;
     if (logo) {
       const img = logoWrap.querySelector('img');
       img.addEventListener('error', () => {
-        logoWrap.innerHTML = `<div class="epg-modal-logo-fallback">${esc(initial)}</div>`;
+        logoWrap.innerHTML = `<div class="epg-modal-logo-fallback">📺</div>`;
       });
     }
 
@@ -520,7 +522,7 @@
     card.innerHTML = `
       <div class="epg-card-header">
         ${logo ? `<img class="epg-logo" src="${esc(logo)}" alt="${esc(channelName)}" loading="lazy">` : ''}
-        <div class="epg-logo-fallback" style="${logo ? 'display:none' : ''}">${esc(initial)}</div>
+        <div class="epg-logo-fallback" style="${logo ? 'display:none' : ''}">📺</div>
         <span class="epg-channel-name">${esc(channelName)}</span>
         <span class="epg-live-badge" style="margin-left:auto;flex-shrink:0">&#9679; Live</span>
       </div>
@@ -582,7 +584,9 @@
     card.innerHTML = `
       <div class="featured-epg-thumb">
         ${logo ? `<img src="${esc(logo)}" alt="${esc(channelName)}" loading="lazy">` : ''}
-        <div class="featured-epg-thumb-fallback"${logo ? ' style="display:none"' : ''}>${esc(initial)}</div>
+        <div class="featured-epg-thumb-fallback"${logo ? ' style="display:none"' : ''}>
+          <span class="card-fallback-name">${esc(channelName)}</span>
+        </div>
         <span class="epg-live-badge featured-epg-live">&#9679; Live</span>
       </div>
       <div class="featured-epg-body">

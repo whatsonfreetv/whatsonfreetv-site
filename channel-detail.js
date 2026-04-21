@@ -90,7 +90,11 @@
   // ---- Back link ----
   function _backParams() {
     const p       = new URLSearchParams(window.location.search);
-    const country = p.get('country') || sessionStorage.getItem('woftv_country') || 'US';
+    // Priority: explicit ?country= → static page var → sessionStorage → default US
+    const country = p.get('country')
+      || (typeof window._CHANNEL_COUNTRY !== 'undefined' ? window._CHANNEL_COUNTRY : null)
+      || sessionStorage.getItem('woftv_country')
+      || 'US';
     const from    = p.get('from') || '';
     return { country, from };
   }
@@ -448,7 +452,9 @@
     hero.innerHTML = `
       <div class="detail-logo-wrap">
         ${logo ? `<img src="${esc(logo)}" alt="${esc(name)}" id="detailImg">` : ''}
-        <div class="detail-logo-fallback" id="detailFallback" style="${logo ? 'display:none' : ''}">${esc(initial)}</div>
+        <div class="detail-logo-fallback" id="detailFallback" style="${logo ? 'display:none' : ''}">
+          <span class="card-fallback-name">${esc(name)}</span>
+        </div>
       </div>
       <div class="detail-info">
         <a href="${esc(backHref())}" class="detail-back">&#8592; ${backLabel()}</a>
@@ -967,10 +973,11 @@
   async function load() {
     const params = new URLSearchParams(window.location.search);
 
-    // Slug: prefer pathname (/channel/cnn-headlines from Netlify rewrite, no query string)
-    // then ?slug= param (legacy query-param fallback)
+    // Slug priority: static page var → pathname → ?slug= query param (legacy)
     const pathMatch = window.location.pathname.match(/\/channel\/([^/?#]+)/);
-    const slugParam = (pathMatch ? decodeURIComponent(pathMatch[1]) : null) || params.get('slug');
+    const slugParam = (typeof window._CHANNEL_SLUG !== 'undefined' ? window._CHANNEL_SLUG : null)
+      || (pathMatch ? decodeURIComponent(pathMatch[1]) : null)
+      || params.get('slug');
 
     // ?id= — legacy lookup by channel name
     const rawId = params.get('id');
@@ -978,9 +985,11 @@
 
     if (!slugParam && !channelName) { showError(); return; }
 
-    // Country resolution order: explicit ?country= param → sessionStorage → default US
-    // ?country= is set by EPG modal and back-button links so it's the most reliable signal
-    const primaryCountry = params.get('country') || sessionStorage.getItem('woftv_country') || 'US';
+    // Country priority: static page var → explicit ?country= param → sessionStorage → default US
+    const primaryCountry = (typeof window._CHANNEL_COUNTRY !== 'undefined' ? window._CHANNEL_COUNTRY : null)
+      || params.get('country')
+      || sessionStorage.getItem('woftv_country')
+      || 'US';
     const altCountry     = primaryCountry === 'US' ? 'CA' : 'US';
 
     let record = null;
