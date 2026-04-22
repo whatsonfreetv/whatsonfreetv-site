@@ -3,19 +3,48 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>XITE Celebrates — Free Live TV | WhatsOnFreeTV</title>
+  <title>XITE Celebrates - Free Streaming | WhatsOnFreeTV</title>
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📺</text></svg>">
   <meta name="description" content="Celebration and party music content from XITE.">
   <link rel="canonical" href="https://whatsonfreetv.com/channel/xite-celebrates">
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="XITE Celebrates - Free Streaming | WhatsOnFreeTV">
+  <meta property="og:description" content="Celebration and party music content from XITE.">
+  <meta property="og:image" content="https://provider-static.plex.tv/epg/cms/production/ea24a0cf-9535-4f90-a96c-c8f769ffd7b2/xitecelebrates_logo_light_-_Arlette_FiranRDX.png">
+  <meta property="og:url" content="https://whatsonfreetv.com/channel/xite-celebrates">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="WhatsOnFreeTV">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="XITE Celebrates - Free Streaming | WhatsOnFreeTV">
+  <meta name="twitter:description" content="Celebration and party music content from XITE.">
+  <meta name="twitter:image" content="https://provider-static.plex.tv/epg/cms/production/ea24a0cf-9535-4f90-a96c-c8f769ffd7b2/xitecelebrates_logo_light_-_Arlette_FiranRDX.png">
+
+  <!-- Schema.org -->
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BroadcastChannel",
+  "name": "XITE Celebrates",
+  "broadcastDisplayName": "XITE Celebrates",
+  "url": "https://whatsonfreetv.com/channel/xite-celebrates",
+  "inLanguage": "en",
+  "description": "Celebration and party music content from XITE.",
+  "genre": "Music",
+  "image": "https://provider-static.plex.tv/epg/cms/production/ea24a0cf-9535-4f90-a96c-c8f769ffd7b2/xitecelebrates_logo_light_-_Arlette_FiranRDX.png"
+}
+  </script>
+
   <link rel="stylesheet" href="../styles.css">
   <script src="../config.js"></script>
   <script>
-    window._CHANNEL_NAME = "XITE Celebrates";
-    window._CHANNEL_COUNTRY = "CA";
+    window._CHANNEL_SLUG    = 'xite-celebrates';
+    window._CHANNEL_COUNTRY = 'US';
   </script>
 </head>
 <body class="detail-page">
 
+  <!-- ======================== NAVBAR ======================== -->
   <nav class="navbar">
     <a href="../index.html" class="navbar-logo">WhatsOn<span>FreeTV</span></a>
     <div class="nav-country-links" id="navCountryLinks">
@@ -29,28 +58,45 @@
     <a href="../suggest.html" class="suggest-nav-btn">+ Suggest Channel</a>
   </nav>
 
+  <!-- ======================== DETAIL HERO (pre-rendered for SEO) ======================== -->
   <section class="detail-hero" id="detailHero">
     <div class="detail-logo-wrap">
-      <div class="skeleton" style="width:100%;height:100%;border-radius:8px;"></div>
+      <img src="https://provider-static.plex.tv/epg/cms/production/ea24a0cf-9535-4f90-a96c-c8f769ffd7b2/xitecelebrates_logo_light_-_Arlette_FiranRDX.png" alt="XITE Celebrates" id="detailImg">
+      <div class="detail-logo-fallback" style="display:none">
+        <span class="card-fallback-name">XITE Celebrates</span>
+      </div>
     </div>
     <div class="detail-info">
-      <div class="skeleton skeleton-title" style="width:80px;margin-bottom:24px;"></div>
-      <div class="skeleton" style="height:36px;width:300px;border-radius:4px;margin-bottom:20px;"></div>
-      <div class="skeleton" style="height:14px;width:100%;max-width:480px;border-radius:4px;margin-bottom:8px;"></div>
-      <div class="skeleton" style="height:14px;width:70%;max-width:340px;border-radius:4px;margin-bottom:24px;"></div>
-      <div class="skeleton" style="height:32px;width:200px;border-radius:20px;"></div>
+      <div class="detail-country">🇺🇸 US</div>
+      <h1 class="detail-channel-name">XITE Celebrates</h1>
+      <p class="detail-description">Celebration and party music content from XITE.</p>
+      
+      <div class="detail-section">
+        <div class="detail-section-label">Genre</div>
+        <div class="badge-row"><span class="badge badge-genre">Music</span></div>
+      </div>
+      
+      <div class="detail-section">
+        <div class="detail-section-label">Available On</div>
+        <div class="badge-row"><span class="badge badge-platform">Plex</span></div>
+      </div>
     </div>
   </section>
 
-  <div class="detail-body" id="detailBody" style="display:none"></div>
+  <!-- ======================== DETAIL BODY ======================== -->
+  <div class="detail-body" id="detailBody" style="display:none">
+    <!-- Populated by channel-detail.js -->
+  </div>
 
+  <!-- ======================== ERROR ======================== -->
   <div class="state-box hidden" id="errorState">
-    <div class="state-icon">&#9888;&#65039;</div>
+    <div class="state-icon">⚠️</div>
     <div class="state-title">Channel not found</div>
     <div class="state-msg">This channel may have been removed or the link is invalid.</div>
     <a href="../index.html" class="retry-btn" style="display:inline-block;margin-top:16px;text-decoration:none;">Go Home</a>
   </div>
 
+  <!-- ======================== FOOTER ======================== -->
   <footer class="site-footer">
     <div class="footer-inner">
       <div class="footer-logo">WhatsOn<span>FreeTV</span></div>
