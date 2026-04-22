@@ -90,10 +90,11 @@
   // ---- Back link ----
   function _backParams() {
     const p       = new URLSearchParams(window.location.search);
-    // Priority: explicit ?country= → static page var → sessionStorage → default US
+    // Priority: explicit ?country= → sessionStorage (set by the page you came from)
+    //           → static page var (fallback for direct/shared links) → default US
     const country = p.get('country')
-      || (typeof window._CHANNEL_COUNTRY !== 'undefined' ? window._CHANNEL_COUNTRY : null)
       || sessionStorage.getItem('woftv_country')
+      || (typeof window._CHANNEL_COUNTRY !== 'undefined' ? window._CHANNEL_COUNTRY : null)
       || 'US';
     const from    = p.get('from') || '';
     return { country, from };
@@ -986,10 +987,11 @@
 
     if (!slugParam && !channelName) { showError(); return; }
 
-    // Country priority: static page var → explicit ?country= param → sessionStorage → default US
-    const primaryCountry = (typeof window._CHANNEL_COUNTRY !== 'undefined' ? window._CHANNEL_COUNTRY : null)
-      || params.get('country')
+    // Country priority: explicit ?country= param → sessionStorage (set by the page you came from)
+    //                   → static page var (fallback for direct/shared links) → default US
+    const primaryCountry = params.get('country')
       || sessionStorage.getItem('woftv_country')
+      || (typeof window._CHANNEL_COUNTRY !== 'undefined' ? window._CHANNEL_COUNTRY : null)
       || 'US';
     const altCountry     = primaryCountry === 'US' ? 'CA' : 'US';
 
