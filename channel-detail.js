@@ -1,6 +1,6 @@
 (function () {
   const DATA_BASE = 'https://raw.githubusercontent.com/whatsonfreetv/whatsonfreetv-data/main';
-  const SITE_ROOT = '';
+  const SITE_ROOT = '/';
 
   // Current channel info — set in load(), read by openShowModal
   let _channel = { name: '', logo: '', initial: '', genres: [] };
