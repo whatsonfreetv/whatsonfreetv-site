@@ -3,19 +3,48 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>The Price is Right Drew Carey — Free Live TV | WhatsOnFreeTV</title>
+  <title>The Price is Right Drew Carey - Free Streaming | WhatsOnFreeTV</title>
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📺</text></svg>">
   <meta name="description" content="The Price is Right hosted by Drew Carey in recent seasons.">
   <link rel="canonical" href="https://whatsonfreetv.com/channel/the-price-is-right-drew-carey">
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="The Price is Right Drew Carey - Free Streaming | WhatsOnFreeTV">
+  <meta property="og:description" content="The Price is Right hosted by Drew Carey in recent seasons.">
+  <meta property="og:image" content="https://provider-static.plex.tv/epg/cms/production/5fd3d7e1-34f3-4d25-8669-18eb4a047424/TPIR_Plex_Logo_DrkBkg_1500x1000.png">
+  <meta property="og:url" content="https://whatsonfreetv.com/channel/the-price-is-right-drew-carey">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="WhatsOnFreeTV">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="The Price is Right Drew Carey - Free Streaming | WhatsOnFreeTV">
+  <meta name="twitter:description" content="The Price is Right hosted by Drew Carey in recent seasons.">
+  <meta name="twitter:image" content="https://provider-static.plex.tv/epg/cms/production/5fd3d7e1-34f3-4d25-8669-18eb4a047424/TPIR_Plex_Logo_DrkBkg_1500x1000.png">
+
+  <!-- Schema.org -->
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BroadcastChannel",
+  "name": "The Price is Right Drew Carey",
+  "broadcastDisplayName": "The Price is Right Drew Carey",
+  "url": "https://whatsonfreetv.com/channel/the-price-is-right-drew-carey",
+  "inLanguage": "en",
+  "description": "The Price is Right hosted by Drew Carey in recent seasons.",
+  "genre": "Game Shows",
+  "image": "https://provider-static.plex.tv/epg/cms/production/5fd3d7e1-34f3-4d25-8669-18eb4a047424/TPIR_Plex_Logo_DrkBkg_1500x1000.png"
+}
+  </script>
+
   <link rel="stylesheet" href="../styles.css">
   <script src="../config.js"></script>
   <script>
-    window._CHANNEL_NAME = "The Price is Right Drew Carey";
-    window._CHANNEL_COUNTRY = "CA";
+    window._CHANNEL_SLUG    = 'the-price-is-right-drew-carey';
+    window._CHANNEL_COUNTRY = 'CA';
   </script>
 </head>
 <body class="detail-page">
 
+  <!-- ======================== NAVBAR ======================== -->
   <nav class="navbar">
     <a href="../index.html" class="navbar-logo">WhatsOn<span>FreeTV</span></a>
     <div class="nav-country-links" id="navCountryLinks">
@@ -29,28 +58,45 @@
     <a href="../suggest.html" class="suggest-nav-btn">+ Suggest Channel</a>
   </nav>
 
+  <!-- ======================== DETAIL HERO (pre-rendered for SEO) ======================== -->
   <section class="detail-hero" id="detailHero">
     <div class="detail-logo-wrap">
-      <div class="skeleton" style="width:100%;height:100%;border-radius:8px;"></div>
+      <img src="https://provider-static.plex.tv/epg/cms/production/5fd3d7e1-34f3-4d25-8669-18eb4a047424/TPIR_Plex_Logo_DrkBkg_1500x1000.png" alt="The Price is Right Drew Carey" id="detailImg">
+      <div class="detail-logo-fallback" style="display:none">
+        <span class="card-fallback-name">The Price is Right Drew Carey</span>
+      </div>
     </div>
     <div class="detail-info">
-      <div class="skeleton skeleton-title" style="width:80px;margin-bottom:24px;"></div>
-      <div class="skeleton" style="height:36px;width:300px;border-radius:4px;margin-bottom:20px;"></div>
-      <div class="skeleton" style="height:14px;width:100%;max-width:480px;border-radius:4px;margin-bottom:8px;"></div>
-      <div class="skeleton" style="height:14px;width:70%;max-width:340px;border-radius:4px;margin-bottom:24px;"></div>
-      <div class="skeleton" style="height:32px;width:200px;border-radius:20px;"></div>
+      <div class="detail-country">🇨🇦 CA</div>
+      <h1 class="detail-channel-name">The Price is Right Drew Carey</h1>
+      <p class="detail-description">The Price is Right hosted by Drew Carey in recent seasons.</p>
+      
+      <div class="detail-section">
+        <div class="detail-section-label">Genre</div>
+        <div class="badge-row"><span class="badge badge-genre">Game Shows</span></div>
+      </div>
+      
+      <div class="detail-section">
+        <div class="detail-section-label">Available On</div>
+        <div class="badge-row"><span class="badge badge-platform">Plex</span></div>
+      </div>
     </div>
   </section>
 
-  <div class="detail-body" id="detailBody" style="display:none"></div>
+  <!-- ======================== DETAIL BODY ======================== -->
+  <div class="detail-body" id="detailBody" style="display:none">
+    <!-- Populated by channel-detail.js -->
+  </div>
 
+  <!-- ======================== ERROR ======================== -->
   <div class="state-box hidden" id="errorState">
-    <div class="state-icon">&#9888;&#65039;</div>
+    <div class="state-icon">⚠️</div>
     <div class="state-title">Channel not found</div>
     <div class="state-msg">This channel may have been removed or the link is invalid.</div>
     <a href="../index.html" class="retry-btn" style="display:inline-block;margin-top:16px;text-decoration:none;">Go Home</a>
   </div>
 
+  <!-- ======================== FOOTER ======================== -->
   <footer class="site-footer">
     <div class="footer-inner">
       <div class="footer-logo">WhatsOn<span>FreeTV</span></div>
