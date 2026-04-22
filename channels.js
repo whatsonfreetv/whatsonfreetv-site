@@ -428,7 +428,10 @@
       if (Math.abs(e.changedTouches[0].clientY - touchStartY) < 10) {
         e.preventDefault(); // suppress the 300ms synthetic click
         const href = viewBtn.getAttribute('href');
-        if (href && href !== '#') window.location.href = href;
+        if (href && href !== '#') {
+          sessionStorage.setItem('woftv_country', COUNTRY);
+          window.location.href = href;
+        }
       }
     }, { passive: false });
 
@@ -490,8 +493,8 @@
       const destUrl    = urlSlug
         ? `/channel/${encodeURIComponent(urlSlug)}${fromGuide ? '?from=guide' : ''}`
         : `channel.html?id=${encodeURIComponent(linkName)}${fromGuide ? '?from=guide' : ''}`;
-      viewBtn.href     = destUrl;
-      viewBtn.onclick = null; // let the native <a href> handle navigation — most reliable on iOS
+      viewBtn.href    = destUrl;
+      viewBtn.onclick = () => { sessionStorage.setItem('woftv_country', COUNTRY); };
       viewBtn.style.display = '';
     } else {
       viewBtn.href    = '#';

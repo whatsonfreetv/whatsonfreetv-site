@@ -307,9 +307,12 @@
   }
 
   function findChannelBySlug(channels, slug) {
+    const norm = nameToSlug(slug); // normalize incoming slug (e.g. metal.rocks → metal-rocks)
     return channels.find(ch => ch.url_slug === slug)
+      || channels.find(ch => ch.url_slug === norm)
       || channels.find(ch => ch.id === slug)
       || channels.find(ch => nameToSlug(ch.fields['Channel Name']) === slug)
+      || channels.find(ch => nameToSlug(ch.fields['Channel Name']) === norm)
       || null;
   }
 
