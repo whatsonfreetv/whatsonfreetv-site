@@ -3,19 +3,47 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Felicity — Free Live TV | WhatsOnFreeTV</title>
+  <title>Felicity - Free Streaming | WhatsOnFreeTV</title>
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📺</text></svg>">
-  <meta name="description" content="Watch Felicity free online, no subscription required. Available on Roku, Samsung TV Plus.">
+  <meta name="description" content="Watch Felicity free online. 24/7 streaming on Roku, Samsung TV Plus. No subscription needed.">
   <link rel="canonical" href="https://whatsonfreetv.com/channel/felicity">
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="Felicity - Free Streaming | WhatsOnFreeTV">
+  <meta property="og:description" content="Watch Felicity free online. 24/7 streaming on Roku, Samsung TV Plus. No subscription needed.">
+  <meta property="og:image" content="https://tvpnlogopus.samsungcloud.tv/platform/image/sourcelogo/vc/00/02/34/US4100029G5_20260310T031322SQUARE.png">
+  <meta property="og:url" content="https://whatsonfreetv.com/channel/felicity">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="WhatsOnFreeTV">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Felicity - Free Streaming | WhatsOnFreeTV">
+  <meta name="twitter:description" content="Watch Felicity free online. 24/7 streaming on Roku, Samsung TV Plus. No subscription needed.">
+  <meta name="twitter:image" content="https://tvpnlogopus.samsungcloud.tv/platform/image/sourcelogo/vc/00/02/34/US4100029G5_20260310T031322SQUARE.png">
+
+  <!-- Schema.org -->
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BroadcastChannel",
+  "name": "Felicity",
+  "broadcastDisplayName": "Felicity",
+  "url": "https://whatsonfreetv.com/channel/felicity",
+  "inLanguage": "en",
+  "genre": "General",
+  "image": "https://tvpnlogopus.samsungcloud.tv/platform/image/sourcelogo/vc/00/02/34/US4100029G5_20260310T031322SQUARE.png"
+}
+  </script>
+
   <link rel="stylesheet" href="../styles.css">
   <script src="../config.js"></script>
   <script>
-    window._CHANNEL_NAME = "Felicity";
-    window._CHANNEL_COUNTRY = "US";
+    window._CHANNEL_SLUG    = 'felicity';
+    window._CHANNEL_COUNTRY = 'US';
   </script>
 </head>
 <body class="detail-page">
 
+  <!-- ======================== NAVBAR ======================== -->
   <nav class="navbar">
     <a href="../index.html" class="navbar-logo">WhatsOn<span>FreeTV</span></a>
     <div class="nav-country-links" id="navCountryLinks">
@@ -29,28 +57,45 @@
     <a href="../suggest.html" class="suggest-nav-btn">+ Suggest Channel</a>
   </nav>
 
+  <!-- ======================== DETAIL HERO (pre-rendered for SEO) ======================== -->
   <section class="detail-hero" id="detailHero">
     <div class="detail-logo-wrap">
-      <div class="skeleton" style="width:100%;height:100%;border-radius:8px;"></div>
+      <img src="https://tvpnlogopus.samsungcloud.tv/platform/image/sourcelogo/vc/00/02/34/US4100029G5_20260310T031322SQUARE.png" alt="Felicity" id="detailImg">
+      <div class="detail-logo-fallback" style="display:none">
+        <span class="card-fallback-name">Felicity</span>
+      </div>
     </div>
     <div class="detail-info">
-      <div class="skeleton skeleton-title" style="width:80px;margin-bottom:24px;"></div>
-      <div class="skeleton" style="height:36px;width:300px;border-radius:4px;margin-bottom:20px;"></div>
-      <div class="skeleton" style="height:14px;width:100%;max-width:480px;border-radius:4px;margin-bottom:8px;"></div>
-      <div class="skeleton" style="height:14px;width:70%;max-width:340px;border-radius:4px;margin-bottom:24px;"></div>
-      <div class="skeleton" style="height:32px;width:200px;border-radius:20px;"></div>
+      <div class="detail-country">🇺🇸 US</div>
+      <h1 class="detail-channel-name">Felicity</h1>
+      <p class="detail-description">Free 24/7 streaming channel available on Roku, Samsung TV Plus.</p>
+      
+      <div class="detail-section">
+        <div class="detail-section-label">Genre</div>
+        <div class="badge-row"><span class="badge badge-genre">General</span></div>
+      </div>
+      
+      <div class="detail-section">
+        <div class="detail-section-label">Available On</div>
+        <div class="badge-row"><span class="badge badge-platform-roku">Roku</span><span class="badge badge-platform-samsung">Samsung TV Plus</span></div>
+      </div>
     </div>
   </section>
 
-  <div class="detail-body" id="detailBody" style="display:none"></div>
+  <!-- ======================== DETAIL BODY ======================== -->
+  <div class="detail-body" id="detailBody" style="display:none">
+    <!-- Populated by channel-detail.js -->
+  </div>
 
+  <!-- ======================== ERROR ======================== -->
   <div class="state-box hidden" id="errorState">
-    <div class="state-icon">&#9888;&#65039;</div>
+    <div class="state-icon">⚠️</div>
     <div class="state-title">Channel not found</div>
     <div class="state-msg">This channel may have been removed or the link is invalid.</div>
     <a href="../index.html" class="retry-btn" style="display:inline-block;margin-top:16px;text-decoration:none;">Go Home</a>
   </div>
 
+  <!-- ======================== FOOTER ======================== -->
   <footer class="site-footer">
     <div class="footer-inner">
       <div class="footer-logo">WhatsOn<span>FreeTV</span></div>
