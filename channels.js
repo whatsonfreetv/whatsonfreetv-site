@@ -650,6 +650,37 @@
       return;
     }
 
+    // Group by primary genre, shuffle within each bucket for variety per load
+    const genreMap = new Map();
+    const ungrouped = [];
+    for (const p of airing) {
+      const ch = channelMap.get(normalizeName(p.fields['Channel']));
+      const primaryGenre = (ch?.fields['Genre'] || [])[0];
+      if (primaryGenre) {
+        if (!genreMap.has(primaryGenre)) genreMap.set(primaryGenre, []);
+        genreMap.get(primaryGenre).push(p);
+      } else {
+        ungrouped.push(p);
+      }
+    }
+    const shuffleArr = a => { for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } };
+    for (const bucket of genreMap.values()) shuffleArr(bucket);
+    shuffleArr(ungrouped);
+
+    // Round-robin across genre buckets; ungrouped is just another bucket in the rotation.
+    // Cap each bucket so no single genre can dominate the rail.
+    const buckets = [...genreMap.values()];
+    if (ungrouped.length) buckets.push(ungrouped);
+    const maxPerBucket = Math.ceil(20 / Math.max(buckets.length, 1));
+    for (const b of buckets) b.splice(maxPerBucket);
+    const selected = [];
+    let i = 0;
+    while (selected.length < 20 && buckets.some(b => b.length)) {
+      const bucket = buckets[i % buckets.length];
+      if (bucket.length) selected.push(bucket.shift());
+      i++;
+    }
+
     const titleEl = section.querySelector('.platform-hero-title');
     if (titleEl) titleEl.textContent = platform ? `On ${platform} Now` : "What's On Now";
 
@@ -659,7 +690,7 @@
     row.className = 'featured-epg-row';
     oldRow.replaceWith(row);
 
-    airing.slice(0, 20).forEach(p => row.appendChild(buildFeaturedCard(p, channelMap)));
+    selected.forEach(p => row.appendChild(buildFeaturedCard(p, channelMap)));
 
     const scrollAmt = 700;
     section.querySelector('.scroll-btn.left').onclick = () => row.scrollBy({ left: -scrollAmt, behavior: 'smooth' });
