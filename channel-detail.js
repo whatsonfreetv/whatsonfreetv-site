@@ -320,12 +320,15 @@
     if (!genres.length) return [];
     const genreSet     = new Set(genres);
     const excludeLower = excludeName.toLowerCase();
-    return channels
-      .filter(ch =>
-        (ch.fields['Channel Name'] || '').toLowerCase() !== excludeLower &&
-        (ch.fields['Genre'] || []).some(g => genreSet.has(g))
-      )
-      .slice(0, 6);
+    const pool = channels.filter(ch =>
+      (ch.fields['Channel Name'] || '').toLowerCase() !== excludeLower &&
+      (ch.fields['Genre'] || []).some(g => genreSet.has(g))
+    );
+    for (let i = pool.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [pool[i], pool[j]] = [pool[j], pool[i]];
+    }
+    return pool.slice(0, 6);
   }
 
   // ---- TVmaze API ----
