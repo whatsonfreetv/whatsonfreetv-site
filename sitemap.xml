@@ -9385,6 +9385,12 @@
     <priority>0.8</priority>
   </url>
   <url>
+    <loc>https://whatsonfreetv.com/channel/the-great-british-baking-channel</loc>
+    <lastmod>2026-04-30</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
     <loc>https://whatsonfreetv.com/channel/the-great-british-competition-channel</loc>
     <lastmod>2026-04-30</lastmod>
     <changefreq>weekly</changefreq>
