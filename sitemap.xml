@@ -14233,6 +14233,12 @@
     <priority>0.8</priority>
   </url>
   <url>
+    <loc>https://whatsonfreetv.com/channel/pluto-tv-cars</loc>
+    <lastmod>2026-05-01</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
     <loc>https://whatsonfreetv.com/channel/pluto-tv-classic-tv-families</loc>
     <lastmod>2026-05-01</lastmod>
     <changefreq>weekly</changefreq>
