@@ -3,19 +3,111 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>iHeart80s — Free Live TV | WhatsOnFreeTV</title>
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📺</text></svg>">
-  <meta name="description" content="Watch iHeart80s free online, no subscription required. Available on Roku.">
+  <title>Watch iHeart80s Free Online | WhatsOnFreeTV</title>
+  <link rel="icon" type="image/x-icon" href="../favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="../favicon-32x32.png">
+  <link rel="apple-touch-icon" href="../apple-touch-icon.png">
+  <meta name="description" content="Watch iHeart80s free online. 24/7 streaming on Roku. No subscription needed.">
   <link rel="canonical" href="https://whatsonfreetv.com/channel/iheart80s">
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="Watch iHeart80s Free Online | WhatsOnFreeTV">
+  <meta property="og:description" content="Watch iHeart80s free online. 24/7 streaming on Roku. No subscription needed.">
+  <meta property="og:image" content="https://images.sr.roku.com/idType/roku-trc/context/trc/id/c92624507ef45e10aa5f3fefb156f125/https%3A%2F%2Fimage.roku.com%2Fbh-uploads%2Fproduction%2FinfoHUDLogo%2F1663973170044_Innocent_T_-_iHeart80s_Image_HUD_4.png">
+  <meta property="og:url" content="https://whatsonfreetv.com/channel/iheart80s">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="WhatsOnFreeTV">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Watch iHeart80s Free Online | WhatsOnFreeTV">
+  <meta name="twitter:description" content="Watch iHeart80s free online. 24/7 streaming on Roku. No subscription needed.">
+  <meta name="twitter:image" content="https://images.sr.roku.com/idType/roku-trc/context/trc/id/c92624507ef45e10aa5f3fefb156f125/https%3A%2F%2Fimage.roku.com%2Fbh-uploads%2Fproduction%2FinfoHUDLogo%2F1663973170044_Innocent_T_-_iHeart80s_Image_HUD_4.png">
+
+  <!-- Schema.org -->
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BroadcastChannel",
+  "name": "iHeart80s",
+  "broadcastDisplayName": "iHeart80s",
+  "url": "https://whatsonfreetv.com/channel/iheart80s",
+  "inLanguage": "en",
+  "genre": "Music",
+  "image": "https://images.sr.roku.com/idType/roku-trc/context/trc/id/c92624507ef45e10aa5f3fefb156f125/https%3A%2F%2Fimage.roku.com%2Fbh-uploads%2Fproduction%2FinfoHUDLogo%2F1663973170044_Innocent_T_-_iHeart80s_Image_HUD_4.png"
+}
+  </script>
+
   <link rel="stylesheet" href="../styles.css">
+  <style>
+    /* Match heading color to JS-rendered h2.detail-section-title inside .detail-body */
+    .seo-schedule .detail-section-title,
+    .more-channels-section .detail-section-title,
+    .seo-faq .detail-section-title { color: var(--text-muted); }
+    /* What's On Today — upcoming items */
+    .upcoming-list { max-width: 560px; }
+    .upcoming-item {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      padding: 12px 0;
+      border-bottom: 1px solid #2a2a2a;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+    .upcoming-item:last-child { border-bottom: none; }
+    .upcoming-item:hover { background: rgba(255,255,255,0.03); border-radius: 4px; }
+    .upcoming-time {
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: #6b6b6b;
+      width: 68px;
+      flex-shrink: 0;
+    }
+    .upcoming-title { font-size: 0.9rem; color: #b3b3b3; }
+    /* More Free Channels — same padding as .detail-epg-section */
+    .more-channels-section {
+      padding: 36px 48px;
+      border-bottom: 1px solid #2a2a2a;
+    }
+    .genre-pills { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 4px; }
+    .genre-pill {
+      display: inline-block;
+      padding: 7px 14px;
+      background: #1c1c1c;
+      border: 1px solid #2a2a2a;
+      border-radius: 20px;
+      color: #b3b3b3;
+      text-decoration: none;
+      font-size: 0.82rem;
+      transition: border-color 0.15s, color 0.15s;
+    }
+    .genre-pill:hover { border-color: #E50914; color: #fff; }
+    /* FAQ — same padding as .detail-epg-section */
+    .seo-faq {
+      padding: 36px 48px;
+      border-bottom: 1px solid #2a2a2a;
+    }
+    .seo-faq [itemprop="mainEntity"] {
+      margin-bottom: 20px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid #2a2a2a;
+    }
+    .seo-faq [itemprop="mainEntity"]:last-child { border-bottom: none; margin-bottom: 0; }
+    .seo-faq h3 { font-size: 0.92rem; font-weight: 700; color: #fff; margin: 0 0 8px; }
+    .seo-faq p  { font-size: 0.85rem; color: #b3b3b3; line-height: 1.6; margin: 0; }
+    @media (max-width: 768px) {
+      .more-channels-section,
+      .seo-faq { padding-left: 20px; padding-right: 20px; }
+    }
+  </style>
   <script src="../config.js"></script>
   <script>
-    window._CHANNEL_NAME = "iHeart80s";
-    window._CHANNEL_COUNTRY = "US";
+    window._CHANNEL_SLUG    = 'iheart80s';
+    window._CHANNEL_COUNTRY = 'US';
   </script>
 </head>
 <body class="detail-page">
 
+  <!-- ======================== NAVBAR ======================== -->
   <nav class="navbar">
     <a href="../index.html" class="navbar-logo">WhatsOn<span>FreeTV</span></a>
     <div class="nav-country-links" id="navCountryLinks">
@@ -29,28 +121,122 @@
     <a href="../suggest.html" class="suggest-nav-btn">+ Suggest Channel</a>
   </nav>
 
+  <!-- ======================== DETAIL HERO (pre-rendered for SEO) ======================== -->
   <section class="detail-hero" id="detailHero">
     <div class="detail-logo-wrap">
-      <div class="skeleton" style="width:100%;height:100%;border-radius:8px;"></div>
+      <img src="https://images.sr.roku.com/idType/roku-trc/context/trc/id/c92624507ef45e10aa5f3fefb156f125/https%3A%2F%2Fimage.roku.com%2Fbh-uploads%2Fproduction%2FinfoHUDLogo%2F1663973170044_Innocent_T_-_iHeart80s_Image_HUD_4.png" alt="iHeart80s" id="detailImg">
+      <div class="detail-logo-fallback" style="display:none">
+        <span class="card-fallback-name">iHeart80s</span>
+      </div>
     </div>
     <div class="detail-info">
-      <div class="skeleton skeleton-title" style="width:80px;margin-bottom:24px;"></div>
-      <div class="skeleton" style="height:36px;width:300px;border-radius:4px;margin-bottom:20px;"></div>
-      <div class="skeleton" style="height:14px;width:100%;max-width:480px;border-radius:4px;margin-bottom:8px;"></div>
-      <div class="skeleton" style="height:14px;width:70%;max-width:340px;border-radius:4px;margin-bottom:24px;"></div>
-      <div class="skeleton" style="height:32px;width:200px;border-radius:20px;"></div>
+      <div class="detail-country">🇺🇸 US</div>
+      <h1 class="detail-channel-name">iHeart80s</h1>
+      <p class="detail-description">Free 24/7 streaming channel available on Roku.</p>
+      
+      <div class="detail-section">
+        <div class="detail-section-label">Genre</div>
+        <div class="badge-row"><span class="badge badge-genre">Music</span></div>
+      </div>
+      
+      <div class="detail-section">
+        <div class="detail-section-label">Available On</div>
+        <div class="badge-row"><span class="badge badge-platform-roku">Roku</span></div>
+      </div>
     </div>
   </section>
 
-  <div class="detail-body" id="detailBody" style="display:none"></div>
+  <!-- ======================== WHAT'S ON TODAY (static EPG) ======================== -->
+  <section id="seoSchedule" class="detail-epg-section seo-schedule">
+    <h2 class="detail-section-title">What&#39;s On Today — iHeart80s Schedule</h2>
+    <div class="upcoming-list">
+        <div class="upcoming-item" data-show="iHeart80s" data-start="2026-05-14T16:00:00Z" data-end="2026-05-14T18:00:00Z" data-platform="Roku">
+          <span class="upcoming-time">4:00 PM</span>
+          <span class="upcoming-title">iHeart80s</span>
+        </div>
+        <div class="upcoming-item" data-show="iHeart80s" data-start="2026-05-14T18:00:00Z" data-end="2026-05-14T20:00:00Z" data-platform="Roku">
+          <span class="upcoming-time">6:00 PM</span>
+          <span class="upcoming-title">iHeart80s</span>
+        </div>
+        <div class="upcoming-item" data-show="iHeart80s" data-start="2026-05-14T20:00:00Z" data-end="2026-05-14T22:00:00Z" data-platform="Roku">
+          <span class="upcoming-time">8:00 PM</span>
+          <span class="upcoming-title">iHeart80s</span>
+        </div>
+        <div class="upcoming-item" data-show="iHeart80s" data-start="2026-05-14T22:00:00Z" data-end="2026-05-15T00:00:00Z" data-platform="Roku">
+          <span class="upcoming-time">10:00 PM</span>
+          <span class="upcoming-title">iHeart80s</span>
+        </div>
+        <div class="upcoming-item" data-show="iHeart80s" data-start="2026-05-15T00:00:00Z" data-end="2026-05-15T02:00:00Z" data-platform="Roku">
+          <span class="upcoming-time">12:00 AM</span>
+          <span class="upcoming-title">iHeart80s</span>
+        </div>
+        <div class="upcoming-item" data-show="iHeart80s" data-start="2026-05-15T02:00:00Z" data-end="2026-05-15T04:00:00Z" data-platform="Roku">
+          <span class="upcoming-time">2:00 AM</span>
+          <span class="upcoming-title">iHeart80s</span>
+        </div>
+        <div class="upcoming-item" data-show="iHeart80s" data-start="2026-05-15T04:00:00Z" data-end="2026-05-15T06:00:00Z" data-platform="Roku">
+          <span class="upcoming-time">4:00 AM</span>
+          <span class="upcoming-title">iHeart80s</span>
+        </div>
+        <div class="upcoming-item" data-show="iHeart80s" data-start="2026-05-15T06:00:00Z" data-end="2026-05-15T08:00:00Z" data-platform="Roku">
+          <span class="upcoming-time">6:00 AM</span>
+          <span class="upcoming-title">iHeart80s</span>
+        </div>
+    </div>
+  </section>
 
+  <!-- ======================== MORE FREE CHANNELS (static) ======================== -->
+  <section id="moreChannels" class="more-channels-section">
+    <h2 class="detail-section-title">More Free Music Channels</h2>
+    <div class="genre-pills">
+      <a href="/channel/vevo-80s" class="genre-pill">Vevo &#x27;80s</a>
+      <a href="/channel/the-country-network" class="genre-pill">The Country Network</a>
+      <a href="/channel/xite-hip-hop-evolution" class="genre-pill">XITE Hip-Hop Evolution</a>
+      <a href="/channel/vevo-rock" class="genre-pill">Vevo Rock</a>
+      <a href="/channel/def-jam" class="genre-pill">Def Jam</a>
+      <a href="/channel/vevo-2k" class="genre-pill">Vevo 2K</a>
+    </div>
+  </section>
+
+  <!-- ======================== DETAIL BODY (JS-rendered) ======================== -->
+  <div class="detail-body" id="detailBody" style="display:none">
+    <!-- Populated by channel-detail.js — EPG on-now, similar channels, suggest link -->
+  </div>
+
+  <!-- ======================== FAQ (static + schema microdata) ======================== -->
+  <section id="faqSection" class="seo-faq">
+    <h2 class="detail-section-title">Frequently Asked Questions</h2>
+    <div itemscope itemtype="https://schema.org/FAQPage">
+      <div itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+        <h3 itemprop="name">Is iHeart80s free to watch?</h3>
+        <div itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+          <p itemprop="text">Yes, iHeart80s is completely free on Roku — no subscription or login required.</p>
+        </div>
+      </div>
+      <div itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+        <h3 itemprop="name">What platforms carry iHeart80s?</h3>
+        <div itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+          <p itemprop="text">iHeart80s is available free on Roku.</p>
+        </div>
+      </div>
+      <div itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+        <h3 itemprop="name">What is on iHeart80s today?</h3>
+        <div itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+          <p itemprop="text">iHeart80s airs Music content 24 hours a day, free on Roku — no subscription required.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======================== ERROR ======================== -->
   <div class="state-box hidden" id="errorState">
-    <div class="state-icon">&#9888;&#65039;</div>
+    <div class="state-icon">⚠️</div>
     <div class="state-title">Channel not found</div>
     <div class="state-msg">This channel may have been removed or the link is invalid.</div>
     <a href="../index.html" class="retry-btn" style="display:inline-block;margin-top:16px;text-decoration:none;">Go Home</a>
   </div>
 
+  <!-- ======================== FOOTER ======================== -->
   <footer class="site-footer">
     <div class="footer-inner">
       <div class="footer-logo">WhatsOn<span>FreeTV</span></div>
@@ -74,5 +260,174 @@
   </footer>
 
   <script src="../channel-detail.js"></script>
+  <script>
+(function () {
+  function esc(s) {
+    const d = document.createElement('div');
+    d.textContent = String(s || '');
+    return d.innerHTML;
+  }
+  function formatTime(iso) {
+    return new Date(iso).toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' });
+  }
+  function platformClass(p) {
+    const l = (p || '').toLowerCase();
+    if (l.includes('pluto'))   return 'badge-platform-pluto';
+    if (l.includes('roku'))    return 'badge-platform-roku';
+    if (l.includes('samsung')) return 'badge-platform-samsung';
+    if (l.includes('plex'))    return 'badge-platform-plex';
+    if (l.includes('tubi'))    return 'badge-platform-tubi';
+    return 'badge-platform';
+  }
+
+  // 1. Click handlers on .upcoming-item — mirrors openShowModal() in channel-detail.js
+  function openStaticShowModal(el) {
+    const title    = el.dataset.show     || '';
+    const startIso = el.dataset.start    || '';
+    const endIso   = el.dataset.end      || '';
+    const platform = el.dataset.platform || '';
+    const chName    = document.querySelector('h1.detail-channel-name')?.textContent?.trim() || '';
+    const chLogo    = document.getElementById('detailImg')?.src || '';
+    const chInitial = chName.charAt(0).toUpperCase();
+    const logoHtml  = chLogo
+      ? `<img class="show-modal-channel-logo" src="${esc(chLogo)}" alt="${esc(chName)}">`
+      : `<div class="show-modal-channel-fallback">${esc(chInitial)}</div>`;
+    const timeStr = startIso && endIso
+      ? `${formatTime(startIso)} &ndash; ${formatTime(endIso)}`
+      : startIso ? formatTime(startIso) : '';
+    const platformBadge = platform
+      ? ` &middot; <span class="badge ${platformClass(platform)}">${esc(platform)}</span>` : '';
+    const airingBlock = `
+      <div class="show-modal-airing">
+        <div class="show-modal-airing-label">&#9197; Coming up on ${esc(chName)}</div>
+        ${timeStr ? `<div class="show-modal-airing-info">${timeStr}${platformBadge}</div>` : ''}
+      </div>`;
+    const backdrop = document.createElement('div');
+    backdrop.className = 'show-modal-backdrop';
+    backdrop.setAttribute('role', 'dialog');
+    backdrop.setAttribute('aria-modal', 'true');
+    backdrop.innerHTML = `
+      <div class="show-modal">
+        <div class="show-modal-channel-header">
+          ${logoHtml}
+          <span class="show-modal-channel-name">${esc(chName)}</span>
+          <button class="show-modal-close" aria-label="Close">&times;</button>
+        </div>
+        <div class="show-modal-inner">
+          <div class="show-modal-spinner"><div class="spinner"></div></div>
+        </div>
+      </div>`;
+    const close = () => { backdrop.remove(); document.body.style.overflow = ''; };
+    backdrop.querySelector('.show-modal-close').addEventListener('click', close);
+    backdrop.addEventListener('click', e => { if (e.target === backdrop) close(); });
+    document.addEventListener('keydown', function onEsc(e) {
+      if (e.key === 'Escape') { close(); document.removeEventListener('keydown', onEsc); }
+    });
+    document.body.style.overflow = 'hidden';
+    document.body.appendChild(backdrop);
+    const inner = backdrop.querySelector('.show-modal-inner');
+    fetch(`https://api.tvmaze.com/singlesearch/shows?q=${encodeURIComponent(title)}`)
+      .then(r => r.ok ? r.json() : Promise.reject())
+      .then(show => {
+        const poster  = show.image?.medium || show.image?.original || null;
+        const rating  = show.rating?.average;
+        const genres  = (show.genres || []).map(g => `<span class="show-modal-genre-pill">${esc(g)}</span>`).join('');
+        const summary = (show.summary || '').replace(/<[^>]+>/g, '').slice(0, 300);
+        const status  = show.status || '';
+        const network = show.network?.name || show.webChannel?.name || '';
+        const sCls    = status.toLowerCase() === 'running' ? 'show-status-running' : 'show-status-ended';
+        inner.innerHTML = `
+          <div class="show-modal-header">
+            ${poster ? `<div class="show-modal-poster"><img src="${esc(poster)}" alt="${esc(show.name || title)}"></div>` : ''}
+            <div class="show-modal-info">
+              <div class="show-modal-title">${esc(show.name || title)}</div>
+              ${rating  ? `<div class="show-modal-rating">&#11088; ${rating}/10</div>` : ''}
+              ${genres  ? `<div class="show-modal-genres">${genres}</div>` : ''}
+              <div class="show-modal-meta">
+                ${status  ? `<span class="${sCls}">${esc(status)}</span>`  : ''}
+                ${network ? `<span>${esc(network)}</span>` : ''}
+              </div>
+            </div>
+          </div>
+          ${summary ? `<div class="show-modal-summary">${esc(summary)}</div>` : ''}
+          ${airingBlock}
+          <div class="show-modal-attribution">Show data from
+            <a href="https://www.tvmaze.com" target="_blank" rel="noopener">TVmaze</a>
+          </div>`;
+      })
+      .catch(() => {
+        inner.innerHTML = `
+          <div class="show-modal-title">${esc(title)}</div>
+          ${airingBlock}
+          <p style="color:var(--text-dim);font-size:0.82rem;margin-top:12px">Show details not available</p>`;
+      });
+  }
+  function attachUpNextHandlers() {
+    document.querySelectorAll('.upcoming-item[data-show]').forEach(el => {
+      if (el.dataset.bound) return;
+      el.dataset.bound = '1';
+      el.classList.add('clickable');
+      el.addEventListener('click', () => openStaticShowModal(el));
+    });
+  }
+  attachUpNextHandlers();
+  setTimeout(attachUpNextHandlers, 1200);
+
+  // 2. Real-time schedule filter — reformat times to local TZ, hide aired, show next 5
+  function filterSchedule() {
+    const now   = Date.now();
+    const items = document.querySelectorAll('#seoSchedule .upcoming-item');
+    let shown   = 0;
+    items.forEach(el => {
+      // Reformat baked UTC time string to the user's local timezone (runs once per item)
+      if (!el.dataset.reformatted && el.dataset.start) {
+        const span = el.querySelector('.upcoming-time');
+        if (span) span.textContent = new Date(el.dataset.start)
+          .toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' });
+        el.dataset.reformatted = '1';
+      }
+      const start = el.dataset.start ? new Date(el.dataset.start).getTime() : 0;
+      if (start <= now) {
+        el.style.display = 'none';           // currently airing or already aired
+      } else if (shown < 5) {
+        el.style.display = '';               // show next 5
+        shown++;
+      } else {
+        el.style.display = 'none';           // beyond the 5-item window
+      }
+    });
+  }
+  filterSchedule();
+  setInterval(filterSchedule, 60000);        // re-check every minute
+
+  // 3. Section order + remove JS "Coming Up Next" (replaced by What's On Today)
+  function doReorder() {
+    const body = document.getElementById('detailBody');
+    if (!body) return;
+    const seoSchedule  = document.getElementById('seoSchedule');
+    const moreChannels = document.getElementById('moreChannels');
+    const faqSection   = document.getElementById('faqSection');
+    const similar      = body.querySelector('.detail-similar-section');
+    const suggest      = body.querySelector('a.detail-suggest-edit');
+    if (seoSchedule  && similar) body.insertBefore(seoSchedule,  similar);
+    if (moreChannels && similar) body.insertBefore(moreChannels, similar);
+    if (faqSection) {
+      if (suggest) body.insertBefore(faqSection, suggest);
+      else         body.appendChild(faqSection);
+    }
+    // Remove the JS-rendered "Coming Up Next" — What's On Today replaces it
+    body.querySelectorAll('.detail-section-title').forEach(h => {
+      if (/coming up next/i.test(h.textContent)) h.closest('.detail-epg-section')?.remove();
+    });
+  }
+  const pollId = setInterval(() => {
+    const body = document.getElementById('detailBody');
+    if (!body || body.style.display === 'none') return;
+    if (body.querySelector('.skeleton'))         return;
+    if (!body.querySelector('.detail-similar-section')) return;
+    clearInterval(pollId);
+    setTimeout(doReorder, 100);
+  }, 200);
+})();</script>
 </body>
 </html>
