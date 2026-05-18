@@ -397,21 +397,41 @@
   }
 
   // ---- OMDb API ----
+  function cleanTitleForOMDb(raw) {
+    return (raw || '')
+      .replace(/\s*\(\d{4}\)\s*$/, '')
+      .replace(/\s*\[\d{4}\]\s*$/, '')
+      .replace(/\s*[-–]\s*(HD|SD|4K|HDR|UHD)\s*$/i, '')
+      .trim();
+  }
+
   async function fetchOMDbShow(title, type) {
     const apiKey = (typeof CONFIG !== 'undefined' && CONFIG.OMDB_API_KEY) ? CONFIG.OMDB_API_KEY : '';
     if (!apiKey || apiKey === 'YOUR_KEY') return null;
-    const typeParam = type ? `&type=${encodeURIComponent(type)}` : '';
-    const key = `omdb_show_${type || 'any'}_` + title.toLowerCase().slice(0, 80);
-    const cached = sessionStorage.getItem(key);
+    const cleaned = cleanTitleForOMDb(title);
+    if (!cleaned) return null;
+
+    const cacheKey = `omdb_show_${type || 'any'}_` + cleaned.toLowerCase().slice(0, 80);
+    const cached = sessionStorage.getItem(cacheKey);
     if (cached) { try { return JSON.parse(cached); } catch (_) {} }
-    try {
-      const res = await fetch(`https://www.omdbapi.com/?t=${encodeURIComponent(title)}&apikey=${encodeURIComponent(apiKey)}${typeParam}`);
-      if (!res.ok) return null;
-      const data = await res.json();
-      if (data.Response !== 'True') return null;
-      try { sessionStorage.setItem(key, JSON.stringify(data)); } catch (_) {}
-      return data;
-    } catch (_) { return null; }
+
+    async function query(t, typeParam) {
+      try {
+        const url = `https://www.omdbapi.com/?t=${encodeURIComponent(t)}&apikey=${encodeURIComponent(apiKey)}${typeParam ? '&type=' + encodeURIComponent(typeParam) : ''}`;
+        const res = await fetch(url);
+        if (!res.ok) return null;
+        const data = await res.json();
+        return data.Response === 'True' ? data : null;
+      } catch (_) { return null; }
+    }
+
+    // Try with type constraint first; fall back to no-type if nothing found
+    let data = type ? await query(cleaned, type) : null;
+    if (!data) data = await query(cleaned, null);
+    if (!data) return null;
+
+    try { sessionStorage.setItem(cacheKey, JSON.stringify(data)); } catch (_) {}
+    return data;
   }
 
   async function fetchShowMetadata(title, channelName, channelGenres) {
@@ -828,8 +848,8 @@
     container.innerHTML = '';
 
     if (!show) {
-      renderOnNow(programs, container);
-      renderUpNext(programs, container);
+      renderOnNow(programs, container, true, _channel.name);
+      renderUpNext(programs, container, true, _channel.name);
       return;
     }
 
@@ -1069,7 +1089,8 @@
         const titleCounts = titles.reduce((acc, t) => { acc[t] = (acc[t] || 0) + 1; return acc; }, {});
         const mostCommonEntry = Object.entries(titleCounts).sort((a, b) => b[1] - a[1])[0];
         const isSingleShow = mostCommonEntry && titles.length > 0 &&
-          (mostCommonEntry[1] / titles.length) > 0.8;
+          (mostCommonEntry[1] / titles.length) > 0.8 &&
+          !isMovieChannel(name, genres);
 
         if (isSingleShow) {
           await renderSingleShowExperience(mostCommonEntry[0], programs, epgContainer);
