@@ -1109,5 +1109,9 @@
     document.getElementById('errorState').classList.remove('hidden');
   }
 
+  // Expose for the static What's On Today schedule so it uses the same
+  // OMDb-aware, movie-channel-aware modal instead of the TVmaze-only fallback.
+  window._woftv_openShowModal = openShowModal;
+
   load();
 })();
