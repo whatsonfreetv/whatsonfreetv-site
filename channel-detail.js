@@ -1109,8 +1109,25 @@
     document.getElementById('errorState').classList.remove('hidden');
   }
 
-  // Expose for the static What's On Today schedule so it uses the same
-  // OMDb-aware, movie-channel-aware modal instead of the TVmaze-only fallback.
+  // Intercept What's On Today clicks (baked into static pages by sync.py).
+  // Those pages have a TVmaze-only handler; capturing here in the capture phase
+  // fires before that handler and stops the event from reaching it.
+  document.addEventListener('click', function(e) {
+    const item = e.target.closest('.upcoming-item[data-show]');
+    if (!item) return;
+    e.stopPropagation();
+    openShowModal(
+      { fields: {
+          'Show Title': item.dataset.show     || '',
+          'Start Time': item.dataset.start    || '',
+          'End Time':   item.dataset.end      || '',
+          'Platform':   item.dataset.platform || ''
+      }},
+      '', true
+    );
+  }, true); // capture phase — fires before the element's own handler
+
+  // Also expose globally for newly-generated pages from sync.py
   window._woftv_openShowModal = openShowModal;
 
   load();
