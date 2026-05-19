@@ -150,18 +150,6 @@
   <section id="seoSchedule" class="detail-epg-section seo-schedule">
     <h2 class="detail-section-title">What&#39;s On Today — Pluto TV Kids Movie Club Schedule</h2>
     <div class="upcoming-list">
-        <div class="upcoming-item" data-show="Undercover Grandpa" data-start="2026-05-18T19:38:00Z" data-end="2026-05-18T21:29:00Z" data-platform="Pluto TV">
-          <span class="upcoming-time">7:38 PM</span>
-          <span class="upcoming-title">Undercover Grandpa</span>
-        </div>
-        <div class="upcoming-item" data-show="UGLYDOLLS" data-start="2026-05-18T21:29:00Z" data-end="2026-05-18T23:13:00Z" data-platform="Pluto TV">
-          <span class="upcoming-time">9:29 PM</span>
-          <span class="upcoming-title">UGLYDOLLS</span>
-        </div>
-        <div class="upcoming-item" data-show="Agent Cody Banks" data-start="2026-05-18T23:13:00Z" data-end="2026-05-19T01:13:00Z" data-platform="Pluto TV">
-          <span class="upcoming-time">11:13 PM</span>
-          <span class="upcoming-title">Agent Cody Banks</span>
-        </div>
         <div class="upcoming-item" data-show="Larger Than Life" data-start="2026-05-19T01:13:00Z" data-end="2026-05-19T03:04:00Z" data-platform="Pluto TV">
           <span class="upcoming-time">1:13 AM</span>
           <span class="upcoming-title">Larger Than Life</span>
@@ -182,6 +170,22 @@
           <span class="upcoming-time">8:34 AM</span>
           <span class="upcoming-title">Air Bud: Golden Receiver</span>
         </div>
+        <div class="upcoming-item" data-show="Air Bud: Seventh Inning Fetch" data-start="2026-05-19T10:20:00Z" data-end="2026-05-19T12:10:00Z" data-platform="Pluto TV">
+          <span class="upcoming-time">10:20 AM</span>
+          <span class="upcoming-title">Air Bud: Seventh Inning Fetch</span>
+        </div>
+        <div class="upcoming-item" data-show="Air Bud: World Pup" data-start="2026-05-19T12:10:00Z" data-end="2026-05-19T13:48:00Z" data-platform="Pluto TV">
+          <span class="upcoming-time">12:10 PM</span>
+          <span class="upcoming-title">Air Bud: World Pup</span>
+        </div>
+        <div class="upcoming-item" data-show="Air Bud: Spikes Back" data-start="2026-05-19T13:48:00Z" data-end="2026-05-19T15:31:00Z" data-platform="Pluto TV">
+          <span class="upcoming-time">1:48 PM</span>
+          <span class="upcoming-title">Air Bud: Spikes Back</span>
+        </div>
+        <div class="upcoming-item" data-show="Air Buddies" data-start="2026-05-19T15:31:00Z" data-end="2026-05-19T17:07:00Z" data-platform="Pluto TV">
+          <span class="upcoming-time">3:31 PM</span>
+          <span class="upcoming-title">Air Buddies</span>
+        </div>
     </div>
   </section>
 
@@ -189,12 +193,12 @@
   <section id="moreChannels" class="more-channels-section">
     <h2 class="detail-section-title">More Free General Channels</h2>
     <div class="genre-pills">
-      <a href="/channel/addictatv" class="genre-pill">AddictaTV</a>
-      <a href="/channel/spring-vibes" class="genre-pill">Spring Vibes</a>
-      <a href="/channel/the-yorkshire-vet" class="genre-pill">The Yorkshire Vet</a>
+      <a href="/channel/milb" class="genre-pill">MiLB</a>
       <a href="/channel/speed-sport-1" class="genre-pill">Speed Sport 1</a>
-      <a href="/channel/beyblade" class="genre-pill">Beyblade</a>
-      <a href="/channel/pluto-tv-retro-action-movies" class="genre-pill">Pluto TV Retro Action Movies</a>
+      <a href="/channel/pluto-tv-80-s-action" class="genre-pill">Pluto TV 80&#x27;s Action</a>
+      <a href="/channel/garden-with-monty-don" class="genre-pill">Garden with Monty Don</a>
+      <a href="/channel/entertains" class="genre-pill">Entertains</a>
+      <a href="/channel/the-yorkshire-vet" class="genre-pill">The Yorkshire Vet</a>
     </div>
   </section>
 
@@ -244,6 +248,7 @@
         <a href="../us.html" class="footer-link">🇺🇸 US Channels</a>
         <a href="../ca.html" class="footer-link">🇨🇦 CA Channels</a>
         <a href="../suggest.html" class="footer-link">Suggest a Channel</a>
+        <a href="../about.html" class="footer-link">About</a>
         <a href="../privacy.html" class="footer-link">Privacy Policy</a>
         <a href="../terms.html" class="footer-link">Terms of Service</a>
         <a href="mailto:hello@whatsonfreetv.com" class="footer-link">Contact</a>
@@ -280,12 +285,24 @@
     return 'badge-platform';
   }
 
-  // 1. Click handlers on .upcoming-item — mirrors openShowModal() in channel-detail.js
+  // 1. Click handlers on .upcoming-item — delegates to channel-detail.js openShowModal
+  //    which uses OMDb + TVmaze with movie-channel awareness.
   function openStaticShowModal(el) {
     const title    = el.dataset.show     || '';
     const startIso = el.dataset.start    || '';
     const endIso   = el.dataset.end      || '';
     const platform = el.dataset.platform || '';
+
+    // Delegate to the OMDb-aware modal exposed by channel-detail.js
+    if (typeof window._woftv_openShowModal === 'function') {
+      window._woftv_openShowModal(
+        { fields: { 'Show Title': title, 'Start Time': startIso, 'End Time': endIso, 'Platform': platform } },
+        '', true
+      );
+      return;
+    }
+
+    // Fallback (channel-detail.js not loaded): TVmaze-only
     const chName    = document.querySelector('h1.detail-channel-name')?.textContent?.trim() || '';
     const chLogo    = document.getElementById('detailImg')?.src || '';
     const chInitial = chName.charAt(0).toUpperCase();
