@@ -151,17 +151,17 @@
   <section id="seoSchedule" class="detail-epg-section seo-schedule">
     <h2 class="detail-section-title">What&#39;s On Today — T2 Schedule</h2>
     <div class="upcoming-list">
-        <div class="upcoming-item" data-show="Tennis Today Live: Geneva-ATP, Hamburg-ATP, Strasbourg-WTA &amp; Rabat-WTA  Early Rounds" data-start="2026-05-18T18:00:00Z" data-end="2026-05-18T23:30:00Z" data-platform="Samsung TV Plus">
-          <span class="upcoming-time">6:00 PM</span>
-          <span class="upcoming-title">Tennis Today Live: Geneva-ATP, Hamburg-ATP, Strasbourg-WTA &amp; Rabat-WTA  Early Rounds</span>
-        </div>
-        <div class="upcoming-item" data-show="Second Serve: Geneva-ATP, Hamburg-ATP, Strasbourg-WTA &amp; Rabat-WTA Early Rounds" data-start="2026-05-18T23:30:00Z" data-end="2026-05-19T01:30:00Z" data-platform="Samsung TV Plus">
-          <span class="upcoming-time">11:30 PM</span>
-          <span class="upcoming-title">Second Serve: Geneva-ATP, Hamburg-ATP, Strasbourg-WTA &amp; Rabat-WTA Early Rounds</span>
-        </div>
         <div class="upcoming-item" data-show="Tennis Today: Geneva-ATP, Hamburg-ATP, Strasbourg-WTA &amp; Rabat-WTA Early Rounds" data-start="2026-05-19T01:30:00Z" data-end="2026-05-19T03:30:00Z" data-platform="Samsung TV Plus">
           <span class="upcoming-time">1:30 AM</span>
           <span class="upcoming-title">Tennis Today: Geneva-ATP, Hamburg-ATP, Strasbourg-WTA &amp; Rabat-WTA Early Rounds</span>
+        </div>
+        <div class="upcoming-item" data-show="Tennis Today Live" data-start="2026-05-19T03:30:00Z" data-end="2026-05-19T08:30:00Z" data-platform="Samsung TV Plus">
+          <span class="upcoming-time">3:30 AM</span>
+          <span class="upcoming-title">Tennis Today Live</span>
+        </div>
+        <div class="upcoming-item" data-show="Tennis Today Live" data-start="2026-05-19T08:30:00Z" data-end="2026-05-19T10:00:00Z" data-platform="Samsung TV Plus">
+          <span class="upcoming-time">8:30 AM</span>
+          <span class="upcoming-title">Tennis Today Live</span>
         </div>
     </div>
   </section>
@@ -170,12 +170,12 @@
   <section id="moreChannels" class="more-channels-section">
     <h2 class="detail-section-title">More Free Sports Channels</h2>
     <div class="genre-pills">
-      <a href="/channel/strongman-champions" class="genre-pill">Strongman Champions</a>
-      <a href="/channel/willow-sports" class="genre-pill">Willow Sports</a>
-      <a href="/channel/the-world-poker-tour" class="genre-pill">The World Poker Tour</a>
-      <a href="/channel/team-usa-tv" class="genre-pill">Team USA TV</a>
-      <a href="/channel/awsn" class="genre-pill">AWSN</a>
-      <a href="/channel/nbc-sports-now" class="genre-pill">NBC Sports NOW</a>
+      <a href="/channel/red-bull-tv" class="genre-pill">Red Bull TV</a>
+      <a href="/channel/cricket-gold" class="genre-pill">Cricket Gold</a>
+      <a href="/channel/flo-racing" class="genre-pill">Flo Racing</a>
+      <a href="/channel/pokergo" class="genre-pill">PokerGO</a>
+      <a href="/channel/stadium" class="genre-pill">Stadium</a>
+      <a href="/channel/combate-global-mma" class="genre-pill">Combate Global MMA</a>
     </div>
   </section>
 
@@ -225,6 +225,7 @@
         <a href="../us.html" class="footer-link">🇺🇸 US Channels</a>
         <a href="../ca.html" class="footer-link">🇨🇦 CA Channels</a>
         <a href="../suggest.html" class="footer-link">Suggest a Channel</a>
+        <a href="../about.html" class="footer-link">About</a>
         <a href="../privacy.html" class="footer-link">Privacy Policy</a>
         <a href="../terms.html" class="footer-link">Terms of Service</a>
         <a href="mailto:hello@whatsonfreetv.com" class="footer-link">Contact</a>
@@ -261,12 +262,24 @@
     return 'badge-platform';
   }
 
-  // 1. Click handlers on .upcoming-item — mirrors openShowModal() in channel-detail.js
+  // 1. Click handlers on .upcoming-item — delegates to channel-detail.js openShowModal
+  //    which uses OMDb + TVmaze with movie-channel awareness.
   function openStaticShowModal(el) {
     const title    = el.dataset.show     || '';
     const startIso = el.dataset.start    || '';
     const endIso   = el.dataset.end      || '';
     const platform = el.dataset.platform || '';
+
+    // Delegate to the OMDb-aware modal exposed by channel-detail.js
+    if (typeof window._woftv_openShowModal === 'function') {
+      window._woftv_openShowModal(
+        { fields: { 'Show Title': title, 'Start Time': startIso, 'End Time': endIso, 'Platform': platform } },
+        '', true
+      );
+      return;
+    }
+
+    // Fallback (channel-detail.js not loaded): TVmaze-only
     const chName    = document.querySelector('h1.detail-channel-name')?.textContent?.trim() || '';
     const chLogo    = document.getElementById('detailImg')?.src || '';
     const chInitial = chName.charAt(0).toUpperCase();

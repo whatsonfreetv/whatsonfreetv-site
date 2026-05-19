@@ -151,22 +151,6 @@
   <section id="seoSchedule" class="detail-epg-section seo-schedule">
     <h2 class="detail-section-title">What&#39;s On Today — TennisChannel 2 Schedule</h2>
     <div class="upcoming-list">
-        <div class="upcoming-item" data-show="Tennis Today Live" data-start="2026-05-18T18:00:00Z" data-end="2026-05-18T23:30:00Z" data-platform="Pluto TV">
-          <span class="upcoming-time">6:00 PM</span>
-          <span class="upcoming-title">Tennis Today Live</span>
-        </div>
-        <div class="upcoming-item" data-show="Tennis Today Live" data-start="2026-05-18T18:00:00Z" data-end="2026-05-18T23:30:00Z" data-platform="Xumo Play">
-          <span class="upcoming-time">6:00 PM</span>
-          <span class="upcoming-title">Tennis Today Live</span>
-        </div>
-        <div class="upcoming-item" data-show="Second Serve" data-start="2026-05-18T23:30:00Z" data-end="2026-05-19T01:30:00Z" data-platform="Pluto TV">
-          <span class="upcoming-time">11:30 PM</span>
-          <span class="upcoming-title">Second Serve</span>
-        </div>
-        <div class="upcoming-item" data-show="Second Serve" data-start="2026-05-18T23:30:00Z" data-end="2026-05-19T01:30:00Z" data-platform="Xumo Play">
-          <span class="upcoming-time">11:30 PM</span>
-          <span class="upcoming-title">Second Serve</span>
-        </div>
         <div class="upcoming-item" data-show="Tennis Today" data-start="2026-05-19T01:30:00Z" data-end="2026-05-19T03:30:00Z" data-platform="Pluto TV">
           <span class="upcoming-time">1:30 AM</span>
           <span class="upcoming-title">Tennis Today</span>
@@ -199,6 +183,14 @@
           <span class="upcoming-time">10:00 AM</span>
           <span class="upcoming-title">Tennis Today Live</span>
         </div>
+        <div class="upcoming-item" data-show="Tennis Today Live" data-start="2026-05-19T14:00:00Z" data-end="2026-05-19T17:30:00Z" data-platform="Pluto TV">
+          <span class="upcoming-time">2:00 PM</span>
+          <span class="upcoming-title">Tennis Today Live</span>
+        </div>
+        <div class="upcoming-item" data-show="Tennis Today Live" data-start="2026-05-19T14:00:00Z" data-end="2026-05-19T17:30:00Z" data-platform="Xumo Play">
+          <span class="upcoming-time">2:00 PM</span>
+          <span class="upcoming-title">Tennis Today Live</span>
+        </div>
     </div>
   </section>
 
@@ -206,12 +198,12 @@
   <section id="moreChannels" class="more-channels-section">
     <h2 class="detail-section-title">More Free Sports Channels</h2>
     <div class="genre-pills">
-      <a href="/channel/mlb" class="genre-pill">MLB</a>
+      <a href="/channel/rugbypass-tv" class="genre-pill">RugbyPass TV</a>
+      <a href="/channel/motogp-tv" class="genre-pill">MotoGP TV</a>
+      <a href="/channel/tennis-channel-2" class="genre-pill">Tennis Channel 2</a>
+      <a href="/channel/matthew-berry-s-fantasy-life" class="genre-pill">Matthew Berry&#x27;s Fantasy Life</a>
+      <a href="/channel/golfpass" class="genre-pill">GolfPass</a>
       <a href="/channel/fubo-sports-network" class="genre-pill">fubo Sports Network</a>
-      <a href="/channel/msg-sportszone" class="genre-pill">MSG SportsZone</a>
-      <a href="/channel/surfer-tv" class="genre-pill">SURFER TV</a>
-      <a href="/channel/victory" class="genre-pill">Victory+</a>
-      <a href="/channel/mav-tv-select" class="genre-pill">MAV TV Select</a>
     </div>
   </section>
 
@@ -261,6 +253,7 @@
         <a href="../us.html" class="footer-link">🇺🇸 US Channels</a>
         <a href="../ca.html" class="footer-link">🇨🇦 CA Channels</a>
         <a href="../suggest.html" class="footer-link">Suggest a Channel</a>
+        <a href="../about.html" class="footer-link">About</a>
         <a href="../privacy.html" class="footer-link">Privacy Policy</a>
         <a href="../terms.html" class="footer-link">Terms of Service</a>
         <a href="mailto:hello@whatsonfreetv.com" class="footer-link">Contact</a>
@@ -297,12 +290,24 @@
     return 'badge-platform';
   }
 
-  // 1. Click handlers on .upcoming-item — mirrors openShowModal() in channel-detail.js
+  // 1. Click handlers on .upcoming-item — delegates to channel-detail.js openShowModal
+  //    which uses OMDb + TVmaze with movie-channel awareness.
   function openStaticShowModal(el) {
     const title    = el.dataset.show     || '';
     const startIso = el.dataset.start    || '';
     const endIso   = el.dataset.end      || '';
     const platform = el.dataset.platform || '';
+
+    // Delegate to the OMDb-aware modal exposed by channel-detail.js
+    if (typeof window._woftv_openShowModal === 'function') {
+      window._woftv_openShowModal(
+        { fields: { 'Show Title': title, 'Start Time': startIso, 'End Time': endIso, 'Platform': platform } },
+        '', true
+      );
+      return;
+    }
+
+    // Fallback (channel-detail.js not loaded): TVmaze-only
     const chName    = document.querySelector('h1.detail-channel-name')?.textContent?.trim() || '';
     const chLogo    = document.getElementById('detailImg')?.src || '';
     const chInitial = chName.charAt(0).toUpperCase();

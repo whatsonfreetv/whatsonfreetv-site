@@ -151,22 +151,6 @@
   <section id="seoSchedule" class="detail-epg-section seo-schedule">
     <h2 class="detail-section-title">What&#39;s On Today — Pluto TV Cult Films Schedule</h2>
     <div class="upcoming-list">
-        <div class="upcoming-item" data-show="Bound" data-start="2026-05-18T17:45:01Z" data-end="2026-05-18T20:15:01Z" data-platform="Pluto TV">
-          <span class="upcoming-time">5:45 PM</span>
-          <span class="upcoming-title">Bound</span>
-        </div>
-        <div class="upcoming-item" data-show="King of New York" data-start="2026-05-18T20:15:01Z" data-end="2026-05-18T22:15:01Z" data-platform="Pluto TV">
-          <span class="upcoming-time">8:15 PM</span>
-          <span class="upcoming-title">King of New York</span>
-        </div>
-        <div class="upcoming-item" data-show="State Property" data-start="2026-05-18T22:15:01Z" data-end="2026-05-19T00:00:01Z" data-platform="Pluto TV">
-          <span class="upcoming-time">10:15 PM</span>
-          <span class="upcoming-title">State Property</span>
-        </div>
-        <div class="upcoming-item" data-show="Madonna: Truth or Dare" data-start="2026-05-19T00:00:01Z" data-end="2026-05-19T02:30:01Z" data-platform="Pluto TV">
-          <span class="upcoming-time">12:00 AM</span>
-          <span class="upcoming-title">Madonna: Truth or Dare</span>
-        </div>
         <div class="upcoming-item" data-show="Bound" data-start="2026-05-19T02:30:01Z" data-end="2026-05-19T05:00:01Z" data-platform="Pluto TV">
           <span class="upcoming-time">2:30 AM</span>
           <span class="upcoming-title">Bound</span>
@@ -179,6 +163,18 @@
           <span class="upcoming-time">7:45 AM</span>
           <span class="upcoming-title">The Boondock Saints</span>
         </div>
+        <div class="upcoming-item" data-show="Memento" data-start="2026-05-19T10:15:01Z" data-end="2026-05-19T12:45:01Z" data-platform="Pluto TV">
+          <span class="upcoming-time">10:15 AM</span>
+          <span class="upcoming-title">Memento</span>
+        </div>
+        <div class="upcoming-item" data-show="Donnie Darko (Theatrical Cut)" data-start="2026-05-19T12:45:01Z" data-end="2026-05-19T15:15:01Z" data-platform="Pluto TV">
+          <span class="upcoming-time">12:45 PM</span>
+          <span class="upcoming-title">Donnie Darko (Theatrical Cut)</span>
+        </div>
+        <div class="upcoming-item" data-show="Cube" data-start="2026-05-19T15:15:01Z" data-end="2026-05-19T17:15:01Z" data-platform="Pluto TV">
+          <span class="upcoming-time">3:15 PM</span>
+          <span class="upcoming-title">Cube</span>
+        </div>
     </div>
   </section>
 
@@ -186,12 +182,12 @@
   <section id="moreChannels" class="more-channels-section">
     <h2 class="detail-section-title">More Free Movies Channels</h2>
     <div class="genre-pills">
-      <a href="/channel/grjngo-western-movies" class="genre-pill">Grjngo - Western Movies</a>
-      <a href="/channel/moviesphere-by-lionsgate" class="genre-pill">MovieSphere by Lionsgate</a>
-      <a href="/channel/xumo-black-cinema" class="genre-pill">Xumo Black Cinema</a>
-      <a href="/channel/ifc-films-picks" class="genre-pill">IFC Films Picks</a>
-      <a href="/channel/genie-k-movie" class="genre-pill">Genie K-Movie</a>
-      <a href="/channel/cinevault" class="genre-pill">CINEVAULT</a>
+      <a href="/channel/black-cinema-by-pluto-tv" class="genre-pill">Black Cinema by Pluto TV</a>
+      <a href="/channel/xumo-free-movies" class="genre-pill">XUMO FREE Movies</a>
+      <a href="/channel/midnight-pulp" class="genre-pill">Midnight Pulp</a>
+      <a href="/channel/pam-grier-s-soul-flix" class="genre-pill">Pam Grier&#x27;s Soul Flix</a>
+      <a href="/channel/moviesphere" class="genre-pill">MovieSphere</a>
+      <a href="/channel/pluto-tv-romance" class="genre-pill">Pluto TV Romance</a>
     </div>
   </section>
 
@@ -241,6 +237,7 @@
         <a href="../us.html" class="footer-link">🇺🇸 US Channels</a>
         <a href="../ca.html" class="footer-link">🇨🇦 CA Channels</a>
         <a href="../suggest.html" class="footer-link">Suggest a Channel</a>
+        <a href="../about.html" class="footer-link">About</a>
         <a href="../privacy.html" class="footer-link">Privacy Policy</a>
         <a href="../terms.html" class="footer-link">Terms of Service</a>
         <a href="mailto:hello@whatsonfreetv.com" class="footer-link">Contact</a>
@@ -277,12 +274,24 @@
     return 'badge-platform';
   }
 
-  // 1. Click handlers on .upcoming-item — mirrors openShowModal() in channel-detail.js
+  // 1. Click handlers on .upcoming-item — delegates to channel-detail.js openShowModal
+  //    which uses OMDb + TVmaze with movie-channel awareness.
   function openStaticShowModal(el) {
     const title    = el.dataset.show     || '';
     const startIso = el.dataset.start    || '';
     const endIso   = el.dataset.end      || '';
     const platform = el.dataset.platform || '';
+
+    // Delegate to the OMDb-aware modal exposed by channel-detail.js
+    if (typeof window._woftv_openShowModal === 'function') {
+      window._woftv_openShowModal(
+        { fields: { 'Show Title': title, 'Start Time': startIso, 'End Time': endIso, 'Platform': platform } },
+        '', true
+      );
+      return;
+    }
+
+    // Fallback (channel-detail.js not loaded): TVmaze-only
     const chName    = document.querySelector('h1.detail-channel-name')?.textContent?.trim() || '';
     const chLogo    = document.getElementById('detailImg')?.src || '';
     const chInitial = chName.charAt(0).toUpperCase();

@@ -151,14 +151,6 @@
   <section id="seoSchedule" class="detail-epg-section seo-schedule">
     <h2 class="detail-section-title">What&#39;s On Today — Reelz Famous and Infamous Schedule</h2>
     <div class="upcoming-list">
-        <div class="upcoming-item" data-show="On Patrol: Live" data-start="2026-05-18T18:02:12Z" data-end="2026-05-18T20:41:16Z" data-platform="Roku">
-          <span class="upcoming-time">6:02 PM</span>
-          <span class="upcoming-title">On Patrol: Live</span>
-        </div>
-        <div class="upcoming-item" data-show="On Patrol: Live" data-start="2026-05-18T20:41:16Z" data-end="2026-05-18T23:20:20Z" data-platform="Roku">
-          <span class="upcoming-time">8:41 PM</span>
-          <span class="upcoming-title">On Patrol: Live</span>
-        </div>
         <div class="upcoming-item" data-show="On Patrol: Live" data-start="2026-05-18T23:20:20Z" data-end="2026-05-19T02:03:25Z" data-platform="Roku">
           <span class="upcoming-time">11:20 PM</span>
           <span class="upcoming-title">On Patrol: Live</span>
@@ -187,6 +179,22 @@
           <span class="upcoming-time">9:14 AM</span>
           <span class="upcoming-title">Breaking the Band</span>
         </div>
+        <div class="upcoming-item" data-show="Frontman" data-start="2026-05-19T10:59:31Z" data-end="2026-05-19T12:44:52Z" data-platform="Roku">
+          <span class="upcoming-time">10:59 AM</span>
+          <span class="upcoming-title">Frontman</span>
+        </div>
+        <div class="upcoming-item" data-show="Breaking the Band" data-start="2026-05-19T12:44:52Z" data-end="2026-05-19T13:38:55Z" data-platform="Roku">
+          <span class="upcoming-time">12:44 PM</span>
+          <span class="upcoming-title">Breaking the Band</span>
+        </div>
+        <div class="upcoming-item" data-show="Breaking the Band" data-start="2026-05-19T13:38:55Z" data-end="2026-05-19T15:24:03Z" data-platform="Roku">
+          <span class="upcoming-time">1:38 PM</span>
+          <span class="upcoming-title">Breaking the Band</span>
+        </div>
+        <div class="upcoming-item" data-show="Breaking the Band" data-start="2026-05-19T15:24:03Z" data-end="2026-05-19T16:18:08Z" data-platform="Roku">
+          <span class="upcoming-time">3:24 PM</span>
+          <span class="upcoming-title">Breaking the Band</span>
+        </div>
     </div>
   </section>
 
@@ -194,12 +202,12 @@
   <section id="moreChannels" class="more-channels-section">
     <h2 class="detail-section-title">More Free Entertainment Channels</h2>
     <div class="genre-pills">
-      <a href="/channel/fgteev" class="genre-pill">FGTeeV</a>
-      <a href="/channel/pluto-tv-spotlight" class="genre-pill">Pluto TV Spotlight</a>
-      <a href="/channel/more-u" class="genre-pill">More U</a>
-      <a href="/channel/beyond-the-gates" class="genre-pill">Beyond the Gates</a>
-      <a href="/channel/latino-vibes" class="genre-pill">Latino Vibes</a>
-      <a href="/channel/dr-phil" class="genre-pill">Dr. Phil</a>
+      <a href="/channel/pluto-tv-pixel-world" class="genre-pill">Pluto TV Pixel World</a>
+      <a href="/channel/tg-en-espanol" class="genre-pill">TG en Espanol</a>
+      <a href="/channel/mtv-pluto-tv" class="genre-pill">MTV Pluto TV</a>
+      <a href="/channel/pluto-tv-icons" class="genre-pill">Pluto TV Icons</a>
+      <a href="/channel/caught-in-providence" class="genre-pill">Caught in Providence</a>
+      <a href="/channel/the-dick-van-dyke-show" class="genre-pill">The Dick Van Dyke Show</a>
     </div>
   </section>
 
@@ -249,6 +257,7 @@
         <a href="../us.html" class="footer-link">🇺🇸 US Channels</a>
         <a href="../ca.html" class="footer-link">🇨🇦 CA Channels</a>
         <a href="../suggest.html" class="footer-link">Suggest a Channel</a>
+        <a href="../about.html" class="footer-link">About</a>
         <a href="../privacy.html" class="footer-link">Privacy Policy</a>
         <a href="../terms.html" class="footer-link">Terms of Service</a>
         <a href="mailto:hello@whatsonfreetv.com" class="footer-link">Contact</a>
@@ -285,12 +294,24 @@
     return 'badge-platform';
   }
 
-  // 1. Click handlers on .upcoming-item — mirrors openShowModal() in channel-detail.js
+  // 1. Click handlers on .upcoming-item — delegates to channel-detail.js openShowModal
+  //    which uses OMDb + TVmaze with movie-channel awareness.
   function openStaticShowModal(el) {
     const title    = el.dataset.show     || '';
     const startIso = el.dataset.start    || '';
     const endIso   = el.dataset.end      || '';
     const platform = el.dataset.platform || '';
+
+    // Delegate to the OMDb-aware modal exposed by channel-detail.js
+    if (typeof window._woftv_openShowModal === 'function') {
+      window._woftv_openShowModal(
+        { fields: { 'Show Title': title, 'Start Time': startIso, 'End Time': endIso, 'Platform': platform } },
+        '', true
+      );
+      return;
+    }
+
+    // Fallback (channel-detail.js not loaded): TVmaze-only
     const chName    = document.querySelector('h1.detail-channel-name')?.textContent?.trim() || '';
     const chLogo    = document.getElementById('detailImg')?.src || '';
     const chInitial = chName.charAt(0).toUpperCase();

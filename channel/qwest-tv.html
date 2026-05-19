@@ -103,7 +103,7 @@
   <script src="../config.js"></script>
   <script>
     window._CHANNEL_SLUG    = 'qwest-tv';
-    window._CHANNEL_COUNTRY = 'CA';
+    window._CHANNEL_COUNTRY = 'US';
   </script>
 </head>
 <body class="detail-page">
@@ -131,7 +131,7 @@
       </div>
     </div>
     <div class="detail-info">
-      <div class="detail-country">🇨🇦 CA</div>
+      <div class="detail-country">🇺🇸 US</div>
       <h1 class="detail-channel-name">Qwest TV</h1>
       <p class="detail-description">Jazz and world music performances and cultural documentary content.</p>
       
@@ -151,22 +151,6 @@
   <section id="seoSchedule" class="detail-epg-section seo-schedule">
     <h2 class="detail-section-title">What&#39;s On Today — Qwest TV Schedule</h2>
     <div class="upcoming-list">
-        <div class="upcoming-item" data-show="Qwest TV On Stage - La Malka Family" data-start="2026-05-18T19:36:00Z" data-end="2026-05-18T21:05:00Z" data-platform="Plex">
-          <span class="upcoming-time">7:36 PM</span>
-          <span class="upcoming-title">Qwest TV On Stage - La Malka Family</span>
-        </div>
-        <div class="upcoming-item" data-show="Chillin&#x27; with Qwest TV" data-start="2026-05-18T21:05:00Z" data-end="2026-05-19T00:00:00Z" data-platform="Plex">
-          <span class="upcoming-time">9:05 PM</span>
-          <span class="upcoming-title">Chillin&#x27; with Qwest TV</span>
-        </div>
-        <div class="upcoming-item" data-show="Les Amazones d&#x27;Afrique - Live" data-start="2026-05-19T00:00:00Z" data-end="2026-05-19T00:56:00Z" data-platform="Plex">
-          <span class="upcoming-time">12:00 AM</span>
-          <span class="upcoming-title">Les Amazones d&#x27;Afrique - Live</span>
-        </div>
-        <div class="upcoming-item" data-show="Kenny Larkin &amp; Truffaz play Miles" data-start="2026-05-19T00:56:00Z" data-end="2026-05-19T01:36:00Z" data-platform="Plex">
-          <span class="upcoming-time">12:56 AM</span>
-          <span class="upcoming-title">Kenny Larkin &amp; Truffaz play Miles</span>
-        </div>
         <div class="upcoming-item" data-show="Qwest TV On Stage - La Malka Family" data-start="2026-05-19T01:36:00Z" data-end="2026-05-19T03:05:00Z" data-platform="Plex">
           <span class="upcoming-time">1:36 AM</span>
           <span class="upcoming-title">Qwest TV On Stage - La Malka Family</span>
@@ -183,6 +167,14 @@
           <span class="upcoming-time">7:49 AM</span>
           <span class="upcoming-title">Diverse, Beautiful Music by Qwest TV</span>
         </div>
+        <div class="upcoming-item" data-show="Where Great Music Meets by Qwest TV" data-start="2026-05-19T10:39:00Z" data-end="2026-05-19T13:28:00Z" data-platform="Plex">
+          <span class="upcoming-time">10:39 AM</span>
+          <span class="upcoming-title">Where Great Music Meets by Qwest TV</span>
+        </div>
+        <div class="upcoming-item" data-show="From Be Bop to Hip Hop by Qwest TV" data-start="2026-05-19T13:28:00Z" data-end="2026-05-19T16:11:00Z" data-platform="Plex">
+          <span class="upcoming-time">1:28 PM</span>
+          <span class="upcoming-title">From Be Bop to Hip Hop by Qwest TV</span>
+        </div>
     </div>
   </section>
 
@@ -190,12 +182,12 @@
   <section id="moreChannels" class="more-channels-section">
     <h2 class="detail-section-title">More Free Music Channels</h2>
     <div class="genre-pills">
-      <a href="/channel/metal-rocks" class="genre-pill">Metal.Rocks</a>
-      <a href="/channel/easy-listening" class="genre-pill">Easy Listening</a>
       <a href="/channel/circle-country" class="genre-pill">Circle Country</a>
-      <a href="/channel/stingray-souvenirs" class="genre-pill">Stingray Souvenirs</a>
-      <a href="/channel/stingray-remember-the-80s" class="genre-pill">Stingray Remember The &#x27;80s</a>
-      <a href="/channel/xite-randb-feels" class="genre-pill">XITE R&amp;B Feels</a>
+      <a href="/channel/stingray-classica" class="genre-pill">Stingray Classica</a>
+      <a href="/channel/hit-list" class="genre-pill">Hit List</a>
+      <a href="/channel/remember-the-80s" class="genre-pill">Remember the ‘80s</a>
+      <a href="/channel/xite-rap-game" class="genre-pill">XITE Rap Game</a>
+      <a href="/channel/movie-music-by-stingray" class="genre-pill">Movie Music by Stingray</a>
     </div>
   </section>
 
@@ -245,6 +237,7 @@
         <a href="../us.html" class="footer-link">🇺🇸 US Channels</a>
         <a href="../ca.html" class="footer-link">🇨🇦 CA Channels</a>
         <a href="../suggest.html" class="footer-link">Suggest a Channel</a>
+        <a href="../about.html" class="footer-link">About</a>
         <a href="../privacy.html" class="footer-link">Privacy Policy</a>
         <a href="../terms.html" class="footer-link">Terms of Service</a>
         <a href="mailto:hello@whatsonfreetv.com" class="footer-link">Contact</a>
@@ -281,12 +274,24 @@
     return 'badge-platform';
   }
 
-  // 1. Click handlers on .upcoming-item — mirrors openShowModal() in channel-detail.js
+  // 1. Click handlers on .upcoming-item — delegates to channel-detail.js openShowModal
+  //    which uses OMDb + TVmaze with movie-channel awareness.
   function openStaticShowModal(el) {
     const title    = el.dataset.show     || '';
     const startIso = el.dataset.start    || '';
     const endIso   = el.dataset.end      || '';
     const platform = el.dataset.platform || '';
+
+    // Delegate to the OMDb-aware modal exposed by channel-detail.js
+    if (typeof window._woftv_openShowModal === 'function') {
+      window._woftv_openShowModal(
+        { fields: { 'Show Title': title, 'Start Time': startIso, 'End Time': endIso, 'Platform': platform } },
+        '', true
+      );
+      return;
+    }
+
+    // Fallback (channel-detail.js not loaded): TVmaze-only
     const chName    = document.querySelector('h1.detail-channel-name')?.textContent?.trim() || '';
     const chLogo    = document.getElementById('detailImg')?.src || '';
     const chInitial = chName.charAt(0).toUpperCase();

@@ -151,21 +151,21 @@
   <section id="seoSchedule" class="detail-epg-section seo-schedule">
     <h2 class="detail-section-title">What&#39;s On Today — Movie Hub West Schedule</h2>
     <div class="upcoming-list">
-        <div class="upcoming-item" data-show="The Immaculate Room" data-start="2026-05-18T21:12:32Z" data-end="2026-05-18T22:57:25Z" data-platform="Samsung TV Plus">
-          <span class="upcoming-time">9:12 PM</span>
-          <span class="upcoming-title">The Immaculate Room</span>
-        </div>
-        <div class="upcoming-item" data-show="Obsessed" data-start="2026-05-18T22:57:25Z" data-end="2026-05-19T00:59:03Z" data-platform="Samsung TV Plus">
-          <span class="upcoming-time">10:57 PM</span>
-          <span class="upcoming-title">Obsessed</span>
-        </div>
-        <div class="upcoming-item" data-show="Identity" data-start="2026-05-19T00:59:03Z" data-end="2026-05-19T02:43:19Z" data-platform="Samsung TV Plus">
-          <span class="upcoming-time">12:59 AM</span>
-          <span class="upcoming-title">Identity</span>
-        </div>
         <div class="upcoming-item" data-show="Hollow Man" data-start="2026-05-19T02:43:19Z" data-end="2026-05-19T04:49:37Z" data-platform="Samsung TV Plus">
           <span class="upcoming-time">2:43 AM</span>
           <span class="upcoming-title">Hollow Man</span>
+        </div>
+        <div class="upcoming-item" data-show="The Prestige" data-start="2026-05-19T04:49:37Z" data-end="2026-05-19T07:17:37Z" data-platform="Samsung TV Plus">
+          <span class="upcoming-time">4:49 AM</span>
+          <span class="upcoming-title">The Prestige</span>
+        </div>
+        <div class="upcoming-item" data-show="Grand Isle" data-start="2026-05-19T07:17:37Z" data-end="2026-05-19T09:10:18Z" data-platform="Samsung TV Plus">
+          <span class="upcoming-time">7:17 AM</span>
+          <span class="upcoming-title">Grand Isle</span>
+        </div>
+        <div class="upcoming-item" data-show="Villains" data-start="2026-05-19T09:10:18Z" data-end="2026-05-19T10:55:31Z" data-platform="Samsung TV Plus">
+          <span class="upcoming-time">9:10 AM</span>
+          <span class="upcoming-title">Villains</span>
         </div>
     </div>
   </section>
@@ -174,12 +174,12 @@
   <section id="moreChannels" class="more-channels-section">
     <h2 class="detail-section-title">More Free Movies Channels</h2>
     <div class="genre-pills">
-      <a href="/channel/filmrise-westerns" class="genre-pill">FilmRise Westerns</a>
-      <a href="/channel/action-hollywood-movies" class="genre-pill">Action Hollywood Movies</a>
-      <a href="/channel/shemaroo-bollywood" class="genre-pill">Shemaroo Bollywood</a>
-      <a href="/channel/wu-tang-collection" class="genre-pill">Wu Tang Collection</a>
       <a href="/channel/western-bound" class="genre-pill">Western Bound</a>
+      <a href="/channel/samuel-goldwyn-classics" class="genre-pill">Samuel Goldwyn Classics</a>
+      <a href="/channel/lifetime-movie-favorites" class="genre-pill">Lifetime Movie Favorites</a>
+      <a href="/channel/bet-comedy-movies" class="genre-pill">BET Comedy Movies</a>
       <a href="/channel/pluto-tv-staff-picks" class="genre-pill">Pluto TV Staff Picks</a>
+      <a href="/channel/movie-hub-romance" class="genre-pill">Movie Hub Romance</a>
     </div>
   </section>
 
@@ -229,6 +229,7 @@
         <a href="../us.html" class="footer-link">🇺🇸 US Channels</a>
         <a href="../ca.html" class="footer-link">🇨🇦 CA Channels</a>
         <a href="../suggest.html" class="footer-link">Suggest a Channel</a>
+        <a href="../about.html" class="footer-link">About</a>
         <a href="../privacy.html" class="footer-link">Privacy Policy</a>
         <a href="../terms.html" class="footer-link">Terms of Service</a>
         <a href="mailto:hello@whatsonfreetv.com" class="footer-link">Contact</a>
@@ -265,12 +266,24 @@
     return 'badge-platform';
   }
 
-  // 1. Click handlers on .upcoming-item — mirrors openShowModal() in channel-detail.js
+  // 1. Click handlers on .upcoming-item — delegates to channel-detail.js openShowModal
+  //    which uses OMDb + TVmaze with movie-channel awareness.
   function openStaticShowModal(el) {
     const title    = el.dataset.show     || '';
     const startIso = el.dataset.start    || '';
     const endIso   = el.dataset.end      || '';
     const platform = el.dataset.platform || '';
+
+    // Delegate to the OMDb-aware modal exposed by channel-detail.js
+    if (typeof window._woftv_openShowModal === 'function') {
+      window._woftv_openShowModal(
+        { fields: { 'Show Title': title, 'Start Time': startIso, 'End Time': endIso, 'Platform': platform } },
+        '', true
+      );
+      return;
+    }
+
+    // Fallback (channel-detail.js not loaded): TVmaze-only
     const chName    = document.querySelector('h1.detail-channel-name')?.textContent?.trim() || '';
     const chLogo    = document.getElementById('detailImg')?.src || '';
     const chInitial = chName.charAt(0).toUpperCase();

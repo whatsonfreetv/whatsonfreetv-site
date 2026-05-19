@@ -151,22 +151,6 @@
   <section id="seoSchedule" class="detail-epg-section seo-schedule">
     <h2 class="detail-section-title">What&#39;s On Today — SPARK TV Schedule</h2>
     <div class="upcoming-list">
-        <div class="upcoming-item" data-show="Bookworm and the Beast" data-start="2026-05-18T19:14:16Z" data-end="2026-05-18T20:49:18Z" data-platform="Roku">
-          <span class="upcoming-time">7:14 PM</span>
-          <span class="upcoming-title">Bookworm and the Beast</span>
-        </div>
-        <div class="upcoming-item" data-show="Dishing Up Love" data-start="2026-05-18T20:49:18Z" data-end="2026-05-18T22:32:03Z" data-platform="Roku">
-          <span class="upcoming-time">8:49 PM</span>
-          <span class="upcoming-title">Dishing Up Love</span>
-        </div>
-        <div class="upcoming-item" data-show="Love Finds You in Sugarcreek" data-start="2026-05-18T22:32:03Z" data-end="2026-05-19T00:15:09Z" data-platform="Roku">
-          <span class="upcoming-time">10:32 PM</span>
-          <span class="upcoming-title">Love Finds You in Sugarcreek</span>
-        </div>
-        <div class="upcoming-item" data-show="Love Switch" data-start="2026-05-19T00:15:09Z" data-end="2026-05-19T01:55:15Z" data-platform="Roku">
-          <span class="upcoming-time">12:15 AM</span>
-          <span class="upcoming-title">Love Switch</span>
-        </div>
         <div class="upcoming-item" data-show="Love Across Time" data-start="2026-05-19T01:55:15Z" data-end="2026-05-19T03:46:50Z" data-platform="Roku">
           <span class="upcoming-time">1:55 AM</span>
           <span class="upcoming-title">Love Across Time</span>
@@ -191,6 +175,22 @@
           <span class="upcoming-time">9:00 AM</span>
           <span class="upcoming-title">Civil Love</span>
         </div>
+        <div class="upcoming-item" data-show="Down and Derby" data-start="2026-05-19T10:43:29Z" data-end="2026-05-19T12:25:43Z" data-platform="Roku">
+          <span class="upcoming-time">10:43 AM</span>
+          <span class="upcoming-title">Down and Derby</span>
+        </div>
+        <div class="upcoming-item" data-show="Scented With Love" data-start="2026-05-19T12:25:43Z" data-end="2026-05-19T14:04:20Z" data-platform="Roku">
+          <span class="upcoming-time">12:25 PM</span>
+          <span class="upcoming-title">Scented With Love</span>
+        </div>
+        <div class="upcoming-item" data-show="Passport to Love" data-start="2026-05-19T14:04:20Z" data-end="2026-05-19T15:44:32Z" data-platform="Roku">
+          <span class="upcoming-time">2:04 PM</span>
+          <span class="upcoming-title">Passport to Love</span>
+        </div>
+        <div class="upcoming-item" data-show="My Perfect Romance" data-start="2026-05-19T15:44:32Z" data-end="2026-05-19T17:27:50Z" data-platform="Roku">
+          <span class="upcoming-time">3:44 PM</span>
+          <span class="upcoming-title">My Perfect Romance</span>
+        </div>
     </div>
   </section>
 
@@ -198,8 +198,8 @@
   <section id="moreChannels" class="more-channels-section">
     <h2 class="detail-section-title">More Free Romance Channels</h2>
     <div class="genre-pills">
-      <a href="/channel/hallmark-movies-and-more" class="genre-pill">Hallmark Movies And More</a>
       <a href="/channel/historias-de-amor" class="genre-pill">Historias de Amor</a>
+      <a href="/channel/hallmark-movies-and-more" class="genre-pill">Hallmark Movies And More</a>
       <a href="/channel/lg-channels-romance-showcase" class="genre-pill">LG Channels Romance Showcase</a>
     </div>
   </section>
@@ -250,6 +250,7 @@
         <a href="../us.html" class="footer-link">🇺🇸 US Channels</a>
         <a href="../ca.html" class="footer-link">🇨🇦 CA Channels</a>
         <a href="../suggest.html" class="footer-link">Suggest a Channel</a>
+        <a href="../about.html" class="footer-link">About</a>
         <a href="../privacy.html" class="footer-link">Privacy Policy</a>
         <a href="../terms.html" class="footer-link">Terms of Service</a>
         <a href="mailto:hello@whatsonfreetv.com" class="footer-link">Contact</a>
@@ -286,12 +287,24 @@
     return 'badge-platform';
   }
 
-  // 1. Click handlers on .upcoming-item — mirrors openShowModal() in channel-detail.js
+  // 1. Click handlers on .upcoming-item — delegates to channel-detail.js openShowModal
+  //    which uses OMDb + TVmaze with movie-channel awareness.
   function openStaticShowModal(el) {
     const title    = el.dataset.show     || '';
     const startIso = el.dataset.start    || '';
     const endIso   = el.dataset.end      || '';
     const platform = el.dataset.platform || '';
+
+    // Delegate to the OMDb-aware modal exposed by channel-detail.js
+    if (typeof window._woftv_openShowModal === 'function') {
+      window._woftv_openShowModal(
+        { fields: { 'Show Title': title, 'Start Time': startIso, 'End Time': endIso, 'Platform': platform } },
+        '', true
+      );
+      return;
+    }
+
+    // Fallback (channel-detail.js not loaded): TVmaze-only
     const chName    = document.querySelector('h1.detail-channel-name')?.textContent?.trim() || '';
     const chLogo    = document.getElementById('detailImg')?.src || '';
     const chInitial = chName.charAt(0).toUpperCase();

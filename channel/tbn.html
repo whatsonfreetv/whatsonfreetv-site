@@ -154,10 +154,10 @@
     <div class="genre-pills">
       <a href="/channel/elevation-church-network" class="genre-pill">Elevation Church Network</a>
       <a href="/channel/joel-osteen-network" class="genre-pill">Joel Osteen Network</a>
-      <a href="/channel/in-touch" class="genre-pill">In Touch</a>
-      <a href="/channel/stellar" class="genre-pill">STELLAR</a>
-      <a href="/channel/gaithertv-fast" class="genre-pill">GaitherTV FAST</a>
       <a href="/channel/pure-flix-tv" class="genre-pill">Pure Flix TV</a>
+      <a href="/channel/in-touch-network" class="genre-pill">In Touch + Network</a>
+      <a href="/channel/impact-gospel" class="genre-pill">Impact Gospel</a>
+      <a href="/channel/sparktv-light-and-love" class="genre-pill">SparkTV: Light &amp; Love</a>
     </div>
   </section>
 
@@ -207,6 +207,7 @@
         <a href="../us.html" class="footer-link">🇺🇸 US Channels</a>
         <a href="../ca.html" class="footer-link">🇨🇦 CA Channels</a>
         <a href="../suggest.html" class="footer-link">Suggest a Channel</a>
+        <a href="../about.html" class="footer-link">About</a>
         <a href="../privacy.html" class="footer-link">Privacy Policy</a>
         <a href="../terms.html" class="footer-link">Terms of Service</a>
         <a href="mailto:hello@whatsonfreetv.com" class="footer-link">Contact</a>
@@ -243,12 +244,24 @@
     return 'badge-platform';
   }
 
-  // 1. Click handlers on .upcoming-item — mirrors openShowModal() in channel-detail.js
+  // 1. Click handlers on .upcoming-item — delegates to channel-detail.js openShowModal
+  //    which uses OMDb + TVmaze with movie-channel awareness.
   function openStaticShowModal(el) {
     const title    = el.dataset.show     || '';
     const startIso = el.dataset.start    || '';
     const endIso   = el.dataset.end      || '';
     const platform = el.dataset.platform || '';
+
+    // Delegate to the OMDb-aware modal exposed by channel-detail.js
+    if (typeof window._woftv_openShowModal === 'function') {
+      window._woftv_openShowModal(
+        { fields: { 'Show Title': title, 'Start Time': startIso, 'End Time': endIso, 'Platform': platform } },
+        '', true
+      );
+      return;
+    }
+
+    // Fallback (channel-detail.js not loaded): TVmaze-only
     const chName    = document.querySelector('h1.detail-channel-name')?.textContent?.trim() || '';
     const chLogo    = document.getElementById('detailImg')?.src || '';
     const chInitial = chName.charAt(0).toUpperCase();

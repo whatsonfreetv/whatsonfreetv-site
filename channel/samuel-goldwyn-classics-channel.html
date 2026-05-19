@@ -150,14 +150,6 @@
   <section id="seoSchedule" class="detail-epg-section seo-schedule">
     <h2 class="detail-section-title">What&#39;s On Today — Samuel Goldwyn Classics CHANNEL Schedule</h2>
     <div class="upcoming-list">
-        <div class="upcoming-item" data-show="Guys and Dolls" data-start="2026-05-18T19:56:07Z" data-end="2026-05-18T22:49:27Z" data-platform="Roku">
-          <span class="upcoming-time">7:56 PM</span>
-          <span class="upcoming-title">Guys and Dolls</span>
-        </div>
-        <div class="upcoming-item" data-show="The Kid From Brooklyn" data-start="2026-05-18T22:49:27Z" data-end="2026-05-19T00:54:29Z" data-platform="Roku">
-          <span class="upcoming-time">10:49 PM</span>
-          <span class="upcoming-title">The Kid From Brooklyn</span>
-        </div>
         <div class="upcoming-item" data-show="The Bishop&#x27;s Wife" data-start="2026-05-19T00:54:29Z" data-end="2026-05-19T03:01:52Z" data-platform="Roku">
           <span class="upcoming-time">12:54 AM</span>
           <span class="upcoming-title">The Bishop&#x27;s Wife</span>
@@ -182,6 +174,18 @@
           <span class="upcoming-time">8:45 AM</span>
           <span class="upcoming-title">They Got Me Covered</span>
         </div>
+        <div class="upcoming-item" data-show="The Best Years of Our Lives" data-start="2026-05-19T10:31:15Z" data-end="2026-05-19T13:43:47Z" data-platform="Roku">
+          <span class="upcoming-time">10:31 AM</span>
+          <span class="upcoming-title">The Best Years of Our Lives</span>
+        </div>
+        <div class="upcoming-item" data-show="The Wedding Night" data-start="2026-05-19T13:43:47Z" data-end="2026-05-19T15:15:20Z" data-platform="Roku">
+          <span class="upcoming-time">1:43 PM</span>
+          <span class="upcoming-title">The Wedding Night</span>
+        </div>
+        <div class="upcoming-item" data-show="Ball of Fire" data-start="2026-05-19T15:15:20Z" data-end="2026-05-19T17:21:17Z" data-platform="Roku">
+          <span class="upcoming-time">3:15 PM</span>
+          <span class="upcoming-title">Ball of Fire</span>
+        </div>
     </div>
   </section>
 
@@ -189,12 +193,12 @@
   <section id="moreChannels" class="more-channels-section">
     <h2 class="detail-section-title">More Free General Channels</h2>
     <div class="genre-pills">
-      <a href="/channel/roku-moods-reading-nook" class="genre-pill">Roku Moods Reading Nook</a>
-      <a href="/channel/the-bernie-mac-show" class="genre-pill">The Bernie Mac Show</a>
-      <a href="/channel/floracing-24-7" class="genre-pill">FloRacing 24/7</a>
+      <a href="/channel/the-practice" class="genre-pill">The Practice</a>
       <a href="/channel/science-is-amazing" class="genre-pill">Science is Amazing</a>
-      <a href="/channel/slvr-sports-and-entertainment-slvr" class="genre-pill">SLVR Sports and Entertainment (SLVR)</a>
-      <a href="/channel/today-s-homeowner" class="genre-pill">Today&#x27;s Homeowner</a>
+      <a href="/channel/impossible" class="genre-pill">Impossible</a>
+      <a href="/channel/scripps-sports-network" class="genre-pill">Scripps Sports Network</a>
+      <a href="/channel/addictatv" class="genre-pill">AddictaTV</a>
+      <a href="/channel/national-geographic-history" class="genre-pill">National Geographic History</a>
     </div>
   </section>
 
@@ -244,6 +248,7 @@
         <a href="../us.html" class="footer-link">🇺🇸 US Channels</a>
         <a href="../ca.html" class="footer-link">🇨🇦 CA Channels</a>
         <a href="../suggest.html" class="footer-link">Suggest a Channel</a>
+        <a href="../about.html" class="footer-link">About</a>
         <a href="../privacy.html" class="footer-link">Privacy Policy</a>
         <a href="../terms.html" class="footer-link">Terms of Service</a>
         <a href="mailto:hello@whatsonfreetv.com" class="footer-link">Contact</a>
@@ -280,12 +285,24 @@
     return 'badge-platform';
   }
 
-  // 1. Click handlers on .upcoming-item — mirrors openShowModal() in channel-detail.js
+  // 1. Click handlers on .upcoming-item — delegates to channel-detail.js openShowModal
+  //    which uses OMDb + TVmaze with movie-channel awareness.
   function openStaticShowModal(el) {
     const title    = el.dataset.show     || '';
     const startIso = el.dataset.start    || '';
     const endIso   = el.dataset.end      || '';
     const platform = el.dataset.platform || '';
+
+    // Delegate to the OMDb-aware modal exposed by channel-detail.js
+    if (typeof window._woftv_openShowModal === 'function') {
+      window._woftv_openShowModal(
+        { fields: { 'Show Title': title, 'Start Time': startIso, 'End Time': endIso, 'Platform': platform } },
+        '', true
+      );
+      return;
+    }
+
+    // Fallback (channel-detail.js not loaded): TVmaze-only
     const chName    = document.querySelector('h1.detail-channel-name')?.textContent?.trim() || '';
     const chLogo    = document.getElementById('detailImg')?.src || '';
     const chInitial = chName.charAt(0).toUpperCase();
