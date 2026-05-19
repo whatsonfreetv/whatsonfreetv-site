@@ -151,18 +151,6 @@
   <section id="seoSchedule" class="detail-epg-section seo-schedule">
     <h2 class="detail-section-title">What&#39;s On Today — 80s Rewind Schedule</h2>
     <div class="upcoming-list">
-        <div class="upcoming-item" data-show="Raw Deal" data-start="2026-05-18T19:45:00Z" data-end="2026-05-18T22:00:00Z" data-platform="Pluto TV">
-          <span class="upcoming-time">7:45 PM</span>
-          <span class="upcoming-title">Raw Deal</span>
-        </div>
-        <div class="upcoming-item" data-show="The Wraith" data-start="2026-05-18T22:00:00Z" data-end="2026-05-19T00:00:00Z" data-platform="Pluto TV">
-          <span class="upcoming-time">10:00 PM</span>
-          <span class="upcoming-title">The Wraith</span>
-        </div>
-        <div class="upcoming-item" data-show="Explorers" data-start="2026-05-19T00:00:00Z" data-end="2026-05-19T02:15:00Z" data-platform="Pluto TV">
-          <span class="upcoming-time">12:00 AM</span>
-          <span class="upcoming-title">Explorers</span>
-        </div>
         <div class="upcoming-item" data-show="D.A.R.Y.L." data-start="2026-05-19T02:15:00Z" data-end="2026-05-19T04:15:00Z" data-platform="Pluto TV">
           <span class="upcoming-time">2:15 AM</span>
           <span class="upcoming-title">D.A.R.Y.L.</span>
@@ -183,6 +171,18 @@
           <span class="upcoming-time">10:00 AM</span>
           <span class="upcoming-title">The Wraith</span>
         </div>
+        <div class="upcoming-item" data-show="Night of the Comet" data-start="2026-05-19T12:00:00Z" data-end="2026-05-19T13:45:00Z" data-platform="Pluto TV">
+          <span class="upcoming-time">12:00 PM</span>
+          <span class="upcoming-title">Night of the Comet</span>
+        </div>
+        <div class="upcoming-item" data-show="Solarbabies" data-start="2026-05-19T13:45:00Z" data-end="2026-05-19T15:45:00Z" data-platform="Pluto TV">
+          <span class="upcoming-time">1:45 PM</span>
+          <span class="upcoming-title">Solarbabies</span>
+        </div>
+        <div class="upcoming-item" data-show="Fright Night" data-start="2026-05-19T15:45:00Z" data-end="2026-05-19T18:00:00Z" data-platform="Pluto TV">
+          <span class="upcoming-time">3:45 PM</span>
+          <span class="upcoming-title">Fright Night</span>
+        </div>
     </div>
   </section>
 
@@ -190,12 +190,12 @@
   <section id="moreChannels" class="more-channels-section">
     <h2 class="detail-section-title">More Free Movies Channels</h2>
     <div class="genre-pills">
-      <a href="/channel/maverick-black-cinema" class="genre-pill">Maverick Black Cinema</a>
-      <a href="/channel/moviesphere-by-lionsgate" class="genre-pill">MovieSphere by Lionsgate</a>
-      <a href="/channel/70s-cinema" class="genre-pill">70s Cinema</a>
-      <a href="/channel/filmrise-free-movies" class="genre-pill">FilmRise Free Movies</a>
-      <a href="/channel/filmrise-western" class="genre-pill">FilmRise Western</a>
-      <a href="/channel/genie-k-movie" class="genre-pill">Genie K-Movie</a>
+      <a href="/channel/xumo-black-cinema" class="genre-pill">Xumo Black Cinema</a>
+      <a href="/channel/lifetime-movies-love-and-drama" class="genre-pill">Lifetime Movies Love &amp; Drama</a>
+      <a href="/channel/movie-hub-romance" class="genre-pill">Movie Hub Romance</a>
+      <a href="/channel/flicks-of-fury" class="genre-pill">Flicks of Fury</a>
+      <a href="/channel/xumo-her-movies" class="genre-pill">Xumo Her Movies</a>
+      <a href="/channel/xumo-free-movies" class="genre-pill">XUMO FREE Movies</a>
     </div>
   </section>
 
@@ -245,6 +245,7 @@
         <a href="../us.html" class="footer-link">🇺🇸 US Channels</a>
         <a href="../ca.html" class="footer-link">🇨🇦 CA Channels</a>
         <a href="../suggest.html" class="footer-link">Suggest a Channel</a>
+        <a href="../about.html" class="footer-link">About</a>
         <a href="../privacy.html" class="footer-link">Privacy Policy</a>
         <a href="../terms.html" class="footer-link">Terms of Service</a>
         <a href="mailto:hello@whatsonfreetv.com" class="footer-link">Contact</a>
@@ -281,12 +282,24 @@
     return 'badge-platform';
   }
 
-  // 1. Click handlers on .upcoming-item — mirrors openShowModal() in channel-detail.js
+  // 1. Click handlers on .upcoming-item — delegates to channel-detail.js openShowModal
+  //    which uses OMDb + TVmaze with movie-channel awareness.
   function openStaticShowModal(el) {
     const title    = el.dataset.show     || '';
     const startIso = el.dataset.start    || '';
     const endIso   = el.dataset.end      || '';
     const platform = el.dataset.platform || '';
+
+    // Delegate to the OMDb-aware modal exposed by channel-detail.js
+    if (typeof window._woftv_openShowModal === 'function') {
+      window._woftv_openShowModal(
+        { fields: { 'Show Title': title, 'Start Time': startIso, 'End Time': endIso, 'Platform': platform } },
+        '', true
+      );
+      return;
+    }
+
+    // Fallback (channel-detail.js not loaded): TVmaze-only
     const chName    = document.querySelector('h1.detail-channel-name')?.textContent?.trim() || '';
     const chLogo    = document.getElementById('detailImg')?.src || '';
     const chInitial = chName.charAt(0).toUpperCase();

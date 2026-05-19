@@ -151,22 +151,6 @@
   <section id="seoSchedule" class="detail-epg-section seo-schedule">
     <h2 class="detail-section-title">What&#39;s On Today — Cine terror Schedule</h2>
     <div class="upcoming-list">
-        <div class="upcoming-item" data-show="Stephen King: la bala de plata" data-start="2026-05-18T19:45:00Z" data-end="2026-05-18T21:45:00Z" data-platform="Pluto TV">
-          <span class="upcoming-time">7:45 PM</span>
-          <span class="upcoming-title">Stephen King: la bala de plata</span>
-        </div>
-        <div class="upcoming-item" data-show="Cujo" data-start="2026-05-18T21:45:00Z" data-end="2026-05-18T23:30:00Z" data-platform="Pluto TV">
-          <span class="upcoming-time">9:45 PM</span>
-          <span class="upcoming-title">Cujo</span>
-        </div>
-        <div class="upcoming-item" data-show="Pandemia lupina" data-start="2026-05-18T23:30:00Z" data-end="2026-05-19T01:15:00Z" data-platform="Pluto TV">
-          <span class="upcoming-time">11:30 PM</span>
-          <span class="upcoming-title">Pandemia lupina</span>
-        </div>
-        <div class="upcoming-item" data-show="El lobo de snow hollow" data-start="2026-05-19T01:15:00Z" data-end="2026-05-19T03:00:00Z" data-platform="Pluto TV">
-          <span class="upcoming-time">1:15 AM</span>
-          <span class="upcoming-title">El lobo de snow hollow</span>
-        </div>
         <div class="upcoming-item" data-show="Stephen King: la bala de plata" data-start="2026-05-19T03:00:00Z" data-end="2026-05-19T05:00:00Z" data-platform="Pluto TV">
           <span class="upcoming-time">3:00 AM</span>
           <span class="upcoming-title">Stephen King: la bala de plata</span>
@@ -183,6 +167,18 @@
           <span class="upcoming-time">8:30 AM</span>
           <span class="upcoming-title">Granja Macabra</span>
         </div>
+        <div class="upcoming-item" data-show="La profecía" data-start="2026-05-19T10:45:00Z" data-end="2026-05-19T12:45:00Z" data-platform="Pluto TV">
+          <span class="upcoming-time">10:45 AM</span>
+          <span class="upcoming-title">La profecía</span>
+        </div>
+        <div class="upcoming-item" data-show="EL Ojo" data-start="2026-05-19T12:45:00Z" data-end="2026-05-19T15:00:00Z" data-platform="Pluto TV">
+          <span class="upcoming-time">12:45 PM</span>
+          <span class="upcoming-title">EL Ojo</span>
+        </div>
+        <div class="upcoming-item" data-show="Perturbados" data-start="2026-05-19T15:00:00Z" data-end="2026-05-19T16:45:00Z" data-platform="Pluto TV">
+          <span class="upcoming-time">3:00 PM</span>
+          <span class="upcoming-title">Perturbados</span>
+        </div>
     </div>
   </section>
 
@@ -190,12 +186,12 @@
   <section id="moreChannels" class="more-channels-section">
     <h2 class="detail-section-title">More Free Spanish Channels</h2>
     <div class="genre-pills">
-      <a href="/channel/vevo-latino" class="genre-pill">Vevo Latino</a>
-      <a href="/channel/vix-villanos-de-novela" class="genre-pill">ViX Villanos de Novela</a>
-      <a href="/channel/como-dice-el-dicho" class="genre-pill">Como Dice el Dicho</a>
-      <a href="/channel/telemundo-al-dia" class="genre-pill">Telemundo al Dia</a>
-      <a href="/channel/telemundo-al-d-a" class="genre-pill">Telemundo Al Día</a>
-      <a href="/channel/the-walking-dead-espanol" class="genre-pill">The Walking Dead Espanol</a>
+      <a href="/channel/revry-latinx" class="genre-pill">Revry Latinx</a>
+      <a href="/channel/la-familia-del-barrio" class="genre-pill">La Familia del Barrio</a>
+      <a href="/channel/freetv-sure-o" class="genre-pill">FreeTV Sureño</a>
+      <a href="/channel/telemundo-acci-n" class="genre-pill">Telemundo Acción</a>
+      <a href="/channel/vevo-reggaeton-and-trap" class="genre-pill">Vevo Reggaeton &amp; Trap</a>
+      <a href="/channel/cops-en-espa-ol" class="genre-pill">Cops en Español</a>
     </div>
   </section>
 
@@ -245,6 +241,7 @@
         <a href="../us.html" class="footer-link">🇺🇸 US Channels</a>
         <a href="../ca.html" class="footer-link">🇨🇦 CA Channels</a>
         <a href="../suggest.html" class="footer-link">Suggest a Channel</a>
+        <a href="../about.html" class="footer-link">About</a>
         <a href="../privacy.html" class="footer-link">Privacy Policy</a>
         <a href="../terms.html" class="footer-link">Terms of Service</a>
         <a href="mailto:hello@whatsonfreetv.com" class="footer-link">Contact</a>
@@ -281,12 +278,24 @@
     return 'badge-platform';
   }
 
-  // 1. Click handlers on .upcoming-item — mirrors openShowModal() in channel-detail.js
+  // 1. Click handlers on .upcoming-item — delegates to channel-detail.js openShowModal
+  //    which uses OMDb + TVmaze with movie-channel awareness.
   function openStaticShowModal(el) {
     const title    = el.dataset.show     || '';
     const startIso = el.dataset.start    || '';
     const endIso   = el.dataset.end      || '';
     const platform = el.dataset.platform || '';
+
+    // Delegate to the OMDb-aware modal exposed by channel-detail.js
+    if (typeof window._woftv_openShowModal === 'function') {
+      window._woftv_openShowModal(
+        { fields: { 'Show Title': title, 'Start Time': startIso, 'End Time': endIso, 'Platform': platform } },
+        '', true
+      );
+      return;
+    }
+
+    // Fallback (channel-detail.js not loaded): TVmaze-only
     const chName    = document.querySelector('h1.detail-channel-name')?.textContent?.trim() || '';
     const chLogo    = document.getElementById('detailImg')?.src || '';
     const chInitial = chName.charAt(0).toUpperCase();

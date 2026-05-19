@@ -151,22 +151,6 @@
   <section id="seoSchedule" class="detail-epg-section seo-schedule">
     <h2 class="detail-section-title">What&#39;s On Today — A Touch of Frost Schedule</h2>
     <div class="upcoming-list">
-        <div class="upcoming-item" data-show="A Touch of Frost" data-start="2026-05-18T18:52:11Z" data-end="2026-05-18T20:50:50Z" data-platform="Plex">
-          <span class="upcoming-time">6:52 PM</span>
-          <span class="upcoming-title">A Touch of Frost</span>
-        </div>
-        <div class="upcoming-item" data-show="A Touch of Frost" data-start="2026-05-18T20:50:50Z" data-end="2026-05-18T22:17:58Z" data-platform="Plex">
-          <span class="upcoming-time">8:50 PM</span>
-          <span class="upcoming-title">A Touch of Frost</span>
-        </div>
-        <div class="upcoming-item" data-show="A Touch of Frost" data-start="2026-05-18T22:17:58Z" data-end="2026-05-18T23:44:58Z" data-platform="Plex">
-          <span class="upcoming-time">10:17 PM</span>
-          <span class="upcoming-title">A Touch of Frost</span>
-        </div>
-        <div class="upcoming-item" data-show="A Touch of Frost" data-start="2026-05-18T23:44:58Z" data-end="2026-05-19T01:12:02Z" data-platform="Plex">
-          <span class="upcoming-time">11:44 PM</span>
-          <span class="upcoming-title">A Touch of Frost</span>
-        </div>
         <div class="upcoming-item" data-show="A Touch of Frost" data-start="2026-05-19T01:12:02Z" data-end="2026-05-19T03:09:56Z" data-platform="Plex">
           <span class="upcoming-time">1:12 AM</span>
           <span class="upcoming-title">A Touch of Frost</span>
@@ -187,6 +171,18 @@
           <span class="upcoming-time">9:03 AM</span>
           <span class="upcoming-title">A Touch of Frost</span>
         </div>
+        <div class="upcoming-item" data-show="A Touch of Frost" data-start="2026-05-19T10:54:43Z" data-end="2026-05-19T12:46:13Z" data-platform="Plex">
+          <span class="upcoming-time">10:54 AM</span>
+          <span class="upcoming-title">A Touch of Frost</span>
+        </div>
+        <div class="upcoming-item" data-show="A Touch of Frost" data-start="2026-05-19T12:46:13Z" data-end="2026-05-19T14:44:52Z" data-platform="Plex">
+          <span class="upcoming-time">12:46 PM</span>
+          <span class="upcoming-title">A Touch of Frost</span>
+        </div>
+        <div class="upcoming-item" data-show="A Touch of Frost" data-start="2026-05-19T14:44:52Z" data-end="2026-05-19T16:41:07Z" data-platform="Plex">
+          <span class="upcoming-time">2:44 PM</span>
+          <span class="upcoming-title">A Touch of Frost</span>
+        </div>
     </div>
   </section>
 
@@ -194,12 +190,12 @@
   <section id="moreChannels" class="more-channels-section">
     <h2 class="detail-section-title">More Free TV Shows Channels</h2>
     <div class="genre-pills">
-      <a href="/channel/weeds-and-nurse-jackie" class="genre-pill">Weeds &amp; Nurse Jackie</a>
-      <a href="/channel/the-love-boat" class="genre-pill">The Love Boat</a>
-      <a href="/channel/rakuten-viki" class="genre-pill">Rakuten Viki</a>
-      <a href="/channel/wanted-dead-or-alive" class="genre-pill">Wanted: Dead or Alive</a>
-      <a href="/channel/csi-miami" class="genre-pill">CSI: Miami</a>
+      <a href="/channel/degrassi" class="genre-pill">Degrassi</a>
+      <a href="/channel/ebony-tv-by-lionsgate" class="genre-pill">Ebony TV by Lionsgate</a>
       <a href="/channel/cw-gold" class="genre-pill">CW Gold</a>
+      <a href="/channel/filmrise-drama" class="genre-pill">FilmRise Drama</a>
+      <a href="/channel/feel-good-drama" class="genre-pill">Feel Good Drama</a>
+      <a href="/channel/the-love-boat" class="genre-pill">The Love Boat</a>
     </div>
   </section>
 
@@ -249,6 +245,7 @@
         <a href="../us.html" class="footer-link">🇺🇸 US Channels</a>
         <a href="../ca.html" class="footer-link">🇨🇦 CA Channels</a>
         <a href="../suggest.html" class="footer-link">Suggest a Channel</a>
+        <a href="../about.html" class="footer-link">About</a>
         <a href="../privacy.html" class="footer-link">Privacy Policy</a>
         <a href="../terms.html" class="footer-link">Terms of Service</a>
         <a href="mailto:hello@whatsonfreetv.com" class="footer-link">Contact</a>
@@ -285,12 +282,24 @@
     return 'badge-platform';
   }
 
-  // 1. Click handlers on .upcoming-item — mirrors openShowModal() in channel-detail.js
+  // 1. Click handlers on .upcoming-item — delegates to channel-detail.js openShowModal
+  //    which uses OMDb + TVmaze with movie-channel awareness.
   function openStaticShowModal(el) {
     const title    = el.dataset.show     || '';
     const startIso = el.dataset.start    || '';
     const endIso   = el.dataset.end      || '';
     const platform = el.dataset.platform || '';
+
+    // Delegate to the OMDb-aware modal exposed by channel-detail.js
+    if (typeof window._woftv_openShowModal === 'function') {
+      window._woftv_openShowModal(
+        { fields: { 'Show Title': title, 'Start Time': startIso, 'End Time': endIso, 'Platform': platform } },
+        '', true
+      );
+      return;
+    }
+
+    // Fallback (channel-detail.js not loaded): TVmaze-only
     const chName    = document.querySelector('h1.detail-channel-name')?.textContent?.trim() || '';
     const chLogo    = document.getElementById('detailImg')?.src || '';
     const chInitial = chName.charAt(0).toUpperCase();

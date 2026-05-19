@@ -151,18 +151,6 @@
   <section id="seoSchedule" class="detail-epg-section seo-schedule">
     <h2 class="detail-section-title">What&#39;s On Today — Cine en español Schedule</h2>
     <div class="upcoming-list">
-        <div class="upcoming-item" data-show="No manches Frida 2" data-start="2026-05-18T19:00:00Z" data-end="2026-05-18T21:15:00Z" data-platform="Pluto TV">
-          <span class="upcoming-time">7:00 PM</span>
-          <span class="upcoming-title">No manches Frida 2</span>
-        </div>
-        <div class="upcoming-item" data-show="Instructions Not Included" data-start="2026-05-18T21:15:00Z" data-end="2026-05-19T00:00:00Z" data-platform="Pluto TV">
-          <span class="upcoming-time">9:15 PM</span>
-          <span class="upcoming-title">Instructions Not Included</span>
-        </div>
-        <div class="upcoming-item" data-show="Un padre no tan padre" data-start="2026-05-19T00:00:00Z" data-end="2026-05-19T02:00:00Z" data-platform="Pluto TV">
-          <span class="upcoming-time">12:00 AM</span>
-          <span class="upcoming-title">Un padre no tan padre</span>
-        </div>
         <div class="upcoming-item" data-show="No manches Frida 2" data-start="2026-05-19T02:00:00Z" data-end="2026-05-19T04:15:00Z" data-platform="Pluto TV">
           <span class="upcoming-time">2:00 AM</span>
           <span class="upcoming-title">No manches Frida 2</span>
@@ -179,6 +167,18 @@
           <span class="upcoming-time">9:15 AM</span>
           <span class="upcoming-title">El Inca (LAS)</span>
         </div>
+        <div class="upcoming-item" data-show="Canela (LAS)" data-start="2026-05-19T12:00:00Z" data-end="2026-05-19T14:00:00Z" data-platform="Pluto TV">
+          <span class="upcoming-time">12:00 PM</span>
+          <span class="upcoming-title">Canela (LAS)</span>
+        </div>
+        <div class="upcoming-item" data-show="Ladrón que roba a ladrón" data-start="2026-05-19T14:00:00Z" data-end="2026-05-19T16:00:00Z" data-platform="Pluto TV">
+          <span class="upcoming-time">2:00 PM</span>
+          <span class="upcoming-title">Ladrón que roba a ladrón</span>
+        </div>
+        <div class="upcoming-item" data-show="Cantinflas" data-start="2026-05-19T16:00:00Z" data-end="2026-05-19T18:00:00Z" data-platform="Pluto TV">
+          <span class="upcoming-time">4:00 PM</span>
+          <span class="upcoming-title">Cantinflas</span>
+        </div>
     </div>
   </section>
 
@@ -186,12 +186,12 @@
   <section id="moreChannels" class="more-channels-section">
     <h2 class="detail-section-title">More Free Spanish Channels</h2>
     <div class="genre-pills">
-      <a href="/channel/filmex-acci-n" class="genre-pill">FILMEX Acción</a>
-      <a href="/channel/mi-casa" class="genre-pill">Mi Casa</a>
-      <a href="/channel/novelas-de-siempre" class="genre-pill">Novelas de Siempre</a>
+      <a href="/channel/estrellatv" class="genre-pill">EstrellaTV</a>
       <a href="/channel/noticias-telemundo-ahora" class="genre-pill">Noticias Telemundo Ahora</a>
-      <a href="/channel/vix-novelas-de-oro" class="genre-pill">ViX Novelas de oro</a>
-      <a href="/channel/telemundo-al-d-a" class="genre-pill">Telemundo Al Día</a>
+      <a href="/channel/cine-retro" class="genre-pill">Cine Retro</a>
+      <a href="/channel/electricnow-en-espa-ol" class="genre-pill">ElectricNOW en Español</a>
+      <a href="/channel/cine-estrellatv" class="genre-pill">Cine EstrellaTV</a>
+      <a href="/channel/vix-lo-mejor-de-liga-mx" class="genre-pill">ViX Lo Mejor de Liga MX</a>
     </div>
   </section>
 
@@ -241,6 +241,7 @@
         <a href="../us.html" class="footer-link">🇺🇸 US Channels</a>
         <a href="../ca.html" class="footer-link">🇨🇦 CA Channels</a>
         <a href="../suggest.html" class="footer-link">Suggest a Channel</a>
+        <a href="../about.html" class="footer-link">About</a>
         <a href="../privacy.html" class="footer-link">Privacy Policy</a>
         <a href="../terms.html" class="footer-link">Terms of Service</a>
         <a href="mailto:hello@whatsonfreetv.com" class="footer-link">Contact</a>
@@ -277,12 +278,24 @@
     return 'badge-platform';
   }
 
-  // 1. Click handlers on .upcoming-item — mirrors openShowModal() in channel-detail.js
+  // 1. Click handlers on .upcoming-item — delegates to channel-detail.js openShowModal
+  //    which uses OMDb + TVmaze with movie-channel awareness.
   function openStaticShowModal(el) {
     const title    = el.dataset.show     || '';
     const startIso = el.dataset.start    || '';
     const endIso   = el.dataset.end      || '';
     const platform = el.dataset.platform || '';
+
+    // Delegate to the OMDb-aware modal exposed by channel-detail.js
+    if (typeof window._woftv_openShowModal === 'function') {
+      window._woftv_openShowModal(
+        { fields: { 'Show Title': title, 'Start Time': startIso, 'End Time': endIso, 'Platform': platform } },
+        '', true
+      );
+      return;
+    }
+
+    // Fallback (channel-detail.js not loaded): TVmaze-only
     const chName    = document.querySelector('h1.detail-channel-name')?.textContent?.trim() || '';
     const chLogo    = document.getElementById('detailImg')?.src || '';
     const chInitial = chName.charAt(0).toUpperCase();
