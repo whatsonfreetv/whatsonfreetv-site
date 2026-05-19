@@ -151,18 +151,6 @@
   <section id="seoSchedule" class="detail-epg-section seo-schedule">
     <h2 class="detail-section-title">What&#39;s On Today — FILMEX Comedia Schedule</h2>
     <div class="upcoming-list">
-        <div class="upcoming-item" data-show="Que seas feliz" data-start="2026-05-18T18:54:00Z" data-end="2026-05-18T20:49:00Z" data-platform="Roku">
-          <span class="upcoming-time">6:54 PM</span>
-          <span class="upcoming-title">Que seas feliz</span>
-        </div>
-        <div class="upcoming-item" data-show="Un par a todo dar" data-start="2026-05-18T20:49:00Z" data-end="2026-05-18T22:36:00Z" data-platform="Roku">
-          <span class="upcoming-time">8:49 PM</span>
-          <span class="upcoming-title">Un par a todo dar</span>
-        </div>
-        <div class="upcoming-item" data-show="Fin de semana en Garibaldi" data-start="2026-05-18T22:36:00Z" data-end="2026-05-19T00:32:00Z" data-platform="Roku">
-          <span class="upcoming-time">10:36 PM</span>
-          <span class="upcoming-title">Fin de semana en Garibaldi</span>
-        </div>
         <div class="upcoming-item" data-show="Caña brava" data-start="2026-05-19T00:32:00Z" data-end="2026-05-19T02:09:00Z" data-platform="Roku">
           <span class="upcoming-time">12:32 AM</span>
           <span class="upcoming-title">Caña brava</span>
@@ -187,6 +175,22 @@
           <span class="upcoming-time">8:59 AM</span>
           <span class="upcoming-title">Un trío de tres</span>
         </div>
+        <div class="upcoming-item" data-show="El fantasma de la casa roja" data-start="2026-05-19T10:24:00Z" data-end="2026-05-19T12:13:00Z" data-platform="Roku">
+          <span class="upcoming-time">10:24 AM</span>
+          <span class="upcoming-title">El fantasma de la casa roja</span>
+        </div>
+        <div class="upcoming-item" data-show="Mi adorada Clementina" data-start="2026-05-19T12:13:00Z" data-end="2026-05-19T13:53:00Z" data-platform="Roku">
+          <span class="upcoming-time">12:13 PM</span>
+          <span class="upcoming-title">Mi adorada Clementina</span>
+        </div>
+        <div class="upcoming-item" data-show="¡Que no me bese el mariachi!" data-start="2026-05-19T13:53:00Z" data-end="2026-05-19T15:50:00Z" data-platform="Roku">
+          <span class="upcoming-time">1:53 PM</span>
+          <span class="upcoming-title">¡Que no me bese el mariachi!</span>
+        </div>
+        <div class="upcoming-item" data-show="Hasta que llovió en Sayula" data-start="2026-05-19T15:50:00Z" data-end="2026-05-19T17:31:00Z" data-platform="Roku">
+          <span class="upcoming-time">3:50 PM</span>
+          <span class="upcoming-title">Hasta que llovió en Sayula</span>
+        </div>
     </div>
   </section>
 
@@ -194,12 +198,12 @@
   <section id="moreChannels" class="more-channels-section">
     <h2 class="detail-section-title">More Free Spanish Channels</h2>
     <div class="genre-pills">
-      <a href="/channel/the-walking-dead-espanol" class="genre-pill">The Walking Dead Espanol</a>
-      <a href="/channel/rcn-noticias" class="genre-pill">RCN Noticias</a>
-      <a href="/channel/azteca-internacional" class="genre-pill">Azteca Internacional</a>
-      <a href="/channel/novelisima" class="genre-pill">Novelisima</a>
-      <a href="/channel/bein-sports-xtra-en-espa-ol" class="genre-pill">beIN Sports Xtra en Español</a>
-      <a href="/channel/los-asesinatos-de-midsomer" class="genre-pill">Los Asesinatos de Midsomer</a>
+      <a href="/channel/el-conflicto-tv" class="genre-pill">El Conflicto TV</a>
+      <a href="/channel/homeful-en-espa-ol" class="genre-pill">Homeful en Español</a>
+      <a href="/channel/estrella-news" class="genre-pill">Estrella News</a>
+      <a href="/channel/sony-canal-escape-perfecto" class="genre-pill">Sony Canal Escape Perfecto</a>
+      <a href="/channel/freetv-banda" class="genre-pill">FreeTV Banda</a>
+      <a href="/channel/pluto-tv-novelas" class="genre-pill">Pluto TV Novelas</a>
     </div>
   </section>
 
@@ -249,6 +253,7 @@
         <a href="../us.html" class="footer-link">🇺🇸 US Channels</a>
         <a href="../ca.html" class="footer-link">🇨🇦 CA Channels</a>
         <a href="../suggest.html" class="footer-link">Suggest a Channel</a>
+        <a href="../about.html" class="footer-link">About</a>
         <a href="../privacy.html" class="footer-link">Privacy Policy</a>
         <a href="../terms.html" class="footer-link">Terms of Service</a>
         <a href="mailto:hello@whatsonfreetv.com" class="footer-link">Contact</a>
@@ -285,12 +290,24 @@
     return 'badge-platform';
   }
 
-  // 1. Click handlers on .upcoming-item — mirrors openShowModal() in channel-detail.js
+  // 1. Click handlers on .upcoming-item — delegates to channel-detail.js openShowModal
+  //    which uses OMDb + TVmaze with movie-channel awareness.
   function openStaticShowModal(el) {
     const title    = el.dataset.show     || '';
     const startIso = el.dataset.start    || '';
     const endIso   = el.dataset.end      || '';
     const platform = el.dataset.platform || '';
+
+    // Delegate to the OMDb-aware modal exposed by channel-detail.js
+    if (typeof window._woftv_openShowModal === 'function') {
+      window._woftv_openShowModal(
+        { fields: { 'Show Title': title, 'Start Time': startIso, 'End Time': endIso, 'Platform': platform } },
+        '', true
+      );
+      return;
+    }
+
+    // Fallback (channel-detail.js not loaded): TVmaze-only
     const chName    = document.querySelector('h1.detail-channel-name')?.textContent?.trim() || '';
     const chLogo    = document.getElementById('detailImg')?.src || '';
     const chInitial = chName.charAt(0).toUpperCase();

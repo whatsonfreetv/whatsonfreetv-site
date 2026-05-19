@@ -152,12 +152,12 @@
   <section id="moreChannels" class="more-channels-section">
     <h2 class="detail-section-title">More Free Food Channels</h2>
     <div class="genre-pills">
-      <a href="/channel/k-food-by-cj-enm" class="genre-pill">K-Food by CJ ENM</a>
+      <a href="/channel/filmrise-food" class="genre-pill">FilmRise Food</a>
+      <a href="/channel/gustotv" class="genre-pill">GUSTOTV</a>
+      <a href="/channel/top-chef-bravo-vault" class="genre-pill">Top Chef: Bravo Vault</a>
       <a href="/channel/hungry" class="genre-pill">Hungry</a>
-      <a href="/channel/cook-s-country" class="genre-pill">Cook&#x27;s Country</a>
-      <a href="/channel/best-of-bobby-flay" class="genre-pill">Best of Bobby Flay</a>
-      <a href="/channel/drool" class="genre-pill">Drool</a>
-      <a href="/channel/xumo-free-food-tv" class="genre-pill">Xumo Free Food TV</a>
+      <a href="/channel/bon-app-tit" class="genre-pill">Bon Appétit</a>
+      <a href="/channel/chef-vs-chef-by-food-network" class="genre-pill">Chef vs Chef by Food Network</a>
     </div>
   </section>
 
@@ -207,6 +207,7 @@
         <a href="../us.html" class="footer-link">🇺🇸 US Channels</a>
         <a href="../ca.html" class="footer-link">🇨🇦 CA Channels</a>
         <a href="../suggest.html" class="footer-link">Suggest a Channel</a>
+        <a href="../about.html" class="footer-link">About</a>
         <a href="../privacy.html" class="footer-link">Privacy Policy</a>
         <a href="../terms.html" class="footer-link">Terms of Service</a>
         <a href="mailto:hello@whatsonfreetv.com" class="footer-link">Contact</a>
@@ -243,12 +244,24 @@
     return 'badge-platform';
   }
 
-  // 1. Click handlers on .upcoming-item — mirrors openShowModal() in channel-detail.js
+  // 1. Click handlers on .upcoming-item — delegates to channel-detail.js openShowModal
+  //    which uses OMDb + TVmaze with movie-channel awareness.
   function openStaticShowModal(el) {
     const title    = el.dataset.show     || '';
     const startIso = el.dataset.start    || '';
     const endIso   = el.dataset.end      || '';
     const platform = el.dataset.platform || '';
+
+    // Delegate to the OMDb-aware modal exposed by channel-detail.js
+    if (typeof window._woftv_openShowModal === 'function') {
+      window._woftv_openShowModal(
+        { fields: { 'Show Title': title, 'Start Time': startIso, 'End Time': endIso, 'Platform': platform } },
+        '', true
+      );
+      return;
+    }
+
+    // Fallback (channel-detail.js not loaded): TVmaze-only
     const chName    = document.querySelector('h1.detail-channel-name')?.textContent?.trim() || '';
     const chLogo    = document.getElementById('detailImg')?.src || '';
     const chInitial = chName.charAt(0).toUpperCase();

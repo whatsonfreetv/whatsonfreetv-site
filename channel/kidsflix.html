@@ -151,22 +151,6 @@
   <section id="seoSchedule" class="detail-epg-section seo-schedule">
     <h2 class="detail-section-title">What&#39;s On Today — KidsFlix Schedule</h2>
     <div class="upcoming-list">
-        <div class="upcoming-item" data-show="Tall Tales" data-start="2026-05-18T19:00:00Z" data-end="2026-05-18T20:47:54Z" data-platform="Plex">
-          <span class="upcoming-time">7:00 PM</span>
-          <span class="upcoming-title">Tall Tales</span>
-        </div>
-        <div class="upcoming-item" data-show="Luis and the Aliens" data-start="2026-05-18T20:47:54Z" data-end="2026-05-18T22:28:14Z" data-platform="Plex">
-          <span class="upcoming-time">8:47 PM</span>
-          <span class="upcoming-title">Luis and the Aliens</span>
-        </div>
-        <div class="upcoming-item" data-show="Boonie Bears : The Big Shrink" data-start="2026-05-18T22:28:14Z" data-end="2026-05-19T00:18:23Z" data-platform="Plex">
-          <span class="upcoming-time">10:28 PM</span>
-          <span class="upcoming-title">Boonie Bears : The Big Shrink</span>
-        </div>
-        <div class="upcoming-item" data-show="Mission to the Moon" data-start="2026-05-19T00:18:23Z" data-end="2026-05-19T01:57:42Z" data-platform="Plex">
-          <span class="upcoming-time">12:18 AM</span>
-          <span class="upcoming-title">Mission to the Moon</span>
-        </div>
         <div class="upcoming-item" data-show="Spy Cat" data-start="2026-05-19T01:57:42Z" data-end="2026-05-19T03:42:27Z" data-platform="Plex">
           <span class="upcoming-time">1:57 AM</span>
           <span class="upcoming-title">Spy Cat</span>
@@ -211,6 +195,18 @@
           <span class="upcoming-time">8:59 AM</span>
           <span class="upcoming-title">Racetime</span>
         </div>
+        <div class="upcoming-item" data-show="Son of Bigfoot" data-start="2026-05-19T10:49:11Z" data-end="2026-05-19T12:43:07Z" data-platform="Plex">
+          <span class="upcoming-time">10:49 AM</span>
+          <span class="upcoming-title">Son of Bigfoot</span>
+        </div>
+        <div class="upcoming-item" data-show="Ozzy" data-start="2026-05-19T12:43:07Z" data-end="2026-05-19T14:33:47Z" data-platform="Plex">
+          <span class="upcoming-time">12:43 PM</span>
+          <span class="upcoming-title">Ozzy</span>
+        </div>
+        <div class="upcoming-item" data-show="Stardog &amp; Turbocat" data-start="2026-05-19T14:33:47Z" data-end="2026-05-19T16:24:33Z" data-platform="Plex">
+          <span class="upcoming-time">2:33 PM</span>
+          <span class="upcoming-title">Stardog &amp; Turbocat</span>
+        </div>
     </div>
   </section>
 
@@ -218,12 +214,12 @@
   <section id="moreChannels" class="more-channels-section">
     <h2 class="detail-section-title">More Free Kids Channels</h2>
     <div class="genre-pills">
-      <a href="/channel/the-wiggles" class="genre-pill">The Wiggles</a>
-      <a href="/channel/go-go-gadget" class="genre-pill">Go Go Gadget!</a>
-      <a href="/channel/super-simple-songs" class="genre-pill">Super Simple Songs</a>
-      <a href="/channel/filmrise-kids" class="genre-pill">FilmRise Kids</a>
-      <a href="/channel/dungeons-and-dragons-adventures" class="genre-pill">Dungeons &amp; Dragons: Adventures</a>
-      <a href="/channel/kidz-bop-tv" class="genre-pill">Kidz Bop TV</a>
+      <a href="/channel/transformers" class="genre-pill">Transformers</a>
+      <a href="/channel/forever-kids" class="genre-pill">Forever Kids</a>
+      <a href="/channel/nick-pluto-tv" class="genre-pill">Nick Pluto TV</a>
+      <a href="/channel/peppa-pig-and-friends" class="genre-pill">Peppa Pig &amp; Friends</a>
+      <a href="/channel/sensical-makers" class="genre-pill">Sensical Makers</a>
+      <a href="/channel/strawberry-shortcake-and-friends" class="genre-pill">Strawberry Shortcake and Friends</a>
     </div>
   </section>
 
@@ -273,6 +269,7 @@
         <a href="../us.html" class="footer-link">🇺🇸 US Channels</a>
         <a href="../ca.html" class="footer-link">🇨🇦 CA Channels</a>
         <a href="../suggest.html" class="footer-link">Suggest a Channel</a>
+        <a href="../about.html" class="footer-link">About</a>
         <a href="../privacy.html" class="footer-link">Privacy Policy</a>
         <a href="../terms.html" class="footer-link">Terms of Service</a>
         <a href="mailto:hello@whatsonfreetv.com" class="footer-link">Contact</a>
@@ -309,12 +306,24 @@
     return 'badge-platform';
   }
 
-  // 1. Click handlers on .upcoming-item — mirrors openShowModal() in channel-detail.js
+  // 1. Click handlers on .upcoming-item — delegates to channel-detail.js openShowModal
+  //    which uses OMDb + TVmaze with movie-channel awareness.
   function openStaticShowModal(el) {
     const title    = el.dataset.show     || '';
     const startIso = el.dataset.start    || '';
     const endIso   = el.dataset.end      || '';
     const platform = el.dataset.platform || '';
+
+    // Delegate to the OMDb-aware modal exposed by channel-detail.js
+    if (typeof window._woftv_openShowModal === 'function') {
+      window._woftv_openShowModal(
+        { fields: { 'Show Title': title, 'Start Time': startIso, 'End Time': endIso, 'Platform': platform } },
+        '', true
+      );
+      return;
+    }
+
+    // Fallback (channel-detail.js not loaded): TVmaze-only
     const chName    = document.querySelector('h1.detail-channel-name')?.textContent?.trim() || '';
     const chLogo    = document.getElementById('detailImg')?.src || '';
     const chInitial = chName.charAt(0).toUpperCase();

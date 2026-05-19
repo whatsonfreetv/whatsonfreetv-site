@@ -151,12 +151,12 @@
   <section id="moreChannels" class="more-channels-section">
     <h2 class="detail-section-title">More Free General Channels</h2>
     <div class="genre-pills">
-      <a href="/channel/jewelry-television" class="genre-pill">Jewelry Television</a>
-      <a href="/channel/addictatv" class="genre-pill">AddictaTV</a>
-      <a href="/channel/monsters-are-real" class="genre-pill">Monsters are Real</a>
-      <a href="/channel/fifth-gear" class="genre-pill">Fifth Gear</a>
-      <a href="/channel/stokes-twins" class="genre-pill">Stokes Twins</a>
-      <a href="/channel/scripps-sports-network" class="genre-pill">Scripps Sports Network</a>
+      <a href="/channel/heartland-classic" class="genre-pill">Heartland Classic</a>
+      <a href="/channel/kanal-d-drama" class="genre-pill">Kanal D Drama</a>
+      <a href="/channel/chasing-criminals" class="genre-pill">Chasing Criminals</a>
+      <a href="/channel/the-repair-shop" class="genre-pill">The Repair Shop</a>
+      <a href="/channel/national-geographic-animals" class="genre-pill">National Geographic Animals</a>
+      <a href="/channel/xite-spring-vibes" class="genre-pill">XITE Spring Vibes</a>
     </div>
   </section>
 
@@ -206,6 +206,7 @@
         <a href="../us.html" class="footer-link">🇺🇸 US Channels</a>
         <a href="../ca.html" class="footer-link">🇨🇦 CA Channels</a>
         <a href="../suggest.html" class="footer-link">Suggest a Channel</a>
+        <a href="../about.html" class="footer-link">About</a>
         <a href="../privacy.html" class="footer-link">Privacy Policy</a>
         <a href="../terms.html" class="footer-link">Terms of Service</a>
         <a href="mailto:hello@whatsonfreetv.com" class="footer-link">Contact</a>
@@ -242,12 +243,24 @@
     return 'badge-platform';
   }
 
-  // 1. Click handlers on .upcoming-item — mirrors openShowModal() in channel-detail.js
+  // 1. Click handlers on .upcoming-item — delegates to channel-detail.js openShowModal
+  //    which uses OMDb + TVmaze with movie-channel awareness.
   function openStaticShowModal(el) {
     const title    = el.dataset.show     || '';
     const startIso = el.dataset.start    || '';
     const endIso   = el.dataset.end      || '';
     const platform = el.dataset.platform || '';
+
+    // Delegate to the OMDb-aware modal exposed by channel-detail.js
+    if (typeof window._woftv_openShowModal === 'function') {
+      window._woftv_openShowModal(
+        { fields: { 'Show Title': title, 'Start Time': startIso, 'End Time': endIso, 'Platform': platform } },
+        '', true
+      );
+      return;
+    }
+
+    // Fallback (channel-detail.js not loaded): TVmaze-only
     const chName    = document.querySelector('h1.detail-channel-name')?.textContent?.trim() || '';
     const chLogo    = document.getElementById('detailImg')?.src || '';
     const chInitial = chName.charAt(0).toUpperCase();

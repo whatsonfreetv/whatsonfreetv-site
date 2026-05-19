@@ -151,28 +151,28 @@
   <section id="seoSchedule" class="detail-epg-section seo-schedule">
     <h2 class="detail-section-title">What&#39;s On Today — History 365 Schedule</h2>
     <div class="upcoming-list">
-        <div class="upcoming-item" data-show="10 Things You Don&#x27;t Know About" data-start="2026-05-18T21:07:45Z" data-end="2026-05-18T21:33:17Z" data-platform="Samsung TV Plus">
-          <span class="upcoming-time">9:07 PM</span>
-          <span class="upcoming-title">10 Things You Don&#x27;t Know About</span>
-        </div>
-        <div class="upcoming-item" data-show="History Remembers President George H.W. Bush" data-start="2026-05-18T21:33:17Z" data-end="2026-05-18T22:00:00Z" data-platform="Samsung TV Plus">
-          <span class="upcoming-time">9:33 PM</span>
-          <span class="upcoming-title">History Remembers President George H.W. Bush</span>
-        </div>
-        <div class="upcoming-item" data-show="FDR" data-start="2026-05-18T22:00:00Z" data-end="2026-05-18T23:42:28Z" data-platform="Samsung TV Plus">
-          <span class="upcoming-time">10:00 PM</span>
-          <span class="upcoming-title">FDR</span>
-        </div>
-        <div class="upcoming-item" data-show="FDR" data-start="2026-05-18T23:42:28Z" data-end="2026-05-19T01:26:19Z" data-platform="Samsung TV Plus">
-          <span class="upcoming-time">11:42 PM</span>
-          <span class="upcoming-title">FDR</span>
-        </div>
-        <div class="upcoming-item" data-show="FDR" data-start="2026-05-19T01:26:19Z" data-end="2026-05-19T03:07:45Z" data-platform="Samsung TV Plus">
-          <span class="upcoming-time">1:26 AM</span>
-          <span class="upcoming-title">FDR</span>
-        </div>
         <div class="upcoming-item" data-show="10 Things You Don&#x27;t Know About" data-start="2026-05-19T03:07:45Z" data-end="2026-05-19T03:33:17Z" data-platform="Samsung TV Plus">
           <span class="upcoming-time">3:07 AM</span>
+          <span class="upcoming-title">10 Things You Don&#x27;t Know About</span>
+        </div>
+        <div class="upcoming-item" data-show="History Remembers President George H.W. Bush" data-start="2026-05-19T03:33:17Z" data-end="2026-05-19T04:00:00Z" data-platform="Samsung TV Plus">
+          <span class="upcoming-time">3:33 AM</span>
+          <span class="upcoming-title">History Remembers President George H.W. Bush</span>
+        </div>
+        <div class="upcoming-item" data-show="FDR" data-start="2026-05-19T04:00:00Z" data-end="2026-05-19T05:42:28Z" data-platform="Samsung TV Plus">
+          <span class="upcoming-time">4:00 AM</span>
+          <span class="upcoming-title">FDR</span>
+        </div>
+        <div class="upcoming-item" data-show="FDR" data-start="2026-05-19T05:42:28Z" data-end="2026-05-19T07:26:19Z" data-platform="Samsung TV Plus">
+          <span class="upcoming-time">5:42 AM</span>
+          <span class="upcoming-title">FDR</span>
+        </div>
+        <div class="upcoming-item" data-show="FDR" data-start="2026-05-19T07:26:19Z" data-end="2026-05-19T09:07:45Z" data-platform="Samsung TV Plus">
+          <span class="upcoming-time">7:26 AM</span>
+          <span class="upcoming-title">FDR</span>
+        </div>
+        <div class="upcoming-item" data-show="10 Things You Don&#x27;t Know About" data-start="2026-05-19T09:07:45Z" data-end="2026-05-19T09:33:17Z" data-platform="Samsung TV Plus">
+          <span class="upcoming-time">9:07 AM</span>
           <span class="upcoming-title">10 Things You Don&#x27;t Know About</span>
         </div>
     </div>
@@ -182,12 +182,12 @@
   <section id="moreChannels" class="more-channels-section">
     <h2 class="detail-section-title">More Free Documentary Channels</h2>
     <div class="genre-pills">
-      <a href="/channel/modern-marvels-presented-by-history" class="genre-pill">Modern Marvels Presented by History</a>
-      <a href="/channel/pluto-tv-science" class="genre-pill">Pluto TV Science</a>
-      <a href="/channel/military-heroes-presented-by-history" class="genre-pill">Military Heroes Presented By History</a>
-      <a href="/channel/pbs-digital-studios" class="genre-pill">PBS Digital Studios</a>
-      <a href="/channel/the-unxplained-with-william-shatner" class="genre-pill">The UnXplained with William Shatner</a>
-      <a href="/channel/modern-marvels-by-history-channel" class="genre-pill">Modern Marvels by History Channel</a>
+      <a href="/channel/mysterious-worlds" class="genre-pill">Mysterious Worlds</a>
+      <a href="/channel/pluto-tv-lives" class="genre-pill">Pluto TV Lives</a>
+      <a href="/channel/history-and-warfare" class="genre-pill">History &amp; Warfare</a>
+      <a href="/channel/history-and-warfare-now" class="genre-pill">History &amp; Warfare Now</a>
+      <a href="/channel/trublu-crime-channel" class="genre-pill">TruBlu Crime Channel</a>
+      <a href="/channel/pbs-genealogy" class="genre-pill">PBS Genealogy</a>
     </div>
   </section>
 
@@ -237,6 +237,7 @@
         <a href="../us.html" class="footer-link">🇺🇸 US Channels</a>
         <a href="../ca.html" class="footer-link">🇨🇦 CA Channels</a>
         <a href="../suggest.html" class="footer-link">Suggest a Channel</a>
+        <a href="../about.html" class="footer-link">About</a>
         <a href="../privacy.html" class="footer-link">Privacy Policy</a>
         <a href="../terms.html" class="footer-link">Terms of Service</a>
         <a href="mailto:hello@whatsonfreetv.com" class="footer-link">Contact</a>
@@ -273,12 +274,24 @@
     return 'badge-platform';
   }
 
-  // 1. Click handlers on .upcoming-item — mirrors openShowModal() in channel-detail.js
+  // 1. Click handlers on .upcoming-item — delegates to channel-detail.js openShowModal
+  //    which uses OMDb + TVmaze with movie-channel awareness.
   function openStaticShowModal(el) {
     const title    = el.dataset.show     || '';
     const startIso = el.dataset.start    || '';
     const endIso   = el.dataset.end      || '';
     const platform = el.dataset.platform || '';
+
+    // Delegate to the OMDb-aware modal exposed by channel-detail.js
+    if (typeof window._woftv_openShowModal === 'function') {
+      window._woftv_openShowModal(
+        { fields: { 'Show Title': title, 'Start Time': startIso, 'End Time': endIso, 'Platform': platform } },
+        '', true
+      );
+      return;
+    }
+
+    // Fallback (channel-detail.js not loaded): TVmaze-only
     const chName    = document.querySelector('h1.detail-channel-name')?.textContent?.trim() || '';
     const chLogo    = document.getElementById('detailImg')?.src || '';
     const chInitial = chName.charAt(0).toUpperCase();

@@ -150,22 +150,6 @@
   <section id="seoSchedule" class="detail-epg-section seo-schedule">
     <h2 class="detail-section-title">What&#39;s On Today — Moovimex Schedule</h2>
     <div class="upcoming-list">
-        <div class="upcoming-item" data-show="Vuelven los tres contra el destino" data-start="2026-05-18T18:28:46Z" data-end="2026-05-18T20:07:28Z" data-platform="Roku">
-          <span class="upcoming-time">6:28 PM</span>
-          <span class="upcoming-title">Vuelven los tres contra el destino</span>
-        </div>
-        <div class="upcoming-item" data-show="Última jugada" data-start="2026-05-18T20:07:28Z" data-end="2026-05-18T21:38:10Z" data-platform="Roku">
-          <span class="upcoming-time">8:07 PM</span>
-          <span class="upcoming-title">Última jugada</span>
-        </div>
-        <div class="upcoming-item" data-show="La Venganza Del Vaquero" data-start="2026-05-18T21:38:10Z" data-end="2026-05-18T23:16:07Z" data-platform="Roku">
-          <span class="upcoming-time">9:38 PM</span>
-          <span class="upcoming-title">La Venganza Del Vaquero</span>
-        </div>
-        <div class="upcoming-item" data-show="Los asaltantes" data-start="2026-05-18T23:16:07Z" data-end="2026-05-19T00:55:46Z" data-platform="Roku">
-          <span class="upcoming-time">11:16 PM</span>
-          <span class="upcoming-title">Los asaltantes</span>
-        </div>
         <div class="upcoming-item" data-show="Perseguidos: Un infierno por las tierras" data-start="2026-05-19T00:55:46Z" data-end="2026-05-19T02:24:54Z" data-platform="Roku">
           <span class="upcoming-time">12:55 AM</span>
           <span class="upcoming-title">Perseguidos: Un infierno por las tierras</span>
@@ -190,6 +174,22 @@
           <span class="upcoming-time">9:17 AM</span>
           <span class="upcoming-title">La noche del fugitivo</span>
         </div>
+        <div class="upcoming-item" data-show="Le Firmé Un Contrato Al Diablo" data-start="2026-05-19T10:41:35Z" data-end="2026-05-19T12:34:00Z" data-platform="Roku">
+          <span class="upcoming-time">10:41 AM</span>
+          <span class="upcoming-title">Le Firmé Un Contrato Al Diablo</span>
+        </div>
+        <div class="upcoming-item" data-show="Hombre sin precio" data-start="2026-05-19T12:34:00Z" data-end="2026-05-19T14:26:01Z" data-platform="Roku">
+          <span class="upcoming-time">12:34 PM</span>
+          <span class="upcoming-title">Hombre sin precio</span>
+        </div>
+        <div class="upcoming-item" data-show="La noche del fugitivo" data-start="2026-05-19T14:26:01Z" data-end="2026-05-19T15:52:13Z" data-platform="Roku">
+          <span class="upcoming-time">2:26 PM</span>
+          <span class="upcoming-title">La noche del fugitivo</span>
+        </div>
+        <div class="upcoming-item" data-show="Le Firmé Un Contrato Al Diablo" data-start="2026-05-19T15:52:13Z" data-end="2026-05-19T17:44:38Z" data-platform="Roku">
+          <span class="upcoming-time">3:52 PM</span>
+          <span class="upcoming-title">Le Firmé Un Contrato Al Diablo</span>
+        </div>
     </div>
   </section>
 
@@ -197,12 +197,12 @@
   <section id="moreChannels" class="more-channels-section">
     <h2 class="detail-section-title">More Free General Channels</h2>
     <div class="genre-pills">
-      <a href="/channel/koat-very-new-mexico-7" class="genre-pill">KOAT Very New Mexico 7</a>
       <a href="/channel/xite-spring-vibes" class="genre-pill">XITE Spring Vibes</a>
-      <a href="/channel/tyler-perry-s-love-thy-neighbor" class="genre-pill">Tyler Perry&#x27;s Love Thy Neighbor</a>
-      <a href="/channel/impossible" class="genre-pill">Impossible</a>
-      <a href="/channel/sony-one-shark-tank-latino" class="genre-pill">Sony One Shark Tank Latino</a>
-      <a href="/channel/dramon" class="genre-pill">Dramon</a>
+      <a href="/channel/garden-with-monty-don" class="genre-pill">Garden with Monty Don</a>
+      <a href="/channel/like-nastya" class="genre-pill">Like Nastya</a>
+      <a href="/channel/roku-fireside" class="genre-pill">Roku Fireside</a>
+      <a href="/channel/blossom" class="genre-pill">Blossom</a>
+      <a href="/channel/roku-moods-reading-nook" class="genre-pill">Roku Moods Reading Nook</a>
     </div>
   </section>
 
@@ -252,6 +252,7 @@
         <a href="../us.html" class="footer-link">🇺🇸 US Channels</a>
         <a href="../ca.html" class="footer-link">🇨🇦 CA Channels</a>
         <a href="../suggest.html" class="footer-link">Suggest a Channel</a>
+        <a href="../about.html" class="footer-link">About</a>
         <a href="../privacy.html" class="footer-link">Privacy Policy</a>
         <a href="../terms.html" class="footer-link">Terms of Service</a>
         <a href="mailto:hello@whatsonfreetv.com" class="footer-link">Contact</a>
@@ -288,12 +289,24 @@
     return 'badge-platform';
   }
 
-  // 1. Click handlers on .upcoming-item — mirrors openShowModal() in channel-detail.js
+  // 1. Click handlers on .upcoming-item — delegates to channel-detail.js openShowModal
+  //    which uses OMDb + TVmaze with movie-channel awareness.
   function openStaticShowModal(el) {
     const title    = el.dataset.show     || '';
     const startIso = el.dataset.start    || '';
     const endIso   = el.dataset.end      || '';
     const platform = el.dataset.platform || '';
+
+    // Delegate to the OMDb-aware modal exposed by channel-detail.js
+    if (typeof window._woftv_openShowModal === 'function') {
+      window._woftv_openShowModal(
+        { fields: { 'Show Title': title, 'Start Time': startIso, 'End Time': endIso, 'Platform': platform } },
+        '', true
+      );
+      return;
+    }
+
+    // Fallback (channel-detail.js not loaded): TVmaze-only
     const chName    = document.querySelector('h1.detail-channel-name')?.textContent?.trim() || '';
     const chLogo    = document.getElementById('detailImg')?.src || '';
     const chInitial = chName.charAt(0).toUpperCase();

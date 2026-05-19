@@ -151,21 +151,33 @@
   <section id="seoSchedule" class="detail-epg-section seo-schedule">
     <h2 class="detail-section-title">What&#39;s On Today — Formula 1 Channel Schedule</h2>
     <div class="upcoming-list">
-        <div class="upcoming-item" data-show="Formula 1 Racing" data-start="2026-05-18T21:17:00Z" data-end="2026-05-18T23:52:00Z" data-platform="Samsung TV Plus">
-          <span class="upcoming-time">9:17 PM</span>
-          <span class="upcoming-title">Formula 1 Racing</span>
-        </div>
-        <div class="upcoming-item" data-show="Formula 1 Racing" data-start="2026-05-18T23:52:00Z" data-end="2026-05-19T02:32:00Z" data-platform="Samsung TV Plus">
-          <span class="upcoming-time">11:52 PM</span>
-          <span class="upcoming-title">Formula 1 Racing</span>
-        </div>
-        <div class="upcoming-item" data-show="Formula 1 Racing" data-start="2026-05-19T02:32:00Z" data-end="2026-05-19T02:42:00Z" data-platform="Samsung TV Plus">
-          <span class="upcoming-time">2:32 AM</span>
-          <span class="upcoming-title">Formula 1 Racing</span>
-        </div>
-        <div class="upcoming-item" data-show="Formula 1 Racing" data-start="2026-05-19T02:42:00Z" data-end="2026-05-19T05:02:00Z" data-platform="Samsung TV Plus">
+        <div class="upcoming-item" data-show="Formula 1 Racing: 2019" data-start="2026-05-19T02:42:00Z" data-end="2026-05-19T05:02:00Z" data-platform="Samsung TV Plus">
           <span class="upcoming-time">2:42 AM</span>
-          <span class="upcoming-title">Formula 1 Racing</span>
+          <span class="upcoming-title">Formula 1 Racing: 2019</span>
+        </div>
+        <div class="upcoming-item" data-show="Race in 30" data-start="2026-05-19T05:02:00Z" data-end="2026-05-19T05:40:00Z" data-platform="Samsung TV Plus">
+          <span class="upcoming-time">5:02 AM</span>
+          <span class="upcoming-title">Race in 30</span>
+        </div>
+        <div class="upcoming-item" data-show="Race in 30" data-start="2026-05-19T05:40:00Z" data-end="2026-05-19T06:18:00Z" data-platform="Samsung TV Plus">
+          <span class="upcoming-time">5:40 AM</span>
+          <span class="upcoming-title">Race in 30</span>
+        </div>
+        <div class="upcoming-item" data-show="Race in 30" data-start="2026-05-19T06:18:00Z" data-end="2026-05-19T06:55:00Z" data-platform="Samsung TV Plus">
+          <span class="upcoming-time">6:18 AM</span>
+          <span class="upcoming-title">Race in 30</span>
+        </div>
+        <div class="upcoming-item" data-show="Race in 30" data-start="2026-05-19T06:55:00Z" data-end="2026-05-19T07:32:00Z" data-platform="Samsung TV Plus">
+          <span class="upcoming-time">6:55 AM</span>
+          <span class="upcoming-title">Race in 30</span>
+        </div>
+        <div class="upcoming-item" data-show="Jolyon Palmer&#x27;s Analysis: Classics Australia 1996" data-start="2026-05-19T07:32:00Z" data-end="2026-05-19T08:13:00Z" data-platform="Samsung TV Plus">
+          <span class="upcoming-time">7:32 AM</span>
+          <span class="upcoming-title">Jolyon Palmer&#x27;s Analysis: Classics Australia 1996</span>
+        </div>
+        <div class="upcoming-item" data-show="Formula 1 Racing: 2019" data-start="2026-05-19T08:13:00Z" data-end="2026-05-19T10:30:00Z" data-platform="Samsung TV Plus">
+          <span class="upcoming-time">8:13 AM</span>
+          <span class="upcoming-title">Formula 1 Racing: 2019</span>
         </div>
     </div>
   </section>
@@ -174,12 +186,12 @@
   <section id="moreChannels" class="more-channels-section">
     <h2 class="detail-section-title">More Free Sports Channels</h2>
     <div class="genre-pills">
-      <a href="/channel/swerve-women-s-sports" class="genre-pill">Swerve Women’s Sports</a>
-      <a href="/channel/roku-sports-channel" class="genre-pill">Roku Sports Channel</a>
-      <a href="/channel/fight-network" class="genre-pill">Fight Network</a>
-      <a href="/channel/slvr" class="genre-pill">SLVR</a>
-      <a href="/channel/the-jim-rome-show" class="genre-pill">The Jim Rome Show</a>
-      <a href="/channel/golfpass" class="genre-pill">GolfPass</a>
+      <a href="/channel/world-surf-league-24-7" class="genre-pill">World Surf League 24/7</a>
+      <a href="/channel/willow-sports" class="genre-pill">Willow Sports</a>
+      <a href="/channel/realmadrid-tv" class="genre-pill">Realmadrid.tv</a>
+      <a href="/channel/ncaa-championships-powered-by-lg" class="genre-pill">NCAA Championships: Powered by LG</a>
+      <a href="/channel/motogp-tv" class="genre-pill">MotoGP TV</a>
+      <a href="/channel/victory" class="genre-pill">Victory+</a>
     </div>
   </section>
 
@@ -229,6 +241,7 @@
         <a href="../us.html" class="footer-link">🇺🇸 US Channels</a>
         <a href="../ca.html" class="footer-link">🇨🇦 CA Channels</a>
         <a href="../suggest.html" class="footer-link">Suggest a Channel</a>
+        <a href="../about.html" class="footer-link">About</a>
         <a href="../privacy.html" class="footer-link">Privacy Policy</a>
         <a href="../terms.html" class="footer-link">Terms of Service</a>
         <a href="mailto:hello@whatsonfreetv.com" class="footer-link">Contact</a>
@@ -265,12 +278,24 @@
     return 'badge-platform';
   }
 
-  // 1. Click handlers on .upcoming-item — mirrors openShowModal() in channel-detail.js
+  // 1. Click handlers on .upcoming-item — delegates to channel-detail.js openShowModal
+  //    which uses OMDb + TVmaze with movie-channel awareness.
   function openStaticShowModal(el) {
     const title    = el.dataset.show     || '';
     const startIso = el.dataset.start    || '';
     const endIso   = el.dataset.end      || '';
     const platform = el.dataset.platform || '';
+
+    // Delegate to the OMDb-aware modal exposed by channel-detail.js
+    if (typeof window._woftv_openShowModal === 'function') {
+      window._woftv_openShowModal(
+        { fields: { 'Show Title': title, 'Start Time': startIso, 'End Time': endIso, 'Platform': platform } },
+        '', true
+      );
+      return;
+    }
+
+    // Fallback (channel-detail.js not loaded): TVmaze-only
     const chName    = document.querySelector('h1.detail-channel-name')?.textContent?.trim() || '';
     const chLogo    = document.getElementById('detailImg')?.src || '';
     const chInitial = chName.charAt(0).toUpperCase();

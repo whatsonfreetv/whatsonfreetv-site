@@ -151,24 +151,24 @@
   <section id="seoSchedule" class="detail-epg-section seo-schedule">
     <h2 class="detail-section-title">What&#39;s On Today — Military Heroes Schedule</h2>
     <div class="upcoming-list">
-        <div class="upcoming-item" data-show="D-Day: The Untold Stories" data-start="2026-05-18T20:16:00Z" data-end="2026-05-18T22:00:00Z" data-platform="Samsung TV Plus">
-          <span class="upcoming-time">8:16 PM</span>
-          <span class="upcoming-title">D-Day: The Untold Stories</span>
-        </div>
-        <div class="upcoming-item" data-show="D-Day in HD" data-start="2026-05-18T22:00:00Z" data-end="2026-05-18T23:42:00Z" data-platform="Samsung TV Plus">
-          <span class="upcoming-time">10:00 PM</span>
-          <span class="upcoming-title">D-Day in HD</span>
-        </div>
-        <div class="upcoming-item" data-show="Mail Call: D-Day Special" data-start="2026-05-18T23:42:00Z" data-end="2026-05-19T00:34:00Z" data-platform="Samsung TV Plus">
-          <span class="upcoming-time">11:42 PM</span>
-          <span class="upcoming-title">Mail Call: D-Day Special</span>
-        </div>
-        <div class="upcoming-item" data-show="D-Day in HD" data-start="2026-05-19T00:34:00Z" data-end="2026-05-19T02:16:00Z" data-platform="Samsung TV Plus">
-          <span class="upcoming-time">12:34 AM</span>
-          <span class="upcoming-title">D-Day in HD</span>
-        </div>
         <div class="upcoming-item" data-show="D-Day: The Untold Stories" data-start="2026-05-19T02:16:00Z" data-end="2026-05-19T04:00:00Z" data-platform="Samsung TV Plus">
           <span class="upcoming-time">2:16 AM</span>
+          <span class="upcoming-title">D-Day: The Untold Stories</span>
+        </div>
+        <div class="upcoming-item" data-show="D-Day in HD" data-start="2026-05-19T04:00:00Z" data-end="2026-05-19T05:42:00Z" data-platform="Samsung TV Plus">
+          <span class="upcoming-time">4:00 AM</span>
+          <span class="upcoming-title">D-Day in HD</span>
+        </div>
+        <div class="upcoming-item" data-show="Mail Call: D-Day Special" data-start="2026-05-19T05:42:00Z" data-end="2026-05-19T06:33:00Z" data-platform="Samsung TV Plus">
+          <span class="upcoming-time">5:42 AM</span>
+          <span class="upcoming-title">Mail Call: D-Day Special</span>
+        </div>
+        <div class="upcoming-item" data-show="D-Day in HD" data-start="2026-05-19T06:33:00Z" data-end="2026-05-19T08:16:00Z" data-platform="Samsung TV Plus">
+          <span class="upcoming-time">6:33 AM</span>
+          <span class="upcoming-title">D-Day in HD</span>
+        </div>
+        <div class="upcoming-item" data-show="D-Day: The Untold Stories" data-start="2026-05-19T08:16:00Z" data-end="2026-05-19T10:00:00Z" data-platform="Samsung TV Plus">
+          <span class="upcoming-time">8:16 AM</span>
           <span class="upcoming-title">D-Day: The Untold Stories</span>
         </div>
     </div>
@@ -178,12 +178,12 @@
   <section id="moreChannels" class="more-channels-section">
     <h2 class="detail-section-title">More Free Documentary Channels</h2>
     <div class="genre-pills">
-      <a href="/channel/vice" class="genre-pill">VICE</a>
-      <a href="/channel/real-disaster-channel" class="genre-pill">Real Disaster Channel</a>
-      <a href="/channel/modern-marvels" class="genre-pill">Modern Marvels</a>
-      <a href="/channel/bet-visionaries" class="genre-pill">BET Visionaries</a>
-      <a href="/channel/trublu-crime-channel" class="genre-pill">TruBlu Crime Channel</a>
-      <a href="/channel/modern-marvels-by-history" class="genre-pill">Modern Marvels by HISTORY</a>
+      <a href="/channel/declassified" class="genre-pill">Declassified</a>
+      <a href="/channel/true-history" class="genre-pill">True History</a>
+      <a href="/channel/startalk-tv" class="genre-pill">Startalk TV</a>
+      <a href="/channel/valorous-tv" class="genre-pill">Valorous TV</a>
+      <a href="/channel/combat-war-channel" class="genre-pill">Combat War Channel</a>
+      <a href="/channel/i-survived" class="genre-pill">I Survived…</a>
     </div>
   </section>
 
@@ -233,6 +233,7 @@
         <a href="../us.html" class="footer-link">🇺🇸 US Channels</a>
         <a href="../ca.html" class="footer-link">🇨🇦 CA Channels</a>
         <a href="../suggest.html" class="footer-link">Suggest a Channel</a>
+        <a href="../about.html" class="footer-link">About</a>
         <a href="../privacy.html" class="footer-link">Privacy Policy</a>
         <a href="../terms.html" class="footer-link">Terms of Service</a>
         <a href="mailto:hello@whatsonfreetv.com" class="footer-link">Contact</a>
@@ -269,12 +270,24 @@
     return 'badge-platform';
   }
 
-  // 1. Click handlers on .upcoming-item — mirrors openShowModal() in channel-detail.js
+  // 1. Click handlers on .upcoming-item — delegates to channel-detail.js openShowModal
+  //    which uses OMDb + TVmaze with movie-channel awareness.
   function openStaticShowModal(el) {
     const title    = el.dataset.show     || '';
     const startIso = el.dataset.start    || '';
     const endIso   = el.dataset.end      || '';
     const platform = el.dataset.platform || '';
+
+    // Delegate to the OMDb-aware modal exposed by channel-detail.js
+    if (typeof window._woftv_openShowModal === 'function') {
+      window._woftv_openShowModal(
+        { fields: { 'Show Title': title, 'Start Time': startIso, 'End Time': endIso, 'Platform': platform } },
+        '', true
+      );
+      return;
+    }
+
+    // Fallback (channel-detail.js not loaded): TVmaze-only
     const chName    = document.querySelector('h1.detail-channel-name')?.textContent?.trim() || '';
     const chLogo    = document.getElementById('detailImg')?.src || '';
     const chInitial = chName.charAt(0).toUpperCase();

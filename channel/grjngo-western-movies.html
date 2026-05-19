@@ -103,7 +103,7 @@
   <script src="../config.js"></script>
   <script>
     window._CHANNEL_SLUG    = 'grjngo-western-movies';
-    window._CHANNEL_COUNTRY = 'CA';
+    window._CHANNEL_COUNTRY = 'US';
   </script>
 </head>
 <body class="detail-page">
@@ -131,7 +131,7 @@
       </div>
     </div>
     <div class="detail-info">
-      <div class="detail-country">🇨🇦 CA</div>
+      <div class="detail-country">🇺🇸 US</div>
       <h1 class="detail-channel-name">Grjngo - Western Movies</h1>
       <p class="detail-description">Western films and frontier cinema for fans of the genre.</p>
       
@@ -151,22 +151,6 @@
   <section id="seoSchedule" class="detail-epg-section seo-schedule">
     <h2 class="detail-section-title">What&#39;s On Today — Grjngo - Western Movies Schedule</h2>
     <div class="upcoming-list">
-        <div class="upcoming-item" data-show="Tequila Joe" data-start="2026-05-18T18:38:25Z" data-end="2026-05-18T20:22:18Z" data-platform="Plex">
-          <span class="upcoming-time">6:38 PM</span>
-          <span class="upcoming-title">Tequila Joe</span>
-        </div>
-        <div class="upcoming-item" data-show="Django Kill... If You Live, Shoot!" data-start="2026-05-18T20:22:18Z" data-end="2026-05-18T22:32:52Z" data-platform="Plex">
-          <span class="upcoming-time">8:22 PM</span>
-          <span class="upcoming-title">Django Kill... If You Live, Shoot!</span>
-        </div>
-        <div class="upcoming-item" data-show="White Apache" data-start="2026-05-18T22:32:52Z" data-end="2026-05-19T00:20:08Z" data-platform="Plex">
-          <span class="upcoming-time">10:32 PM</span>
-          <span class="upcoming-title">White Apache</span>
-        </div>
-        <div class="upcoming-item" data-show="Requiescant" data-start="2026-05-19T00:20:08Z" data-end="2026-05-19T02:19:40Z" data-platform="Plex">
-          <span class="upcoming-time">12:20 AM</span>
-          <span class="upcoming-title">Requiescant</span>
-        </div>
         <div class="upcoming-item" data-show="Kill Django... Kill First" data-start="2026-05-19T02:19:40Z" data-end="2026-05-19T03:53:33Z" data-platform="Plex">
           <span class="upcoming-time">2:19 AM</span>
           <span class="upcoming-title">Kill Django... Kill First</span>
@@ -187,6 +171,18 @@
           <span class="upcoming-time">9:10 AM</span>
           <span class="upcoming-title">Taste of Killing</span>
         </div>
+        <div class="upcoming-item" data-show="Massacre At Grand Canyon" data-start="2026-05-19T10:50:19Z" data-end="2026-05-19T12:29:22Z" data-platform="Plex">
+          <span class="upcoming-time">10:50 AM</span>
+          <span class="upcoming-title">Massacre At Grand Canyon</span>
+        </div>
+        <div class="upcoming-item" data-show="Sugar Colt" data-start="2026-05-19T12:29:22Z" data-end="2026-05-19T14:25:17Z" data-platform="Plex">
+          <span class="upcoming-time">12:29 PM</span>
+          <span class="upcoming-title">Sugar Colt</span>
+        </div>
+        <div class="upcoming-item" data-show="Hey Amigo! A Toast to Your Death" data-start="2026-05-19T14:25:17Z" data-end="2026-05-19T16:03:37Z" data-platform="Plex">
+          <span class="upcoming-time">2:25 PM</span>
+          <span class="upcoming-title">Hey Amigo! A Toast to Your Death</span>
+        </div>
     </div>
   </section>
 
@@ -194,12 +190,12 @@
   <section id="moreChannels" class="more-channels-section">
     <h2 class="detail-section-title">More Free Movies Channels</h2>
     <div class="genre-pills">
-      <a href="/channel/new-kmovies" class="genre-pill">NEW KMOVIES</a>
-      <a href="/channel/filmrise-action" class="genre-pill">FilmRise Action</a>
-      <a href="/channel/pluto-classic-movie-westerns" class="genre-pill">Pluto Classic Movie Westerns</a>
-      <a href="/channel/trailers-from-hell" class="genre-pill">Trailers From Hell</a>
-      <a href="/channel/pluto-tv-comedy" class="genre-pill">Pluto TV Comedy</a>
-      <a href="/channel/pluto-tv-action-movies" class="genre-pill">Pluto TV Action Movies</a>
+      <a href="/channel/xumo-free-black-cinema" class="genre-pill">Xumo Free Black Cinema</a>
+      <a href="/channel/pluto-tv-thrillers" class="genre-pill">Pluto TV Thrillers</a>
+      <a href="/channel/grit-xtra" class="genre-pill">Grit Xtra</a>
+      <a href="/channel/samuel-goldwyn-channel" class="genre-pill">Samuel Goldwyn Channel</a>
+      <a href="/channel/pluto-tv-action" class="genre-pill">Pluto TV Action</a>
+      <a href="/channel/bet-comedy-movies" class="genre-pill">BET Comedy Movies</a>
     </div>
   </section>
 
@@ -249,6 +245,7 @@
         <a href="../us.html" class="footer-link">🇺🇸 US Channels</a>
         <a href="../ca.html" class="footer-link">🇨🇦 CA Channels</a>
         <a href="../suggest.html" class="footer-link">Suggest a Channel</a>
+        <a href="../about.html" class="footer-link">About</a>
         <a href="../privacy.html" class="footer-link">Privacy Policy</a>
         <a href="../terms.html" class="footer-link">Terms of Service</a>
         <a href="mailto:hello@whatsonfreetv.com" class="footer-link">Contact</a>
@@ -285,12 +282,24 @@
     return 'badge-platform';
   }
 
-  // 1. Click handlers on .upcoming-item — mirrors openShowModal() in channel-detail.js
+  // 1. Click handlers on .upcoming-item — delegates to channel-detail.js openShowModal
+  //    which uses OMDb + TVmaze with movie-channel awareness.
   function openStaticShowModal(el) {
     const title    = el.dataset.show     || '';
     const startIso = el.dataset.start    || '';
     const endIso   = el.dataset.end      || '';
     const platform = el.dataset.platform || '';
+
+    // Delegate to the OMDb-aware modal exposed by channel-detail.js
+    if (typeof window._woftv_openShowModal === 'function') {
+      window._woftv_openShowModal(
+        { fields: { 'Show Title': title, 'Start Time': startIso, 'End Time': endIso, 'Platform': platform } },
+        '', true
+      );
+      return;
+    }
+
+    // Fallback (channel-detail.js not loaded): TVmaze-only
     const chName    = document.querySelector('h1.detail-channel-name')?.textContent?.trim() || '';
     const chLogo    = document.getElementById('detailImg')?.src || '';
     const chInitial = chName.charAt(0).toUpperCase();

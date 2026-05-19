@@ -151,22 +151,6 @@
   <section id="seoSchedule" class="detail-epg-section seo-schedule">
     <h2 class="detail-section-title">What&#39;s On Today — Great American RomComs Schedule</h2>
     <div class="upcoming-list">
-        <div class="upcoming-item" data-show="Romance at the Vineyard" data-start="2026-05-18T18:55:30Z" data-end="2026-05-18T20:31:45Z" data-platform="Roku">
-          <span class="upcoming-time">6:55 PM</span>
-          <span class="upcoming-title">Romance at the Vineyard</span>
-        </div>
-        <div class="upcoming-item" data-show="Swing Into Romance" data-start="2026-05-18T20:31:45Z" data-end="2026-05-18T22:04:17Z" data-platform="Roku">
-          <span class="upcoming-time">8:31 PM</span>
-          <span class="upcoming-title">Swing Into Romance</span>
-        </div>
-        <div class="upcoming-item" data-show="Ainsley McGregor Mysteries: A Case for the Winemaker" data-start="2026-05-18T22:04:17Z" data-end="2026-05-18T23:36:48Z" data-platform="Roku">
-          <span class="upcoming-time">10:04 PM</span>
-          <span class="upcoming-title">Ainsley McGregor Mysteries: A Case for the Winemaker</span>
-        </div>
-        <div class="upcoming-item" data-show="The Love Subscription" data-start="2026-05-18T23:36:48Z" data-end="2026-05-19T01:11:27Z" data-platform="Roku">
-          <span class="upcoming-time">11:36 PM</span>
-          <span class="upcoming-title">The Love Subscription</span>
-        </div>
         <div class="upcoming-item" data-show="Romance at the Vineyard" data-start="2026-05-19T01:11:27Z" data-end="2026-05-19T02:43:28Z" data-platform="Roku">
           <span class="upcoming-time">1:11 AM</span>
           <span class="upcoming-title">Romance at the Vineyard</span>
@@ -191,6 +175,22 @@
           <span class="upcoming-time">9:02 AM</span>
           <span class="upcoming-title">Ainsley McGregor Mysteries: A Case for the Yarn Maker</span>
         </div>
+        <div class="upcoming-item" data-show="Romantic Rewrite" data-start="2026-05-19T10:33:21Z" data-end="2026-05-19T12:02:51Z" data-platform="Roku">
+          <span class="upcoming-time">10:33 AM</span>
+          <span class="upcoming-title">Romantic Rewrite</span>
+        </div>
+        <div class="upcoming-item" data-show="The Winter Palace" data-start="2026-05-19T12:02:51Z" data-end="2026-05-19T13:38:23Z" data-platform="Roku">
+          <span class="upcoming-time">12:02 PM</span>
+          <span class="upcoming-title">The Winter Palace</span>
+        </div>
+        <div class="upcoming-item" data-show="God&#x27;s Country Song" data-start="2026-05-19T13:38:23Z" data-end="2026-05-19T15:10:55Z" data-platform="Roku">
+          <span class="upcoming-time">1:38 PM</span>
+          <span class="upcoming-title">God&#x27;s Country Song</span>
+        </div>
+        <div class="upcoming-item" data-show="Finding Faith" data-start="2026-05-19T15:10:55Z" data-end="2026-05-19T16:45:33Z" data-platform="Roku">
+          <span class="upcoming-time">3:10 PM</span>
+          <span class="upcoming-title">Finding Faith</span>
+        </div>
     </div>
   </section>
 
@@ -198,12 +198,12 @@
   <section id="moreChannels" class="more-channels-section">
     <h2 class="detail-section-title">More Free Comedy Channels</h2>
     <div class="genre-pills">
-      <a href="/channel/comedy-plus" class="genre-pill">Comedy Plus</a>
-      <a href="/channel/portlandia" class="genre-pill">Portlandia</a>
-      <a href="/channel/rifftrax" class="genre-pill">RiffTrax</a>
-      <a href="/channel/humor-mill" class="genre-pill">Humor Mill</a>
-      <a href="/channel/the-addams-family" class="genre-pill">The Addams Family</a>
-      <a href="/channel/according-to-jim" class="genre-pill">According To Jim</a>
+      <a href="/channel/tosh-0" class="genre-pill">Tosh.0</a>
+      <a href="/channel/smosh" class="genre-pill">Smosh</a>
+      <a href="/channel/conan-o-brien-tv" class="genre-pill">Conan O&#x27;Brien TV</a>
+      <a href="/channel/80-s-sitcom-flashback" class="genre-pill">80&#x27;s Sitcom Flashback</a>
+      <a href="/channel/beverly-hillbillies" class="genre-pill">Beverly Hillbillies</a>
+      <a href="/channel/just-for-laughs-comedy" class="genre-pill">Just for Laughs Comedy</a>
     </div>
   </section>
 
@@ -253,6 +253,7 @@
         <a href="../us.html" class="footer-link">🇺🇸 US Channels</a>
         <a href="../ca.html" class="footer-link">🇨🇦 CA Channels</a>
         <a href="../suggest.html" class="footer-link">Suggest a Channel</a>
+        <a href="../about.html" class="footer-link">About</a>
         <a href="../privacy.html" class="footer-link">Privacy Policy</a>
         <a href="../terms.html" class="footer-link">Terms of Service</a>
         <a href="mailto:hello@whatsonfreetv.com" class="footer-link">Contact</a>
@@ -289,12 +290,24 @@
     return 'badge-platform';
   }
 
-  // 1. Click handlers on .upcoming-item — mirrors openShowModal() in channel-detail.js
+  // 1. Click handlers on .upcoming-item — delegates to channel-detail.js openShowModal
+  //    which uses OMDb + TVmaze with movie-channel awareness.
   function openStaticShowModal(el) {
     const title    = el.dataset.show     || '';
     const startIso = el.dataset.start    || '';
     const endIso   = el.dataset.end      || '';
     const platform = el.dataset.platform || '';
+
+    // Delegate to the OMDb-aware modal exposed by channel-detail.js
+    if (typeof window._woftv_openShowModal === 'function') {
+      window._woftv_openShowModal(
+        { fields: { 'Show Title': title, 'Start Time': startIso, 'End Time': endIso, 'Platform': platform } },
+        '', true
+      );
+      return;
+    }
+
+    // Fallback (channel-detail.js not loaded): TVmaze-only
     const chName    = document.querySelector('h1.detail-channel-name')?.textContent?.trim() || '';
     const chLogo    = document.getElementById('detailImg')?.src || '';
     const chInitial = chName.charAt(0).toUpperCase();

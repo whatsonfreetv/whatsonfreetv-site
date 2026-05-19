@@ -151,26 +151,6 @@
   <section id="seoSchedule" class="detail-epg-section seo-schedule">
     <h2 class="detail-section-title">What&#39;s On Today — Lucha Libre AAA Schedule</h2>
     <div class="upcoming-list">
-        <div class="upcoming-item" data-show="Lucha libre AAA" data-start="2026-05-18T19:15:00Z" data-end="2026-05-18T20:45:00Z" data-platform="Pluto TV">
-          <span class="upcoming-time">7:15 PM</span>
-          <span class="upcoming-title">Lucha libre AAA</span>
-        </div>
-        <div class="upcoming-item" data-show="Lucha libre AAA" data-start="2026-05-18T20:45:00Z" data-end="2026-05-18T22:15:00Z" data-platform="Pluto TV">
-          <span class="upcoming-time">8:45 PM</span>
-          <span class="upcoming-title">Lucha libre AAA</span>
-        </div>
-        <div class="upcoming-item" data-show="Lucha libre AAA" data-start="2026-05-18T22:15:00Z" data-end="2026-05-18T23:45:00Z" data-platform="Pluto TV">
-          <span class="upcoming-time">10:15 PM</span>
-          <span class="upcoming-title">Lucha libre AAA</span>
-        </div>
-        <div class="upcoming-item" data-show="Lucha libre AAA" data-start="2026-05-18T23:45:00Z" data-end="2026-05-19T01:15:00Z" data-platform="Pluto TV">
-          <span class="upcoming-time">11:45 PM</span>
-          <span class="upcoming-title">Lucha libre AAA</span>
-        </div>
-        <div class="upcoming-item" data-show="Lucha libre AAA" data-start="2026-05-19T01:15:00Z" data-end="2026-05-19T02:45:00Z" data-platform="Pluto TV">
-          <span class="upcoming-time">1:15 AM</span>
-          <span class="upcoming-title">Lucha libre AAA</span>
-        </div>
         <div class="upcoming-item" data-show="Lucha libre AAA" data-start="2026-05-19T02:45:00Z" data-end="2026-05-19T04:15:00Z" data-platform="Pluto TV">
           <span class="upcoming-time">2:45 AM</span>
           <span class="upcoming-title">Lucha libre AAA</span>
@@ -191,6 +171,22 @@
           <span class="upcoming-time">8:45 AM</span>
           <span class="upcoming-title">Lucha libre AAA</span>
         </div>
+        <div class="upcoming-item" data-show="Lucha libre AAA" data-start="2026-05-19T10:15:00Z" data-end="2026-05-19T11:45:00Z" data-platform="Pluto TV">
+          <span class="upcoming-time">10:15 AM</span>
+          <span class="upcoming-title">Lucha libre AAA</span>
+        </div>
+        <div class="upcoming-item" data-show="Lucha libre AAA" data-start="2026-05-19T11:45:00Z" data-end="2026-05-19T13:15:00Z" data-platform="Pluto TV">
+          <span class="upcoming-time">11:45 AM</span>
+          <span class="upcoming-title">Lucha libre AAA</span>
+        </div>
+        <div class="upcoming-item" data-show="Lucha libre AAA" data-start="2026-05-19T13:15:00Z" data-end="2026-05-19T14:45:00Z" data-platform="Pluto TV">
+          <span class="upcoming-time">1:15 PM</span>
+          <span class="upcoming-title">Lucha libre AAA</span>
+        </div>
+        <div class="upcoming-item" data-show="Lucha libre AAA" data-start="2026-05-19T14:45:00Z" data-end="2026-05-19T16:15:00Z" data-platform="Pluto TV">
+          <span class="upcoming-time">2:45 PM</span>
+          <span class="upcoming-title">Lucha libre AAA</span>
+        </div>
     </div>
   </section>
 
@@ -198,12 +194,12 @@
   <section id="moreChannels" class="more-channels-section">
     <h2 class="detail-section-title">More Free Sports Channels</h2>
     <div class="genre-pills">
-      <a href="/channel/realmadrid-tv" class="genre-pill">Realmadrid.tv</a>
-      <a href="/channel/nfl-channel" class="genre-pill">NFL Channel</a>
-      <a href="/channel/wwe-superstar-central" class="genre-pill">WWE Superstar Central</a>
-      <a href="/channel/stadium" class="genre-pill">Stadium</a>
-      <a href="/channel/tennis-channel-2" class="genre-pill">Tennis Channel 2</a>
-      <a href="/channel/world-poker-tour" class="genre-pill">World Poker Tour</a>
+      <a href="/channel/pbr-ridepass" class="genre-pill">PBR RidePass</a>
+      <a href="/channel/sports-illustrated-tv" class="genre-pill">Sports Illustrated TV</a>
+      <a href="/channel/dazn-ringside" class="genre-pill">DAZN Ringside</a>
+      <a href="/channel/billiards-tv" class="genre-pill">Billiards TV</a>
+      <a href="/channel/sportsgrid" class="genre-pill">SportsGrid</a>
+      <a href="/channel/one-championship-tv" class="genre-pill">ONE Championship TV</a>
     </div>
   </section>
 
@@ -253,6 +249,7 @@
         <a href="../us.html" class="footer-link">🇺🇸 US Channels</a>
         <a href="../ca.html" class="footer-link">🇨🇦 CA Channels</a>
         <a href="../suggest.html" class="footer-link">Suggest a Channel</a>
+        <a href="../about.html" class="footer-link">About</a>
         <a href="../privacy.html" class="footer-link">Privacy Policy</a>
         <a href="../terms.html" class="footer-link">Terms of Service</a>
         <a href="mailto:hello@whatsonfreetv.com" class="footer-link">Contact</a>
@@ -289,12 +286,24 @@
     return 'badge-platform';
   }
 
-  // 1. Click handlers on .upcoming-item — mirrors openShowModal() in channel-detail.js
+  // 1. Click handlers on .upcoming-item — delegates to channel-detail.js openShowModal
+  //    which uses OMDb + TVmaze with movie-channel awareness.
   function openStaticShowModal(el) {
     const title    = el.dataset.show     || '';
     const startIso = el.dataset.start    || '';
     const endIso   = el.dataset.end      || '';
     const platform = el.dataset.platform || '';
+
+    // Delegate to the OMDb-aware modal exposed by channel-detail.js
+    if (typeof window._woftv_openShowModal === 'function') {
+      window._woftv_openShowModal(
+        { fields: { 'Show Title': title, 'Start Time': startIso, 'End Time': endIso, 'Platform': platform } },
+        '', true
+      );
+      return;
+    }
+
+    // Fallback (channel-detail.js not loaded): TVmaze-only
     const chName    = document.querySelector('h1.detail-channel-name')?.textContent?.trim() || '';
     const chLogo    = document.getElementById('detailImg')?.src || '';
     const chInitial = chName.charAt(0).toUpperCase();

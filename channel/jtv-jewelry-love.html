@@ -150,14 +150,6 @@
   <section id="seoSchedule" class="detail-epg-section seo-schedule">
     <h2 class="detail-section-title">What&#39;s On Today — JTV Jewelry Love Schedule</h2>
     <div class="upcoming-list">
-        <div class="upcoming-item" data-show="Prazana Lab-Grown Diamonds" data-start="2026-05-18T20:00:00Z" data-end="2026-05-18T22:00:00Z" data-platform="Xumo Play">
-          <span class="upcoming-time">8:00 PM</span>
-          <span class="upcoming-title">Prazana Lab-Grown Diamonds</span>
-        </div>
-        <div class="upcoming-item" data-show="Gold Jewelry Showcase" data-start="2026-05-18T22:00:00Z" data-end="2026-05-19T00:00:00Z" data-platform="Xumo Play">
-          <span class="upcoming-time">10:00 PM</span>
-          <span class="upcoming-title">Gold Jewelry Showcase</span>
-        </div>
         <div class="upcoming-item" data-show="Warehouse Sale" data-start="2026-05-19T00:00:00Z" data-end="2026-05-19T04:00:00Z" data-platform="Xumo Play">
           <span class="upcoming-time">12:00 AM</span>
           <span class="upcoming-title">Warehouse Sale</span>
@@ -186,6 +178,18 @@
           <span class="upcoming-time">10:00 AM</span>
           <span class="upcoming-title">Prazana Lab-Grown Diamonds</span>
         </div>
+        <div class="upcoming-item" data-show="Affordable Jewelry Luxuries" data-start="2026-05-19T11:00:00Z" data-end="2026-05-19T13:00:00Z" data-platform="Xumo Play">
+          <span class="upcoming-time">11:00 AM</span>
+          <span class="upcoming-title">Affordable Jewelry Luxuries</span>
+        </div>
+        <div class="upcoming-item" data-show="Jewel School - Jewelry Making" data-start="2026-05-19T13:00:00Z" data-end="2026-05-19T16:00:00Z" data-platform="Xumo Play">
+          <span class="upcoming-time">1:00 PM</span>
+          <span class="upcoming-title">Jewel School - Jewelry Making</span>
+        </div>
+        <div class="upcoming-item" data-show="Prazana Lab-Grown Diamonds" data-start="2026-05-19T16:00:00Z" data-end="2026-05-19T18:00:00Z" data-platform="Xumo Play">
+          <span class="upcoming-time">4:00 PM</span>
+          <span class="upcoming-title">Prazana Lab-Grown Diamonds</span>
+        </div>
     </div>
   </section>
 
@@ -193,12 +197,12 @@
   <section id="moreChannels" class="more-channels-section">
     <h2 class="detail-section-title">More Free Lifestyle Channels</h2>
     <div class="genre-pills">
-      <a href="/channel/dove" class="genre-pill">Dove</a>
-      <a href="/channel/beach-bonfire-vibes" class="genre-pill">Beach Bonfire Vibes</a>
-      <a href="/channel/christmas-plus" class="genre-pill">Christmas Plus</a>
-      <a href="/channel/stingray-holidayscapes" class="genre-pill">Stingray Holidayscapes</a>
-      <a href="/channel/chip-and-jo-feels-like-home-by-magnolia-network" class="genre-pill">Chip &amp; Jo: Feels Like Home by Magnolia Network</a>
+      <a href="/channel/tiny-house-nation" class="genre-pill">Tiny House Nation</a>
       <a href="/channel/island-vibes" class="genre-pill">Island Vibes</a>
+      <a href="/channel/bbc-home-and-garden" class="genre-pill">BBC Home &amp; Garden</a>
+      <a href="/channel/beach-bonfire-vibes" class="genre-pill">Beach Bonfire Vibes</a>
+      <a href="/channel/rovr-pets" class="genre-pill">Rovr Pets</a>
+      <a href="/channel/perform-by-lifetime" class="genre-pill">Perform by Lifetime</a>
     </div>
   </section>
 
@@ -248,6 +252,7 @@
         <a href="../us.html" class="footer-link">🇺🇸 US Channels</a>
         <a href="../ca.html" class="footer-link">🇨🇦 CA Channels</a>
         <a href="../suggest.html" class="footer-link">Suggest a Channel</a>
+        <a href="../about.html" class="footer-link">About</a>
         <a href="../privacy.html" class="footer-link">Privacy Policy</a>
         <a href="../terms.html" class="footer-link">Terms of Service</a>
         <a href="mailto:hello@whatsonfreetv.com" class="footer-link">Contact</a>
@@ -284,12 +289,24 @@
     return 'badge-platform';
   }
 
-  // 1. Click handlers on .upcoming-item — mirrors openShowModal() in channel-detail.js
+  // 1. Click handlers on .upcoming-item — delegates to channel-detail.js openShowModal
+  //    which uses OMDb + TVmaze with movie-channel awareness.
   function openStaticShowModal(el) {
     const title    = el.dataset.show     || '';
     const startIso = el.dataset.start    || '';
     const endIso   = el.dataset.end      || '';
     const platform = el.dataset.platform || '';
+
+    // Delegate to the OMDb-aware modal exposed by channel-detail.js
+    if (typeof window._woftv_openShowModal === 'function') {
+      window._woftv_openShowModal(
+        { fields: { 'Show Title': title, 'Start Time': startIso, 'End Time': endIso, 'Platform': platform } },
+        '', true
+      );
+      return;
+    }
+
+    // Fallback (channel-detail.js not loaded): TVmaze-only
     const chName    = document.querySelector('h1.detail-channel-name')?.textContent?.trim() || '';
     const chLogo    = document.getElementById('detailImg')?.src || '';
     const chInitial = chName.charAt(0).toUpperCase();

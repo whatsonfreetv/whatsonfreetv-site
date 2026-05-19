@@ -151,30 +151,6 @@
   <section id="seoSchedule" class="detail-epg-section seo-schedule">
     <h2 class="detail-section-title">What&#39;s On Today — FreeTV Live Schedule</h2>
     <div class="upcoming-list">
-        <div class="upcoming-item" data-show="Maternidad Imposible" data-start="2026-05-18T20:03:38Z" data-end="2026-05-18T21:44:45Z" data-platform="Plex">
-          <span class="upcoming-time">8:03 PM</span>
-          <span class="upcoming-title">Maternidad Imposible</span>
-        </div>
-        <div class="upcoming-item" data-show="La Caza de Beria" data-start="2026-05-18T21:44:45Z" data-end="2026-05-18T22:48:18Z" data-platform="Plex">
-          <span class="upcoming-time">9:44 PM</span>
-          <span class="upcoming-title">La Caza de Beria</span>
-        </div>
-        <div class="upcoming-item" data-show="Doctor en Turno" data-start="2026-05-18T22:48:18Z" data-end="2026-05-18T23:40:56Z" data-platform="Plex">
-          <span class="upcoming-time">10:48 PM</span>
-          <span class="upcoming-title">Doctor en Turno</span>
-        </div>
-        <div class="upcoming-item" data-show="Doctor en Turno" data-start="2026-05-18T23:40:56Z" data-end="2026-05-19T00:33:10Z" data-platform="Plex">
-          <span class="upcoming-time">11:40 PM</span>
-          <span class="upcoming-title">Doctor en Turno</span>
-        </div>
-        <div class="upcoming-item" data-show="Doctor en Turno" data-start="2026-05-19T00:33:10Z" data-end="2026-05-19T01:25:29Z" data-platform="Plex">
-          <span class="upcoming-time">12:33 AM</span>
-          <span class="upcoming-title">Doctor en Turno</span>
-        </div>
-        <div class="upcoming-item" data-show="Doctor en Turno" data-start="2026-05-19T01:25:29Z" data-end="2026-05-19T02:17:50Z" data-platform="Plex">
-          <span class="upcoming-time">1:25 AM</span>
-          <span class="upcoming-title">Doctor en Turno</span>
-        </div>
         <div class="upcoming-item" data-show="La Visita Que No Tocó el Timbre" data-start="2026-05-19T02:17:50Z" data-end="2026-05-19T04:12:33Z" data-platform="Plex">
           <span class="upcoming-time">2:17 AM</span>
           <span class="upcoming-title">La Visita Que No Tocó el Timbre</span>
@@ -207,6 +183,22 @@
           <span class="upcoming-time">10:00 AM</span>
           <span class="upcoming-title">El Beso de Ultratumba</span>
         </div>
+        <div class="upcoming-item" data-show="La Escondida" data-start="2026-05-19T11:44:14Z" data-end="2026-05-19T13:43:43Z" data-platform="Plex">
+          <span class="upcoming-time">11:44 AM</span>
+          <span class="upcoming-title">La Escondida</span>
+        </div>
+        <div class="upcoming-item" data-show="La Caza de Beria" data-start="2026-05-19T13:43:43Z" data-end="2026-05-19T14:47:16Z" data-platform="Plex">
+          <span class="upcoming-time">1:43 PM</span>
+          <span class="upcoming-title">La Caza de Beria</span>
+        </div>
+        <div class="upcoming-item" data-show="Doctor en Turno" data-start="2026-05-19T14:47:16Z" data-end="2026-05-19T15:40:04Z" data-platform="Plex">
+          <span class="upcoming-time">2:47 PM</span>
+          <span class="upcoming-title">Doctor en Turno</span>
+        </div>
+        <div class="upcoming-item" data-show="Doctor en Turno" data-start="2026-05-19T15:40:04Z" data-end="2026-05-19T16:32:29Z" data-platform="Plex">
+          <span class="upcoming-time">3:40 PM</span>
+          <span class="upcoming-title">Doctor en Turno</span>
+        </div>
     </div>
   </section>
 
@@ -214,12 +206,12 @@
   <section id="moreChannels" class="more-channels-section">
     <h2 class="detail-section-title">More Free Spanish Channels</h2>
     <div class="genre-pills">
-      <a href="/channel/cine-amor" class="genre-pill">Cine Amor</a>
+      <a href="/channel/m-s-adrenalina" class="genre-pill">Más adrenalina</a>
       <a href="/channel/autopista-al-cielo" class="genre-pill">Autopista al Cielo</a>
-      <a href="/channel/csi-ny-en-espa-ol" class="genre-pill">CSI: NY en español</a>
-      <a href="/channel/emoci-n-atres-tv" class="genre-pill">EMOCIÓN ATRES TV</a>
-      <a href="/channel/love-the-planet-en-espa-ol" class="genre-pill">Love The Planet En Español</a>
-      <a href="/channel/canela-telenovelas" class="genre-pill">Canela Telenovelas</a>
+      <a href="/channel/vevo-reggaeton-and-trap" class="genre-pill">Vevo Reggaeton &amp; Trap</a>
+      <a href="/channel/cine-estrellatv" class="genre-pill">Cine EstrellaTV</a>
+      <a href="/channel/tudiscovery" class="genre-pill">TuDiscovery</a>
+      <a href="/channel/latv" class="genre-pill">LATV</a>
     </div>
   </section>
 
@@ -269,6 +261,7 @@
         <a href="../us.html" class="footer-link">🇺🇸 US Channels</a>
         <a href="../ca.html" class="footer-link">🇨🇦 CA Channels</a>
         <a href="../suggest.html" class="footer-link">Suggest a Channel</a>
+        <a href="../about.html" class="footer-link">About</a>
         <a href="../privacy.html" class="footer-link">Privacy Policy</a>
         <a href="../terms.html" class="footer-link">Terms of Service</a>
         <a href="mailto:hello@whatsonfreetv.com" class="footer-link">Contact</a>
@@ -305,12 +298,24 @@
     return 'badge-platform';
   }
 
-  // 1. Click handlers on .upcoming-item — mirrors openShowModal() in channel-detail.js
+  // 1. Click handlers on .upcoming-item — delegates to channel-detail.js openShowModal
+  //    which uses OMDb + TVmaze with movie-channel awareness.
   function openStaticShowModal(el) {
     const title    = el.dataset.show     || '';
     const startIso = el.dataset.start    || '';
     const endIso   = el.dataset.end      || '';
     const platform = el.dataset.platform || '';
+
+    // Delegate to the OMDb-aware modal exposed by channel-detail.js
+    if (typeof window._woftv_openShowModal === 'function') {
+      window._woftv_openShowModal(
+        { fields: { 'Show Title': title, 'Start Time': startIso, 'End Time': endIso, 'Platform': platform } },
+        '', true
+      );
+      return;
+    }
+
+    // Fallback (channel-detail.js not loaded): TVmaze-only
     const chName    = document.querySelector('h1.detail-channel-name')?.textContent?.trim() || '';
     const chLogo    = document.getElementById('detailImg')?.src || '';
     const chInitial = chName.charAt(0).toUpperCase();

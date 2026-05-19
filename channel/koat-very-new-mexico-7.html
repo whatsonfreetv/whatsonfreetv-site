@@ -151,12 +151,12 @@
   <section id="moreChannels" class="more-channels-section">
     <h2 class="detail-section-title">More Free General Channels</h2>
     <div class="genre-pills">
-      <a href="/channel/kgtv-san-diego-abc10" class="genre-pill">KGTV San Diego ABC10</a>
-      <a href="/channel/amazon-live" class="genre-pill">Amazon Live</a>
-      <a href="/channel/cowboy-sports" class="genre-pill">Cowboy+ Sports</a>
-      <a href="/channel/aande-alaska-state-troopers" class="genre-pill">A&amp;E Alaska State Troopers</a>
-      <a href="/channel/home-made-nation" class="genre-pill">Home. Made. Nation</a>
-      <a href="/channel/the-repair-shop" class="genre-pill">The Repair Shop</a>
+      <a href="/channel/the-fbi" class="genre-pill">The FBI</a>
+      <a href="/channel/iheart-2010s-radio" class="genre-pill">iHeart 2010s Radio</a>
+      <a href="/channel/america-s-voice" class="genre-pill">America&#x27;s Voice</a>
+      <a href="/channel/killer-mysteries" class="genre-pill">Killer Mysteries</a>
+      <a href="/channel/jail-en-espa-ol" class="genre-pill">JAIL en Español</a>
+      <a href="/channel/price-is-right" class="genre-pill">Price is Right</a>
     </div>
   </section>
 
@@ -206,6 +206,7 @@
         <a href="../us.html" class="footer-link">🇺🇸 US Channels</a>
         <a href="../ca.html" class="footer-link">🇨🇦 CA Channels</a>
         <a href="../suggest.html" class="footer-link">Suggest a Channel</a>
+        <a href="../about.html" class="footer-link">About</a>
         <a href="../privacy.html" class="footer-link">Privacy Policy</a>
         <a href="../terms.html" class="footer-link">Terms of Service</a>
         <a href="mailto:hello@whatsonfreetv.com" class="footer-link">Contact</a>
@@ -242,12 +243,24 @@
     return 'badge-platform';
   }
 
-  // 1. Click handlers on .upcoming-item — mirrors openShowModal() in channel-detail.js
+  // 1. Click handlers on .upcoming-item — delegates to channel-detail.js openShowModal
+  //    which uses OMDb + TVmaze with movie-channel awareness.
   function openStaticShowModal(el) {
     const title    = el.dataset.show     || '';
     const startIso = el.dataset.start    || '';
     const endIso   = el.dataset.end      || '';
     const platform = el.dataset.platform || '';
+
+    // Delegate to the OMDb-aware modal exposed by channel-detail.js
+    if (typeof window._woftv_openShowModal === 'function') {
+      window._woftv_openShowModal(
+        { fields: { 'Show Title': title, 'Start Time': startIso, 'End Time': endIso, 'Platform': platform } },
+        '', true
+      );
+      return;
+    }
+
+    // Fallback (channel-detail.js not loaded): TVmaze-only
     const chName    = document.querySelector('h1.detail-channel-name')?.textContent?.trim() || '';
     const chLogo    = document.getElementById('detailImg')?.src || '';
     const chInitial = chName.charAt(0).toUpperCase();

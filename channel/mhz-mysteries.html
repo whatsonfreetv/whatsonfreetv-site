@@ -151,24 +151,24 @@
   <section id="seoSchedule" class="detail-epg-section seo-schedule">
     <h2 class="detail-section-title">What&#39;s On Today — MHz Mysteries Schedule</h2>
     <div class="upcoming-list">
-        <div class="upcoming-item" data-show="Rave Party" data-start="2026-05-18T20:47:00Z" data-end="2026-05-18T21:52:00Z" data-platform="Samsung TV Plus">
-          <span class="upcoming-time">8:47 PM</span>
-          <span class="upcoming-title">Rave Party</span>
-        </div>
-        <div class="upcoming-item" data-show="Summer of the Finger" data-start="2026-05-18T21:52:00Z" data-end="2026-05-18T23:59:00Z" data-platform="Samsung TV Plus">
-          <span class="upcoming-time">9:52 PM</span>
-          <span class="upcoming-title">Summer of the Finger</span>
-        </div>
-        <div class="upcoming-item" data-show="Like Plants Among the Sassi" data-start="2026-05-18T23:59:00Z" data-end="2026-05-19T02:02:00Z" data-platform="Samsung TV Plus">
-          <span class="upcoming-time">11:59 PM</span>
-          <span class="upcoming-title">Like Plants Among the Sassi</span>
-        </div>
-        <div class="upcoming-item" data-show="Applause" data-start="2026-05-19T02:02:00Z" data-end="2026-05-19T03:03:00Z" data-platform="Samsung TV Plus">
-          <span class="upcoming-time">2:02 AM</span>
-          <span class="upcoming-title">Applause</span>
-        </div>
         <div class="upcoming-item" data-show="#Forzanne" data-start="2026-05-19T03:03:00Z" data-end="2026-05-19T04:03:00Z" data-platform="Samsung TV Plus">
           <span class="upcoming-time">3:03 AM</span>
+          <span class="upcoming-title">#Forzanne</span>
+        </div>
+        <div class="upcoming-item" data-show="Summer of the Finger" data-start="2026-05-19T04:03:00Z" data-end="2026-05-19T06:11:00Z" data-platform="Samsung TV Plus">
+          <span class="upcoming-time">4:03 AM</span>
+          <span class="upcoming-title">Summer of the Finger</span>
+        </div>
+        <div class="upcoming-item" data-show="Like Plants Among the Sassi" data-start="2026-05-19T06:11:00Z" data-end="2026-05-19T08:13:00Z" data-platform="Samsung TV Plus">
+          <span class="upcoming-time">6:11 AM</span>
+          <span class="upcoming-title">Like Plants Among the Sassi</span>
+        </div>
+        <div class="upcoming-item" data-show="Applause" data-start="2026-05-19T08:13:00Z" data-end="2026-05-19T09:14:00Z" data-platform="Samsung TV Plus">
+          <span class="upcoming-time">8:13 AM</span>
+          <span class="upcoming-title">Applause</span>
+        </div>
+        <div class="upcoming-item" data-show="#Forzanne" data-start="2026-05-19T09:14:00Z" data-end="2026-05-19T10:15:00Z" data-platform="Samsung TV Plus">
+          <span class="upcoming-time">9:14 AM</span>
           <span class="upcoming-title">#Forzanne</span>
         </div>
     </div>
@@ -178,12 +178,12 @@
   <section id="moreChannels" class="more-channels-section">
     <h2 class="detail-section-title">More Free True Crime Channels</h2>
     <div class="genre-pills">
-      <a href="/channel/crime-zone" class="genre-pill">Crime Zone</a>
-      <a href="/channel/filmrise-mysteries" class="genre-pill">FilmRise Mysteries</a>
+      <a href="/channel/tv-one-crime-and-justice" class="genre-pill">TV One Crime &amp; Justice</a>
       <a href="/channel/reelz-famous-and-infamous" class="genre-pill">REELZ Famous &amp; Infamous</a>
-      <a href="/channel/unsolved-mysteries" class="genre-pill">Unsolved Mysteries</a>
+      <a href="/channel/filmrise-true-crime" class="genre-pill">FilmRise True Crime</a>
+      <a href="/channel/acorn-tv-mysteries" class="genre-pill">Acorn TV Mysteries</a>
+      <a href="/channel/law-and-crime" class="genre-pill">Law &amp; Crime</a>
       <a href="/channel/britbox-mysteries" class="genre-pill">BritBox Mysteries</a>
-      <a href="/channel/prime-suspect" class="genre-pill">Prime Suspect</a>
     </div>
   </section>
 
@@ -233,6 +233,7 @@
         <a href="../us.html" class="footer-link">🇺🇸 US Channels</a>
         <a href="../ca.html" class="footer-link">🇨🇦 CA Channels</a>
         <a href="../suggest.html" class="footer-link">Suggest a Channel</a>
+        <a href="../about.html" class="footer-link">About</a>
         <a href="../privacy.html" class="footer-link">Privacy Policy</a>
         <a href="../terms.html" class="footer-link">Terms of Service</a>
         <a href="mailto:hello@whatsonfreetv.com" class="footer-link">Contact</a>
@@ -269,12 +270,24 @@
     return 'badge-platform';
   }
 
-  // 1. Click handlers on .upcoming-item — mirrors openShowModal() in channel-detail.js
+  // 1. Click handlers on .upcoming-item — delegates to channel-detail.js openShowModal
+  //    which uses OMDb + TVmaze with movie-channel awareness.
   function openStaticShowModal(el) {
     const title    = el.dataset.show     || '';
     const startIso = el.dataset.start    || '';
     const endIso   = el.dataset.end      || '';
     const platform = el.dataset.platform || '';
+
+    // Delegate to the OMDb-aware modal exposed by channel-detail.js
+    if (typeof window._woftv_openShowModal === 'function') {
+      window._woftv_openShowModal(
+        { fields: { 'Show Title': title, 'Start Time': startIso, 'End Time': endIso, 'Platform': platform } },
+        '', true
+      );
+      return;
+    }
+
+    // Fallback (channel-detail.js not loaded): TVmaze-only
     const chName    = document.querySelector('h1.detail-channel-name')?.textContent?.trim() || '';
     const chLogo    = document.getElementById('detailImg')?.src || '';
     const chInitial = chName.charAt(0).toUpperCase();

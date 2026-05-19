@@ -151,18 +151,6 @@
   <section id="seoSchedule" class="detail-epg-section seo-schedule">
     <h2 class="detail-section-title">What&#39;s On Today — Free Movies Plus Schedule</h2>
     <div class="upcoming-list">
-        <div class="upcoming-item" data-show="Sliding Doors" data-start="2026-05-18T19:08:44Z" data-end="2026-05-18T21:22:19Z" data-platform="Plex">
-          <span class="upcoming-time">7:08 PM</span>
-          <span class="upcoming-title">Sliding Doors</span>
-        </div>
-        <div class="upcoming-item" data-show="Paper Man" data-start="2026-05-18T21:22:19Z" data-end="2026-05-18T23:50:23Z" data-platform="Plex">
-          <span class="upcoming-time">9:22 PM</span>
-          <span class="upcoming-title">Paper Man</span>
-        </div>
-        <div class="upcoming-item" data-show="Heathers" data-start="2026-05-18T23:50:23Z" data-end="2026-05-19T02:08:23Z" data-platform="Plex">
-          <span class="upcoming-time">11:50 PM</span>
-          <span class="upcoming-title">Heathers</span>
-        </div>
         <div class="upcoming-item" data-show="Take Me Home Tonight" data-start="2026-05-19T02:08:23Z" data-end="2026-05-19T04:20:30Z" data-platform="Plex">
           <span class="upcoming-time">2:08 AM</span>
           <span class="upcoming-title">Take Me Home Tonight</span>
@@ -179,6 +167,14 @@
           <span class="upcoming-time">8:57 AM</span>
           <span class="upcoming-title">Monty Python&#x27;s Life of Brian</span>
         </div>
+        <div class="upcoming-item" data-show="The Little Hours" data-start="2026-05-19T11:03:49Z" data-end="2026-05-19T13:02:57Z" data-platform="Plex">
+          <span class="upcoming-time">11:03 AM</span>
+          <span class="upcoming-title">The Little Hours</span>
+        </div>
+        <div class="upcoming-item" data-show="Alice In Wonderland" data-start="2026-05-19T13:02:57Z" data-end="2026-05-19T16:03:55Z" data-platform="Plex">
+          <span class="upcoming-time">1:02 PM</span>
+          <span class="upcoming-title">Alice In Wonderland</span>
+        </div>
     </div>
   </section>
 
@@ -186,12 +182,12 @@
   <section id="moreChannels" class="more-channels-section">
     <h2 class="detail-section-title">More Free Movies Channels</h2>
     <div class="genre-pills">
-      <a href="/channel/xumo-her-movies" class="genre-pill">Xumo Her Movies</a>
-      <a href="/channel/pluto-tv-westerns" class="genre-pill">Pluto TV Westerns</a>
-      <a href="/channel/at-the-movies" class="genre-pill">At the Movies</a>
-      <a href="/channel/universal-movies" class="genre-pill">Universal Movies</a>
-      <a href="/channel/miramax-movie-channel" class="genre-pill">Miramax Movie Channel</a>
-      <a href="/channel/pluto-tv-thrillers" class="genre-pill">Pluto TV Thrillers</a>
+      <a href="/channel/lifetime-movie-favorites" class="genre-pill">Lifetime Movie Favorites</a>
+      <a href="/channel/mgm-presents" class="genre-pill">MGM Presents</a>
+      <a href="/channel/pluto-tv-romance" class="genre-pill">Pluto TV Romance</a>
+      <a href="/channel/blackpix" class="genre-pill">BlackPix</a>
+      <a href="/channel/gravitas-movies" class="genre-pill">Gravitas Movies</a>
+      <a href="/channel/new-k-movies" class="genre-pill">New K movies</a>
     </div>
   </section>
 
@@ -241,6 +237,7 @@
         <a href="../us.html" class="footer-link">🇺🇸 US Channels</a>
         <a href="../ca.html" class="footer-link">🇨🇦 CA Channels</a>
         <a href="../suggest.html" class="footer-link">Suggest a Channel</a>
+        <a href="../about.html" class="footer-link">About</a>
         <a href="../privacy.html" class="footer-link">Privacy Policy</a>
         <a href="../terms.html" class="footer-link">Terms of Service</a>
         <a href="mailto:hello@whatsonfreetv.com" class="footer-link">Contact</a>
@@ -277,12 +274,24 @@
     return 'badge-platform';
   }
 
-  // 1. Click handlers on .upcoming-item — mirrors openShowModal() in channel-detail.js
+  // 1. Click handlers on .upcoming-item — delegates to channel-detail.js openShowModal
+  //    which uses OMDb + TVmaze with movie-channel awareness.
   function openStaticShowModal(el) {
     const title    = el.dataset.show     || '';
     const startIso = el.dataset.start    || '';
     const endIso   = el.dataset.end      || '';
     const platform = el.dataset.platform || '';
+
+    // Delegate to the OMDb-aware modal exposed by channel-detail.js
+    if (typeof window._woftv_openShowModal === 'function') {
+      window._woftv_openShowModal(
+        { fields: { 'Show Title': title, 'Start Time': startIso, 'End Time': endIso, 'Platform': platform } },
+        '', true
+      );
+      return;
+    }
+
+    // Fallback (channel-detail.js not loaded): TVmaze-only
     const chName    = document.querySelector('h1.detail-channel-name')?.textContent?.trim() || '';
     const chLogo    = document.getElementById('detailImg')?.src || '';
     const chInitial = chName.charAt(0).toUpperCase();
