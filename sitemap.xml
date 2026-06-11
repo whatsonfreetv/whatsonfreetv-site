@@ -8815,6 +8815,12 @@
     <priority>0.8</priority>
   </url>
   <url>
+    <loc>https://whatsonfreetv.com/channel/telemundo-peacock</loc>
+    <lastmod>2026-06-11</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
     <loc>https://whatsonfreetv.com/channel/telemundo-accion</loc>
     <lastmod>2026-06-11</lastmod>
     <changefreq>weekly</changefreq>
