@@ -5203,6 +5203,12 @@
     <priority>0.8</priority>
   </url>
   <url>
+    <loc>https://whatsonfreetv.com/channel/kusa-9news</loc>
+    <lastmod>2026-07-05</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
     <loc>https://whatsonfreetv.com/channel/kxtv-sacramento-abc10</loc>
     <lastmod>2026-07-05</lastmod>
     <changefreq>weekly</changefreq>
