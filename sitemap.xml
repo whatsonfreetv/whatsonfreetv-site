@@ -6577,6 +6577,12 @@
     <priority>0.8</priority>
   </url>
   <url>
+    <loc>https://whatsonfreetv.com/channel/nick-en-espa-ol</loc>
+    <lastmod>2026-07-28</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
     <loc>https://whatsonfreetv.com/channel/nick-jr-pluto-tv</loc>
     <lastmod>2026-07-28</lastmod>
     <changefreq>weekly</changefreq>
