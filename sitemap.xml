@@ -14461,6 +14461,12 @@
     <priority>0.8</priority>
   </url>
   <url>
+    <loc>https://whatsonfreetv.com/channel/pluto-tv-spicy</loc>
+    <lastmod>2026-07-31</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
     <loc>https://whatsonfreetv.com/channel/pluto-tv-true-crime</loc>
     <lastmod>2026-07-31</lastmod>
     <changefreq>weekly</changefreq>
