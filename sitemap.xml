@@ -5485,6 +5485,12 @@
     <priority>0.8</priority>
   </url>
   <url>
+    <loc>https://whatsonfreetv.com/channel/latinus</loc>
+    <lastmod>2026-08-04</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
     <loc>https://whatsonfreetv.com/channel/latv</loc>
     <lastmod>2026-08-04</lastmod>
     <changefreq>weekly</changefreq>
@@ -8654,6 +8660,12 @@
   </url>
   <url>
     <loc>https://whatsonfreetv.com/channel/star-trek-deep-space-nine</loc>
+    <lastmod>2026-08-04</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://whatsonfreetv.com/channel/star-trek-enterprise</loc>
     <lastmod>2026-08-04</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
