@@ -13849,6 +13849,12 @@
     <priority>0.8</priority>
   </url>
   <url>
+    <loc>https://whatsonfreetv.com/channel/mhz-mysteries</loc>
+    <lastmod>2026-08-24</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
     <loc>https://whatsonfreetv.com/channel/mhz-now</loc>
     <lastmod>2026-08-24</lastmod>
     <changefreq>weekly</changefreq>
