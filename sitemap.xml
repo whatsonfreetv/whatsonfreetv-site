@@ -14041,6 +14041,12 @@
     <priority>0.8</priority>
   </url>
   <url>
+    <loc>https://whatsonfreetv.com/channel/pluto-tv-90s-hit-comedy</loc>
+    <lastmod>2026-09-04</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
     <loc>https://whatsonfreetv.com/channel/pluto-tv-action-movies</loc>
     <lastmod>2026-09-04</lastmod>
     <changefreq>weekly</changefreq>
@@ -14120,6 +14126,12 @@
   </url>
   <url>
     <loc>https://whatsonfreetv.com/channel/pluto-tv-horror</loc>
+    <lastmod>2026-09-04</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://whatsonfreetv.com/channel/pluto-tv-kids-movie-club</loc>
     <lastmod>2026-09-04</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
