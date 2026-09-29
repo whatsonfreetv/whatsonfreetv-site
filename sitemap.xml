@@ -7903,6 +7903,12 @@
     <priority>0.8</priority>
   </url>
   <url>
+    <loc>https://whatsonfreetv.com/channel/roku-moods-frightfest</loc>
+    <lastmod>2026-09-29</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
     <loc>https://whatsonfreetv.com/channel/roku-moods-summertime</loc>
     <lastmod>2026-09-29</lastmod>
     <changefreq>weekly</changefreq>
