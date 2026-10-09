@@ -13789,6 +13789,12 @@
     <priority>0.8</priority>
   </url>
   <url>
+    <loc>https://whatsonfreetv.com/channel/narcos</loc>
+    <lastmod>2026-10-09</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
     <loc>https://whatsonfreetv.com/channel/naruto</loc>
     <lastmod>2026-10-09</lastmod>
     <changefreq>weekly</changefreq>
