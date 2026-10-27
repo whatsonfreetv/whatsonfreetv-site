@@ -10603,6 +10603,12 @@
     <priority>0.8</priority>
   </url>
   <url>
+    <loc>https://whatsonfreetv.com/channel/urban-tv-movies</loc>
+    <lastmod>2026-10-27</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
     <loc>https://whatsonfreetv.com/channel/usa-today</loc>
     <lastmod>2026-10-27</lastmod>
     <changefreq>weekly</changefreq>
@@ -12098,6 +12104,12 @@
   </url>
   <url>
     <loc>https://whatsonfreetv.com/channel/bar-rescue</loc>
+    <lastmod>2026-10-27</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://whatsonfreetv.com/channel/barney-and-friends</loc>
     <lastmod>2026-10-27</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
