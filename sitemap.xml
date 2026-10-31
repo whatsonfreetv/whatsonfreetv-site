@@ -3937,6 +3937,12 @@
     <priority>0.8</priority>
   </url>
   <url>
+    <loc>https://whatsonfreetv.com/channel/freetv-terror</loc>
+    <lastmod>2026-10-31</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
     <loc>https://whatsonfreetv.com/channel/fresh-off-the-boat</loc>
     <lastmod>2026-10-31</lastmod>
     <changefreq>weekly</changefreq>
