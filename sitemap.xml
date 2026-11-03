@@ -8275,7 +8275,19 @@
     <priority>0.8</priority>
   </url>
   <url>
+    <loc>https://whatsonfreetv.com/channel/roku-moods-holiday-hub</loc>
+    <lastmod>2026-11-03</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
     <loc>https://whatsonfreetv.com/channel/roku-moods-nature</loc>
+    <lastmod>2026-11-03</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://whatsonfreetv.com/channel/roku-moods-yule-log</loc>
     <lastmod>2026-11-03</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
@@ -8474,6 +8486,12 @@
   </url>
   <url>
     <loc>https://whatsonfreetv.com/channel/secrets-of-war</loc>
+    <lastmod>2026-11-03</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://whatsonfreetv.com/channel/see-it-now-studios-true-crime</loc>
     <lastmod>2026-11-03</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
