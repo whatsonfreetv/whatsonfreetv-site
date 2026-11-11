@@ -10795,6 +10795,12 @@
     <priority>0.8</priority>
   </url>
   <url>
+    <loc>https://whatsonfreetv.com/channel/urban-tv-movies-tv-one</loc>
+    <lastmod>2026-11-11</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
     <loc>https://whatsonfreetv.com/channel/usa-today</loc>
     <lastmod>2026-11-11</lastmod>
     <changefreq>weekly</changefreq>
